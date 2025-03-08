@@ -17,7 +17,7 @@ function App() {
         </a>
       </div>
       <h1 className="text-4xl font-bold text-blue-600">
-        Vite + React + Tailwind
+        배포 테스트
       </h1>
       <div className="p-6 bg-white shadow-md rounded-lg mt-6">
         <button
