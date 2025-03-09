@@ -1,13 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import { requestNotificationPermission } from "./components/notification";
+
 function App() {
   const [count, setCount] = useState(0);
-  useEffect(() => {
-    requestNotificationPermission(); // ✅ 앱이 실행될 때 알림 권한 요청
-  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-500 text-gray-800">
@@ -28,7 +25,7 @@ function App() {
           count is {count}
         </button>
         <button
-          onClick={requestNotificationPermission}
+          onClick={() => console.log("click")}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition"
         >
           알림 권한 요청하기
