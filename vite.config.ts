@@ -10,10 +10,9 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: "autoUpdate",
-      injectRegister: "auto", // 자동으로 등록
-      strategies: "injectManifest", // 직접 작성한 sw.js 사용
-      srcDir: "public", // 서비스 워커 파일 위치
-      filename: "sw.js", // 사용할 sw.js 파일 지정
+      strategies: "injectManifest", // 직접 작성한 service-worker.ts 사용
+      srcDir: "src", // 서비스 워커 파일 위치
+      filename: "service-worker.ts", // 사용할 service-worker.ts 파일 지정
       devOptions: {
         enabled: true, // vite dev 로 돌려도 PWA 까지 볼 수 있게끔 주는 옵션
       },
