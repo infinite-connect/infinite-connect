@@ -1,7 +1,7 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import { useState } from 'react';
+import reactLogo from './assets/react.svg';
+import viteLogo from '/vite.svg';
+import './App.css';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -25,19 +25,16 @@ function App() {
           count is {count}
         </button>
         <button
-          onClick={() => console.log("click")}
+          onClick={() => console.log('click')}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition"
         >
           알림 권한 요청하기
         </button>
         <p className="mt-2 text-gray-600">
-          Edit <code className="font-mono bg-gray-200 px-1">src/App.tsx</code>{" "}
-          and save to test HMR
+          Edit <code className="font-mono bg-gray-200 px-1">src/App.tsx</code> and save to test HMR
         </p>
       </div>
-      <p className="mt-4 text-sm text-gray-500">
-        Click on the Vite and React logos to learn more
-      </p>
+      <p className="mt-4 text-sm text-gray-500">Click on the Vite and React logos to learn more</p>
     </div>
   );
 }
