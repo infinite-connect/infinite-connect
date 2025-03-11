@@ -1,7 +1,14 @@
+import { Button } from '@components/ui/button';
 import React from 'react';
 
 const MainPage = (): React.JSX.Element => {
-  return <div></div>;
+  console.log('hello');
+  return (
+    <div>
+      <Button>dfd</Button>
+      <p>sddsf</p>
+    </div>
+  );
 };
 
 export default MainPage;

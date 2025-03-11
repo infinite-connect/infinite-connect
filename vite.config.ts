@@ -9,6 +9,18 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@pages': path.resolve(__dirname, './src/pages'),
+      '@features': path.resolve(__dirname, './src/features'),
+      '@components': path.resolve(__dirname, './src/components'),
+      '@shared': path.resolve(__dirname, './src/shared'),
+      '@store': path.resolve(__dirname, './src/store'),
+      '@styles': path.resolve(__dirname, './src/styles'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@utils': path.resolve(__dirname, './src/utils'),
+      '@constants': path.resolve(__dirname, './src/constants'),
+      '@assets': path.resolve(__dirname, './src/assets'),
+      '@routes': path.resolve(__dirname, './src/routes'),
+      '@lib': path.resolve(__dirname, './src/lib'),
     },
   },
   build: {

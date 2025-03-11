@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
 import RoutePaths from './RoutePath';
-import NotFoundPage from '@pages/NotFoundPage/NotFoundPage';
 import AdditionalInfoPage from '@pages/AdditionalInfoPage/AdditionalInfoPage';
 import LoginPage from '@pages/LoginPage/LoginPage';
 import SignupPage from '@pages/SignupPage/SignupPage';
@@ -15,6 +14,7 @@ import EventPage from '@pages/EventPage/EventPage';
 import PremiumEventPage from '@pages/PremiumEventPage/PremiumEventPage';
 import NetworkingClubPage from '@pages/NetworkingClubPage/NetworkingClub';
 import NetworkingListPage from '@pages/NetworkingListPage/NetworkingListPage';
+import NotFoundPage from '@pages/NotFoundPage/NotFoundPage';
 
 const AppRouter = () => {
   return (
