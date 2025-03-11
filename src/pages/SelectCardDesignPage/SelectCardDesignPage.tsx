@@ -1,7 +1,7 @@
 import React from 'react';
 
-const EventPage = (): React.JSX.Element => {
+const SelectCardDesignPage = (): React.JSX.Element => {
   return <div></div>;
 };
 
-export default EventPage;
+export default SelectCardDesignPage;

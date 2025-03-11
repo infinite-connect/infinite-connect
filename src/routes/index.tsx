@@ -1,10 +1,39 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-// import RoutePaths from './RoutePath';
+import { Routes, Route } from 'react-router-dom';
+import RoutePaths from './RoutePath';
+import NotFoundPage from '@pages/NotFoundPage/NotFoundPage';
+import AdditionalInfoPage from '@pages/AdditionalInfoPage/AdditionalInfoPage';
+import LoginPage from '@pages/LoginPage/LoginPage';
+import SignupPage from '@pages/SignupPage/SignupPage';
+import MainPage from '@pages/MainPage/MainPage';
+import SelectCardDesignPage from '@pages/SelectCardDesignPage/SelectCardDesignPage';
+import UserPage from '@pages/UserPage/UserPage';
+import UserCardPage from '@pages/UserCardPage/UserCardPage';
+import InfoPage from '@pages/InfoPage/InfoPage';
+import MembershipPage from '@pages/MembershipPage/MembershipPage';
+import UserSettingPage from '@pages/UserSettingPage/UserSettingPage';
+import EventPage from '@pages/EventPage/EventPage';
+import PremiumEventPage from '@pages/PremiumEventPage/PremiumEventPage';
+import NetworkingClubPage from '@pages/NetworkingClubPage/NetworkingClub';
+import NetworkingListPage from '@pages/NetworkingListPage/NetworkingListPage';
 
 const AppRouter = () => {
   return (
     <Routes>
-      {/* <Route path="*" element={<NotFoundPage />} /> */}
+      <Route path={RoutePaths.MAIN} element={<MainPage />} />
+      <Route path={RoutePaths.LOGIN} element={<LoginPage />} />
+      <Route path={RoutePaths.SIGNUP} element={<SignupPage />} />
+      <Route path={RoutePaths.SELECTCARDDESIGN} element={<SelectCardDesignPage />} />
+      <Route path={RoutePaths.ADDITIONALINFO} element={<AdditionalInfoPage />} />
+      <Route path={RoutePaths.USER} element={<UserPage />} />
+      <Route path={`${RoutePaths.USER}${RoutePaths.CARD}/:cardId?`} element={<UserCardPage />} />
+      <Route path={`${RoutePaths.USER}${RoutePaths.SETTING}`} element={<UserSettingPage />} />
+      <Route path={RoutePaths.INFO} element={<InfoPage />} />
+      <Route path={RoutePaths.MEMBERSHIP} element={<MembershipPage />} />
+      <Route path={RoutePaths.EVENTS} element={<EventPage />} />
+      <Route path={`${RoutePaths.EVENTS}${RoutePaths.PREMIUM}`} element={<PremiumEventPage />} />
+      <Route path={RoutePaths.NETWORKINGCLUBS} element={<NetworkingClubPage />} />
+      <Route path={RoutePaths.NETWORKINGLIST} element={<NetworkingListPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };
