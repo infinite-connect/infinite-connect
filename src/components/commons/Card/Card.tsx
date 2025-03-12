@@ -5,9 +5,10 @@ interface CardProps {
   isGlossy: boolean;
   isMobile: boolean;
   isChat: boolean;
+  cardColor: string;
 }
 
-const Card = ({ isGlossy, isMobile, isChat }: CardProps) => {
+const Card = ({ isGlossy, isMobile, isChat, cardColor }: CardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMove = (e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>) => {
@@ -31,7 +32,7 @@ const Card = ({ isGlossy, isMobile, isChat }: CardProps) => {
     // 유광 효과 업데이트
     const glossyOverlay = card.querySelector('.overlay.glossy') as HTMLElement;
     if (glossyOverlay) {
-      glossyOverlay.style.background = `radial-gradient(circle at ${mouseX}px ${mouseY}px, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.03) 70%, transparent 100%)`;
+      glossyOverlay.style.background = `radial-gradient(circle at ${mouseX}px ${mouseY}px, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.03) 70%, transparent 100%)`;
       glossyOverlay.style.opacity = '1';
     }
   };
@@ -59,12 +60,38 @@ const Card = ({ isGlossy, isMobile, isChat }: CardProps) => {
     }
   };
 
+  const adjustColorBrightness = (color: string, amount: number): string => {
+    let usePound = false;
+
+    if (color[0] === '#') {
+      color = color.slice(1);
+      usePound = true;
+    }
+
+    let num = parseInt(color, 16);
+    let r = (num >> 16) + amount;
+    let g = ((num >> 8) & 0x00ff) + amount;
+    let b = (num & 0x0000ff) + amount;
+
+    r = Math.min(Math.max(0, r), 255);
+    g = Math.min(Math.max(0, g), 255);
+    b = Math.min(Math.max(0, b), 255);
+
+    return `${usePound ? '#' : ''}${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+  };
+
   return (
     <>
       <div className="flex justify-center items-center h-full perspective-[1500px]">
         <div
           ref={cardRef}
-          className="w-[80mm] h-[128mm] bg-gradient-to-br from-blue-500 to-blue-700 rounded-3xl shadow-lg transform-style-preserve-3d transition-transform duration-300 ease-out relative flex flex-col justify-center items-center gap-2 will-change-transform"
+          className={`w-[80mm] h-[128mm] rounded-3xl shadow-lg transform-style-preserve-3d transition-transform duration-300 ease-out relative flex flex-col justify-center items-center gap-2 will-change-transform`}
+          style={{
+            backgroundImage: `linear-gradient(to bottom right, ${cardColor}, ${adjustColorBrightness(
+              cardColor,
+              -30,
+            )})`,
+          }}
           onMouseEnter={!isMobile ? handleEnter : undefined}
           onMouseMove={!isMobile ? handleMove : undefined}
           onMouseLeave={!isMobile ? handleLeave : undefined}
