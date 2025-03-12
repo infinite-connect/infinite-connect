@@ -13,6 +13,7 @@ const RoutePaths = {
   PREMIUM: '/premium',
   NETWORKINGCLUBS: '/networkingclubs',
   NETWORKINGLIST: '/networkinglist',
+  REALCARDSCAN: '/realcardscan',
 };
 
 export default RoutePaths;

@@ -20,6 +20,7 @@ import {
   FormMessage,
 } from '@components/ui/form';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 // Zod 스키마 정의
 const schema = z.object({
@@ -41,6 +42,7 @@ type FormData = z.infer<typeof schema>;
 
 const AdditionalInfoPage = (): React.JSX.Element => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(true); // Drawer 초기 상태: 열림
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -64,6 +66,10 @@ const AdditionalInfoPage = (): React.JSX.Element => {
     // 제출 로직 추가 가능
   };
 
+  const onClickMovetoRealCardScanPage = () => {
+    navigate('/realcardscan');
+  };
+
   return (
     <div>
       {/* Drawer 컴포넌트 */}
@@ -76,7 +82,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
 
           {/* 버튼 그룹 */}
           <div className="flex flex-col gap-4 mt-6">
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full" onClick={onClickMovetoRealCardScanPage}>
               실제 명함 촬영하기
             </Button>
             <Button variant="outline" className="w-full">
