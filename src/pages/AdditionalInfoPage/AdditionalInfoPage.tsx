@@ -41,9 +41,9 @@ type FormData = z.infer<typeof schema>;
 
 const AdditionalInfoPage = (): React.JSX.Element => {
   const location = useLocation();
-  const scannedData = location.state as Partial<FormData>;
-  const isFromScanPage = location.state.fromScanPage;
   const navigate = useNavigate();
+  const scannedData = (location.state as Partial<FormData>) || null;
+  const isFromScanPage = location.state?.fromScanPage || false;
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
