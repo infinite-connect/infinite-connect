@@ -13,7 +13,6 @@ import { Input } from '@components/ui/input';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -114,7 +113,6 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormControl>
                     <Input placeholder="example@example.com" {...field} />
                   </FormControl>
-                  <FormDescription>회사 이메일 주소를 입력하세요.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -128,9 +126,8 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 <FormItem>
                   <FormLabel>회사명</FormLabel>
                   <FormControl>
-                    <Input placeholder="회사명을 입력하세요" {...field} />
+                    <Input placeholder="현재 소속된 회사명을 입력하세요" {...field} />
                   </FormControl>
-                  <FormDescription>현재 소속된 회사명을 입력하세요.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
