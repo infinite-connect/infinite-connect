@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@components/ui/button';
+import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 
 const InterestSelector = () => {
@@ -7,29 +8,56 @@ const InterestSelector = () => {
   const maxSelection = 5;
   const navigate = useNavigate();
 
+  // 기술 스택과 아이콘 매핑
   const interests = [
-    'React',
-    'TypeScript',
-    'CSS',
-    'HTML5',
-    'AWS',
-    'Figma',
-    'Spring',
-    'Chakra UI',
-    'Shadcn UI',
-    'Python',
-    'JAVA',
-    'JavaScript',
-    'C/C++',
-    'Kotlin',
-    'Tailwind CSS',
+    { name: 'React', icon: 'logos:react' },
+    { name: 'TypeScript', icon: 'logos:typescript-icon' },
+    { name: 'CSS', icon: 'logos:css-3' },
+    { name: 'HTML5', icon: 'logos:html-5' },
+    { name: 'AWS', icon: 'logos:aws' },
+    { name: 'Figma', icon: 'logos:figma' },
+    { name: 'Spring', icon: 'logos:spring' },
+    { name: 'Chakra UI', icon: 'logos:chakraui' },
+    { name: 'Shadcn UI', icon: 'logos:webflow' }, // 대체 아이콘 사용
+    { name: 'Python', icon: 'logos:python' },
+    { name: 'JAVA', icon: 'logos:java' },
+    { name: 'JavaScript', icon: 'logos:javascript' },
+    { name: 'C/C++', icon: 'logos:c-plusplus' }, // C++ 아이콘 사용
+    { name: 'Kotlin', icon: 'logos:kotlin' },
+    { name: 'Node.js', icon: 'logos:nodejs-icon' },
+    { name: 'Svelte', icon: 'logos:svelte-icon' },
+    { name: 'Vue.js', icon: 'logos:vue' },
+    { name: 'AngularJS', icon: 'logos:angular-icon' },
+    { name: 'jQuery', icon: 'logos:jquery' },
+    { name: 'Django', icon: 'logos:django-icon' },
+    { name: 'PHP', icon: 'logos:mysql' },
+    { name: 'MySQL', icon: 'logos:mysql-icon' },
+    { name: 'Oracle', icon: 'simple-icons:mysql' },
+    { name: 'SwiftUI', icon: 'simple-icons:flutter' },
+    { name: 'TensorFlow', icon: 'logos:tensorflow' },
+    { name: 'Next.js', icon: 'logos:nextjs-icon' },
+    { name: 'Tailwind CSS', icon: 'logos:tailwindcss-icon' },
+    { name: 'GraphQL', icon: 'logos:graphql' },
+    { name: 'Docker', icon: 'logos:docker-icon' },
+    { name: 'PostgreSQL', icon: 'logos:postgresql' },
+    { name: 'MongoDB', icon: 'logos:mongodb-icon' },
+    { name: 'Redis', icon: 'logos:redis' },
+    { name: 'Prisma', icon: 'logos:prisma' },
+    { name: 'Vite', icon: 'logos:vitejs' },
+    { name: 'Jest', icon: 'logos:jest' },
+    { name: 'Flutter', icon: 'logos:flutter' },
+    { name: 'Rust', icon: 'logos:rust' },
+    { name: 'Golang', icon: 'logos:go' },
+    { name: 'Ruby on Rails', icon: 'logos:ruby-on-rails' },
+    { name: 'Three.js', icon: 'logos:threejs' },
+    { name: 'Solidity', icon: 'logos:solidity' },
   ];
 
-  const toggleInterest = (interest: string) => {
-    if (selectedInterests.includes(interest)) {
-      setSelectedInterests(selectedInterests.filter((item) => item !== interest));
+  const toggleInterest = (interestName: string) => {
+    if (selectedInterests.includes(interestName)) {
+      setSelectedInterests(selectedInterests.filter((item) => item !== interestName));
     } else if (selectedInterests.length < maxSelection) {
-      setSelectedInterests([...selectedInterests, interest]);
+      setSelectedInterests([...selectedInterests, interestName]);
     }
   };
 
@@ -45,16 +73,20 @@ const InterestSelector = () => {
 
       {/* 버튼 그룹 */}
       <div className="flex flex-wrap gap-2 justify-center">
-        {interests.map((interest) => (
-          <button
-            key={interest}
-            onClick={() => toggleInterest(interest)}
-            className={`px-4 py-2 rounded-full border ${
-              selectedInterests.includes(interest) ? 'border-green-500' : 'border-gray-600'
-            } text-sm whitespace-nowrap bg-white-800 hover:bg-gray-700`}
+        {interests.map(({ name, icon }) => (
+          <Button
+            key={name}
+            variant="outline"
+            onClick={() => toggleInterest(name)}
+            className={`px-4 py-2 rounded-full flex items-center gap-2 ${
+              selectedInterests.includes(name)
+                ? 'border-2 border-green-500'
+                : 'border border-gray-600'
+            }`}
           >
-            {interest}
-          </button>
+            <Icon icon={icon} className="w-5 h-5" /> {/* 아이콘 추가 */}
+            <span>{name}</span>
+          </Button>
         ))}
       </div>
 
@@ -77,7 +109,7 @@ const InterestSelector = () => {
         <Button
           variant="default"
           className={`w-full py-3 rounded-lg ${
-            selectedInterests.length === 0 ? 'bg-gray-600 cursor-not-allowed' : 'bg-gray-600'
+            selectedInterests.length === 0 ? 'bg-gray-600 cursor-not-allowed' : ''
           }`}
           onClick={onClickCardPreviewPage}
         >
