@@ -18,6 +18,7 @@ import NotFoundPage from '@pages/NotFoundPage/NotFoundPage';
 import RealCardScanPage from '@pages/RealCardScanPage/RealCardScanPage';
 import UserInterestsPage from '@pages/UserInterestsPage/UserInterestsPage';
 import CardPreviewPage from '@pages/CardPreviewPage/CardPreviewPage';
+import QrScannerPage from '@pages/QrScannerPage/\bQrScannerPage';
 
 const AppRouter = () => {
   return (
@@ -40,6 +41,7 @@ const AppRouter = () => {
       <Route path={RoutePaths.REALCARDSCAN} element={<RealCardScanPage />} />
       <Route path={RoutePaths.USERINTERESTS} element={<UserInterestsPage />} />
       <Route path={RoutePaths.CARDPREVIEW} element={<CardPreviewPage />} />
+      <Route path={RoutePaths.QR_SCANNER} element={<QrScannerPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

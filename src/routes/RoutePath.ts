@@ -17,6 +17,7 @@ const RoutePaths = {
   REALCARDSCAN: '/realcardscan',
   USERINTERESTS: '/userinterests',
   CARDPREVIEW: '/cardpreview',
+  QR_SCANNER: '/qr-scan',
 };
 
 export default RoutePaths;
