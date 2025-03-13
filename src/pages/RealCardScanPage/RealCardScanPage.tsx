@@ -10,6 +10,7 @@ import {
 import { Button } from '@components/ui/button';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { Separator } from '@components/ui/separator';
 
 const RealCardScanPage = (): React.JSX.Element => {
   const webcamRef = useRef<Webcam>(null);
@@ -207,53 +208,36 @@ const RealCardScanPage = (): React.JSX.Element => {
         <DrawerContent className="min-h-screen">
           <DrawerHeader>
             <DrawerTitle>촬영된 이미지</DrawerTitle>
+            <Separator />
           </DrawerHeader>
 
-          {/* 캡처된 이미지 표시 */}
+          {/* 캡처된 이미지 및 데이터 표시 */}
           {!loading && !geminiLoading && capturedImage && (
-            <div className="flex flex-col items-center mt-2">
+            <div className="flex flex-col items-center mt-2 overflow-y-auto max-h-[70vh] px-4">
+              {/* 캡처된 이미지 */}
               <img
                 src={capturedImage}
                 alt="Captured Business Card"
-                className="w-full max-w-sm h-auto mb-2"
+                className="w-full max-w-sm h-auto mb-4 rounded-md shadow-md"
               />
-              <ul>
-                <li>
-                  <strong>이름:</strong> {parsedData.name}
-                </li>
-                <li>
-                  <strong>회사명:</strong> {parsedData.company}
-                </li>
-                <li>
-                  <strong>직책:</strong> {parsedData.jobTitle}
-                </li>
-                <li>
-                  <strong>부서:</strong> {parsedData.department}
-                </li>
-                <li>
-                  <strong>이메일:</strong> {parsedData.email}
-                </li>
-                <li>
-                  <strong>전화번호:</strong> {parsedData.phone}
-                </li>
-                <li>
-                  <strong>팩스:</strong> {parsedData.fax}
-                </li>
-                <li>
-                  <strong>주소:</strong> {parsedData.address}
-                </li>
-                <li>
-                  <strong>웹사이트:</strong> {parsedData.website}
-                </li>
-              </ul>
+
+              {/* 데이터 매핑 결과 */}
+              <div className="w-full space-y-2 text-sm">
+                {Object.entries(parsedData).map(([key, value]) => (
+                  <p key={key} className="text-left">
+                    <span className="font-medium capitalize">{key}:</span> {value || '없음'}
+                  </p>
+                ))}
+              </div>
             </div>
           )}
 
-          <DrawerFooter className="flex justify-end">
+          {/* Footer */}
+          <DrawerFooter className="flex justify-end gap-2 mt-4 px-4">
             <Button variant="outline" onClick={() => setIsDrawerOpen(false)}>
               재촬영
             </Button>
-            <Button variant="outline" onClick={onClickMovetoAdditionalInfoPageWithData}>
+            <Button variant="default" onClick={onClickMovetoAdditionalInfoPageWithData}>
               완료
             </Button>
           </DrawerFooter>
