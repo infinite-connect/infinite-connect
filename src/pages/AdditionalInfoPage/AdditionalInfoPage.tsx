@@ -48,12 +48,12 @@ const AdditionalInfoPage = (): React.JSX.Element => {
 
   useEffect(() => {
     // 최초 입장 시에는 Drawer를 열고, 스캔 페이지에서 돌아온 경우에는 열지 않음
-    if (!location.state || !location.state.fromScanPage) {
+    if (!scannedData && !location.state.fromScanPage) {
       setIsDrawerOpen(true); // 최초 입장 시 Drawer 열기
     } else {
       setIsDrawerOpen(false); // 스캔 페이지에서 돌아온 경우 Drawer 닫기
     }
-  }, [location.state]);
+  }, [scannedData]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
