@@ -73,7 +73,7 @@ const Card = ({ isGlossy, isMobile, isChat }: CardProps) => {
           onTouchEnd={isMobile ? handleLeave : undefined}
         >
           {isGlossy && (
-            <div className="overlay glossy absolute top-0 left-0 w-full h-full rounded-inherit pointer-events-none transition-opacity duration-300"></div>
+            <div className="overlay glossy absolute top-0 left-0 w-full h-full rounded-3xl pointer-events-none transition-opacity duration-300"></div>
           )}
 
           <div className="flex flex-row justify-center items-center gap-4">

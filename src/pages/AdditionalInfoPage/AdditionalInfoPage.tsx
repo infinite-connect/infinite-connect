@@ -42,18 +42,19 @@ type FormData = z.infer<typeof schema>;
 const AdditionalInfoPage = (): React.JSX.Element => {
   const location = useLocation();
   const scannedData = location.state as Partial<FormData>;
+  const isFromScanPage = location.state.fromScanPage;
   const navigate = useNavigate();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     // 최초 입장 시에는 Drawer를 열고, 스캔 페이지에서 돌아온 경우에는 열지 않음
-    if (!scannedData && !location.state.fromScanPage) {
+    if (!scannedData && !isFromScanPage) {
       setIsDrawerOpen(true); // 최초 입장 시 Drawer 열기
     } else {
       setIsDrawerOpen(false); // 스캔 페이지에서 돌아온 경우 Drawer 닫기
     }
-  }, [scannedData]);
+  }, [scannedData, isFromScanPage]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),

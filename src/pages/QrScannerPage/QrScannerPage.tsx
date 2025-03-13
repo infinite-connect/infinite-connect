@@ -26,7 +26,7 @@ const QrScannerPage: React.FC = () => {
       );
 
       html5QrCodeScanner.render(
-        (decodedText, decodedResult) => {
+        (decodedText) => {
           // 스캔 성공 시 decodedText에 QR 코드의 텍스트가 들어옵니다.
           console.log('Decoded text:', decodedText);
           // 예를 들어, decodedText를 business-card id로 사용해 상세 페이지로 이동

@@ -18,7 +18,7 @@ import NotFoundPage from '@pages/NotFoundPage/NotFoundPage';
 import RealCardScanPage from '@pages/RealCardScanPage/RealCardScanPage';
 import UserInterestsPage from '@pages/UserInterestsPage/UserInterestsPage';
 import CardPreviewPage from '@pages/CardPreviewPage/CardPreviewPage';
-import QrScannerPage from '@pages/QrScannerPage/\bQrScannerPage';
+import QrScannerPage from '@pages/QrScannerPage/QrScannerPage';
 
 const AppRouter = () => {
   return (
