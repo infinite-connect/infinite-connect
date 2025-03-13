@@ -1,5 +1,6 @@
 import { useRef, MouseEvent, TouchEvent } from 'react';
-import { Button } from '@components/ui/button';
+import { Badge } from '@components/ui/badge';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 interface CardProps {
   isGlossy: boolean;
@@ -8,7 +9,7 @@ interface CardProps {
   cardColor: string;
 }
 
-const Card = ({ isGlossy, isMobile, isChat, cardColor }: CardProps) => {
+const Card = ({ isGlossy, isMobile, cardColor }: CardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMove = (e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>) => {
@@ -23,8 +24,8 @@ const Card = ({ isGlossy, isMobile, isChat, cardColor }: CardProps) => {
 
     const mouseX = clientX - rect.left;
     const mouseY = clientY - rect.top;
-    const xAxis = (clientX - rect.left - rect.width / 2) / 20;
-    const yAxis = (clientY - rect.top - rect.height / 2) / 20;
+    const xAxis = (clientX - rect.left - rect.width / 2) / 15;
+    const yAxis = (clientY - rect.top - rect.height / 2) / 15;
 
     // 카드 각도 조절
     card.style.transform = `rotateY(${-xAxis}deg) rotateX(${yAxis}deg)`;
@@ -103,38 +104,54 @@ const Card = ({ isGlossy, isMobile, isChat, cardColor }: CardProps) => {
             <div className="overlay glossy absolute top-0 left-0 w-full h-full rounded-inherit pointer-events-none transition-opacity duration-300"></div>
           )}
 
-          <div className="flex flex-row justify-center items-center gap-4">
-            <Button
-              className="w-9 h-9 bg-white text-blue-500 rounded-full shadow-lg flex justify-center items-center"
-              disabled={!isChat}
-            >
-              💬
-            </Button>
-            <Button className="w-9 h-9 bg-white text-blue-500 rounded-full shadow-lg flex justify-center items-center">
-              📚
-            </Button>
-          </div>
+          <div className="text-white text-center flex flex-col justify-center items-center gap-2">
+            <p className="font-bold text-2xl">이종혁</p>
+            <p className="font-bold text-xl">프론트엔드 개발자</p>
 
-          <div className="text-white text-center flex flex-col justify-center items-center">
-            <h1>이종혁</h1>
-            <p className="font-bold text-2xl">프론트엔드 개발자</p>
-            <p>E-mail: jonghyeok@example.com</p>
-            <p>Phone: +123-456-7890</p>
+            <div className="flex flex-col items-start gap-2">
+              <div className="flex items-center gap-2 text-sm">
+                <Icon icon="mdi-light:email" className="w-5 h-5" />
+                <span>E-mail: jonghyeok@example.com</span>
+              </div>
 
-            <div className="flex items-center">
-              <span>github.com/leejh5314</span>
+              <div className="flex items-center gap-2 text-sm">
+                <Icon icon="mdi-light:phone" className="w-5 h-5" />
+                <span>Phone: +123-456-7890</span>
+              </div>
+
+              <div className="flex items-center gap-2 text-sm">
+                <Icon icon="uiw:github" className="w-5 h-5" />
+                <span>github.com/leejh5314</span>
+              </div>
+
+              <div className="flex items-center gap-2 text-sm">
+                <Icon icon="dashicons:instagram" className="w-5 h-5" />
+                <span>instagram.com/jonghyeok</span>
+              </div>
             </div>
 
-            <div className="flex justify-center">
-              <span className="bg-white/20 text-white font-bold text-xs py-1 px-2 rounded-full mx-2">
+            <div className="flex justify-center gap-2 mt-4">
+              <Badge
+                variant="outline"
+                className="flex text-white items-center gap-1 p-2 rounded-xl font-bold"
+              >
+                <Icon icon="logos:nextjs-icon" className="w-4 h-4" />
                 Next.js
-              </span>
-              <span className="bg-white/20 text-white font-bold text-xs py-1 px-2 rounded-full mx-2">
+              </Badge>
+              <Badge
+                variant="outline"
+                className="flex text-white items-center gap-1 p-2 rounded-xl font-bold"
+              >
+                <Icon icon="logos:typescript-icon" className="w-4 h-4" />
                 TypeScript
-              </span>
-              <span className="bg-white/20 text-white font-bold text-xs py-1 px-2 rounded-full mx-2">
+              </Badge>
+              <Badge
+                variant="outline"
+                className="flex text-white items-center gap-1 p-2 rounded-xl font-bold"
+              >
+                <Icon icon="logos:react" className="w-4 h-4" />
                 React
-              </span>
+              </Badge>
             </div>
           </div>
         </div>

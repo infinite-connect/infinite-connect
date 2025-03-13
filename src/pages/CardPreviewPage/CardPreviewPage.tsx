@@ -21,7 +21,7 @@ const CardPreviewPage = (): React.JSX.Element => {
   return (
     <div className="flex flex-col items-center gap-4 p-6">
       <h1 className="text-lg font-bold mb-2">명함이 생성되었습니다!</h1>
-      <Card isGlossy={true} isMobile={isMobileDevice} isChat={false} cardColor="#d32f2f" />
+      <Card isGlossy={true} isMobile={isMobileDevice} isChat={false} cardColor="#1E90ff" />
 
       <Button variant="default" className="w-full py-3 rounded-lg mt-5">
         완료
