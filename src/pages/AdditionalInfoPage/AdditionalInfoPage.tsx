@@ -52,11 +52,16 @@ const AdditionalInfoPage = (): React.JSX.Element => {
 
   const onSubmit = (values: FormData) => {
     console.log('폼 제출 데이터:', values);
+    onClickUserInterestsPage();
     // 제출 로직 추가 가능
   };
 
   const onClickMovetoRealCardScanPage = () => {
     navigate('/realcardscan');
+  };
+
+  const onClickUserInterestsPage = () => {
+    navigate('/userinterests');
   };
 
   return (
@@ -81,10 +86,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
 
           {/* Footer */}
           <DrawerFooter className="mt-6">
-            <button
-              className="text-sm text-gray-500 underline"
-              onClick={() => setIsDrawerOpen(false)}
-            >
+            <button className="text-sm text-gray-500 underline" onClick={onClickUserInterestsPage}>
               나중에 할래요
             </button>
           </DrawerFooter>

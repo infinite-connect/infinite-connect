@@ -14,6 +14,7 @@ const RoutePaths = {
   NETWORKINGCLUBS: '/networkingclubs',
   NETWORKINGLIST: '/networkinglist',
   REALCARDSCAN: '/realcardscan',
+  USERINTERESTS: '/userinterests',
 };
 
 export default RoutePaths;

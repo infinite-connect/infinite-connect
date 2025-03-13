@@ -16,6 +16,7 @@ import NetworkingClubPage from '@pages/NetworkingClubPage/NetworkingClub';
 import NetworkingListPage from '@pages/NetworkingListPage/NetworkingListPage';
 import NotFoundPage from '@pages/NotFoundPage/NotFoundPage';
 import RealCardScanPage from '@pages/RealCardScanPage/RealCardScanPage';
+import UserInterestsPage from '@pages/UserInterestsPage/UserInterestsPage';
 
 const AppRouter = () => {
   return (
@@ -35,6 +36,7 @@ const AppRouter = () => {
       <Route path={RoutePaths.NETWORKINGCLUBS} element={<NetworkingClubPage />} />
       <Route path={RoutePaths.NETWORKINGLIST} element={<NetworkingListPage />} />
       <Route path={RoutePaths.REALCARDSCAN} element={<RealCardScanPage />} />
+      <Route path={RoutePaths.USERINTERESTS} element={<UserInterestsPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
