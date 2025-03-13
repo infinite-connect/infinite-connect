@@ -9,9 +9,11 @@ import {
 } from '@components/ui/drawer';
 import { Button } from '@components/ui/button';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 const RealCardScanPage = (): React.JSX.Element => {
   const webcamRef = useRef<Webcam>(null);
+  const navigate = useNavigate();
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [parsedData, setParsedData] = useState({
@@ -157,6 +159,10 @@ const RealCardScanPage = (): React.JSX.Element => {
     }
   };
 
+  const onClickMovetoAdditionalInfoPageWithData = () => {
+    navigate('/additionalinfo', { state: parsedData }); // parsedData를 전달
+  };
+
   return (
     <div className="relative w-full h-screen">
       {/* 카메라 화면 */}
@@ -238,8 +244,8 @@ const RealCardScanPage = (): React.JSX.Element => {
             <Button variant="outline" onClick={() => setIsDrawerOpen(false)}>
               재촬영
             </Button>
-            <Button variant="outline" onClick={() => setIsDrawerOpen(false)}>
-              닫기
+            <Button variant="outline" onClick={onClickMovetoAdditionalInfoPageWithData}>
+              완료
             </Button>
           </DrawerFooter>
         </DrawerContent>

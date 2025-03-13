@@ -19,12 +19,12 @@ import {
   FormMessage,
 } from '@components/ui/form';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // Zod 스키마 정의
 const schema = z.object({
   email: z.string().optional(),
-  companyName: z.string().optional(),
+  company: z.string().optional(),
   jobTitle: z.string().optional(),
   department: z.string().optional(),
   phone: z.string().optional(),
@@ -40,24 +40,14 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const AdditionalInfoPage = (): React.JSX.Element => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(true); // Drawer 초기 상태: 열림
+  const location = useLocation();
+  const scannedData = location.state as Partial<FormData>;
+  const [isDrawerOpen, setIsDrawerOpen] = useState(!scannedData);
   const navigate = useNavigate();
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      email: '',
-      companyName: '',
-      jobTitle: '',
-      department: '',
-      phone: '',
-      fax: '',
-      address: '',
-      website: '',
-      url1: '',
-      url2: '',
-      url3: '',
-    },
+    defaultValues: scannedData || {},
   });
 
   const onSubmit = (values: FormData) => {
@@ -121,7 +111,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
             {/* 회사명 필드 */}
             <FormField
               control={form.control}
-              name="companyName"
+              name="company"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>회사명</FormLabel>
