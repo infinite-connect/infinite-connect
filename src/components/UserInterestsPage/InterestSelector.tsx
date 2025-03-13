@@ -76,7 +76,6 @@ const InterestSelector = () => {
       <div className="mt-2 w-full max-w-md">
         <Button
           variant="default"
-          disabled={selectedInterests.length === 0}
           className={`w-full py-3 rounded-lg ${
             selectedInterests.length === 0 ? 'bg-gray-600 cursor-not-allowed' : 'bg-gray-600'
           }`}

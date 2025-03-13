@@ -163,6 +163,10 @@ const RealCardScanPage = (): React.JSX.Element => {
     navigate('/additionalinfo', { state: parsedData }); // parsedData를 전달
   };
 
+  const onClickDirectInputButton = () => {
+    navigate('/additionalinfo', { state: { fromScanPage: true } });
+  };
+
   return (
     <div className="relative w-full h-screen">
       {/* 카메라 화면 */}
@@ -187,9 +191,13 @@ const RealCardScanPage = (): React.JSX.Element => {
       </div>
 
       {/* 촬영 버튼 */}
-      <div className="absolute bottom-10 w-full flex justify-center">
+      <div className="absolute bottom-10 w-full flex justify-center gap-2">
         <Button onClick={capturePhoto} className="bg-blue-500 text-white">
           촬영하기
+        </Button>
+        {/* 직접 입력 버튼 */}
+        <Button variant="outline" onClick={onClickDirectInputButton}>
+          직접 입력
         </Button>
       </div>
 

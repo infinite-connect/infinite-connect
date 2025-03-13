@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -42,12 +42,35 @@ type FormData = z.infer<typeof schema>;
 const AdditionalInfoPage = (): React.JSX.Element => {
   const location = useLocation();
   const scannedData = location.state as Partial<FormData>;
-  const [isDrawerOpen, setIsDrawerOpen] = useState(!scannedData);
   const navigate = useNavigate();
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    // 최초 입장 시에는 Drawer를 열고, 스캔 페이지에서 돌아온 경우에는 열지 않음
+    if (!location.state || !location.state.fromScanPage) {
+      setIsDrawerOpen(true); // 최초 입장 시 Drawer 열기
+    } else {
+      setIsDrawerOpen(false); // 스캔 페이지에서 돌아온 경우 Drawer 닫기
+    }
+  }, [location.state]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: scannedData || {},
+    defaultValues: {
+      email: '',
+      company: '',
+      jobTitle: '',
+      department: '',
+      phone: '',
+      fax: '',
+      address: '',
+      website: '',
+      url1: '',
+      url2: '',
+      url3: '',
+      ...scannedData, // 스캔된 데이터가 있으면 덮어쓰기
+    },
   });
 
   const onSubmit = (values: FormData) => {
@@ -62,6 +85,10 @@ const AdditionalInfoPage = (): React.JSX.Element => {
 
   const onClickUserInterestsPage = () => {
     navigate('/userinterests');
+  };
+
+  const onClickCardPreviewPage = () => {
+    navigate('/cardPreview');
   };
 
   return (
@@ -86,7 +113,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
 
           {/* Footer */}
           <DrawerFooter className="mt-6">
-            <button className="text-sm text-gray-500 underline" onClick={onClickUserInterestsPage}>
+            <button className="text-sm text-gray-500 underline" onClick={onClickCardPreviewPage}>
               나중에 할래요
             </button>
           </DrawerFooter>
@@ -261,7 +288,10 @@ const AdditionalInfoPage = (): React.JSX.Element => {
             />
 
             {/* 제출 버튼 */}
-            <Button type="submit">제출</Button>
+            <div className="flex flex-col gap-4">
+              <Button type="submit">제출</Button>
+              <Button onClick={onClickUserInterestsPage}>건너뛰기</Button>
+            </div>
           </form>
         </Form>
       </div>
