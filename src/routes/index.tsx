@@ -15,6 +15,9 @@ import PremiumEventPage from '@pages/PremiumEventPage/PremiumEventPage';
 import NetworkingClubPage from '@pages/NetworkingClubPage/NetworkingClub';
 import NetworkingListPage from '@pages/NetworkingListPage/NetworkingListPage';
 import NotFoundPage from '@pages/NotFoundPage/NotFoundPage';
+import RealCardScanPage from '@pages/RealCardScanPage/RealCardScanPage';
+import UserInterestsPage from '@pages/UserInterestsPage/UserInterestsPage';
+import CardPreviewPage from '@pages/CardPreviewPage/CardPreviewPage';
 import QrScannerPage from '@pages/QrScannerPage/\bQrScannerPage';
 
 const AppRouter = () => {
@@ -35,6 +38,9 @@ const AppRouter = () => {
       <Route path={RoutePaths.NETWORKINGCLUBS} element={<NetworkingClubPage />} />
       <Route path={RoutePaths.NETWORKINGLIST} element={<NetworkingListPage />} />
       <Route path={RoutePaths.BUSINESS_CARD_DETAIL} element={<UserCardPage />} />
+      <Route path={RoutePaths.REALCARDSCAN} element={<RealCardScanPage />} />
+      <Route path={RoutePaths.USERINTERESTS} element={<UserInterestsPage />} />
+      <Route path={RoutePaths.CARDPREVIEW} element={<CardPreviewPage />} />
       <Route path={RoutePaths.QR_SCANNER} element={<QrScannerPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
