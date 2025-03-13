@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Card from '@components/NetworkingListPage/Card';
 import AddModal from '@components/NetworkingListPage/AddModal';
 import { Check, Plus } from 'lucide-react';
@@ -21,6 +21,7 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [isQRDrawerOpen, setIsQRDrawerOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // TODO: 실제 API 요청으로 변경
@@ -69,10 +70,7 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
             variant="outline"
             size="sm"
             className="text-black"
-            onClick={() => {
-              setIsQRDrawerOpen(true);
-              console.log('QR Drawer 열림');
-            }}
+            onClick={() => navigate('/qr-scan')}
           >
             <Scan className="h-6 w-6 text-black" />
             QR 스캔
