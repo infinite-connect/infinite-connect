@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Button } from '@components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const InterestSelector = () => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const maxSelection = 5;
+  const navigate = useNavigate();
 
   const interests = [
     'React',
@@ -29,6 +31,10 @@ const InterestSelector = () => {
     } else if (selectedInterests.length < maxSelection) {
       setSelectedInterests([...selectedInterests, interest]);
     }
+  };
+
+  const onClickCardPreviewPage = () => {
+    navigate('/cardPreview');
   };
 
   return (
@@ -62,6 +68,7 @@ const InterestSelector = () => {
               ? 'bg-gray-600 cursor-not-allowed'
               : 'bg-gradient-to-r from-blue-500 to-green-500'
           }`}
+          onClick={onClickCardPreviewPage}
         >
           완료 ({selectedInterests.length}/{maxSelection})
         </Button>
@@ -73,6 +80,7 @@ const InterestSelector = () => {
           className={`w-full py-3 rounded-lg ${
             selectedInterests.length === 0 ? 'bg-gray-600 cursor-not-allowed' : 'bg-gray-600'
           }`}
+          onClick={onClickCardPreviewPage}
         >
           건너뛰기
         </Button>

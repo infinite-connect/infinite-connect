@@ -15,6 +15,7 @@ const RoutePaths = {
   NETWORKINGLIST: '/networkinglist',
   REALCARDSCAN: '/realcardscan',
   USERINTERESTS: '/userinterests',
+  CARDPREVIEW: '/cardpreview',
 };
 
 export default RoutePaths;

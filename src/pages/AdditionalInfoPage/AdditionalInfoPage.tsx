@@ -79,7 +79,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
             <Button variant="outline" className="w-full" onClick={onClickMovetoRealCardScanPage}>
               실제 명함 촬영하기
             </Button>
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full" onClick={() => setIsDrawerOpen(false)}>
               직접 입력
             </Button>
           </div>
