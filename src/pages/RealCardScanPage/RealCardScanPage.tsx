@@ -31,8 +31,9 @@ const RealCardScanPage = (): React.JSX.Element => {
   const [loading, setLoading] = useState(false); // 로딩 상태
   const [geminiLoading, setGeminiLoading] = useState(false);
 
-  const GEMINI_API_KEY = 'AIzaSyB2cjhxlyYC2lysl_dZGX8N3TMif6YDCao';
-  const GOOGLE_VISION_API_KEY = 'AIzaSyDmQOm46CZBB3J-94iNRUEYPYZ_gGE4UGk';
+  const geminiApiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  const googleVisionApiKey = import.meta.env.VITE_GOOGLE_VISION_API_KEY;
+
   // 사진 촬영 함수
   const capturePhoto = async () => {
     if (webcamRef.current) {
@@ -83,7 +84,7 @@ const RealCardScanPage = (): React.JSX.Element => {
     setGeminiLoading(true); // Gemini 작업 시작
     try {
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`,
         {
           method: 'POST',
           headers: {
@@ -136,7 +137,7 @@ const RealCardScanPage = (): React.JSX.Element => {
   const callGoogleVisionAPI = async (base64Image: string) => {
     try {
       const response = await fetch(
-        `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_VISION_API_KEY}`,
+        `https://vision.googleapis.com/v1/images:annotate?key=${googleVisionApiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
