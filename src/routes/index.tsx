@@ -36,6 +36,7 @@ const AppRouter = () => {
       <Route path={`${RoutePaths.EVENTS}${RoutePaths.PREMIUM}`} element={<PremiumEventPage />} />
       <Route path={RoutePaths.NETWORKINGCLUBS} element={<NetworkingClubPage />} />
       <Route path={RoutePaths.NETWORKINGLIST} element={<NetworkingListPage />} />
+      <Route path={RoutePaths.BUSINESS_CARD_DETAIL} element={<UserCardPage />} />
       <Route path={RoutePaths.REALCARDSCAN} element={<RealCardScanPage />} />
       <Route path={RoutePaths.USERINTERESTS} element={<UserInterestsPage />} />
       <Route path={RoutePaths.CARDPREVIEW} element={<CardPreviewPage />} />
