@@ -4,6 +4,11 @@ import { XIcon } from 'lucide-react';
 
 import { cn } from '@lib/utils';
 
+// Radix의 DialogPrimitive.Content에서 파생된 타입을 확장
+interface CustomDialogContentProps extends React.ComponentProps<typeof DialogPrimitive.Content> {
+  hideCloseButton?: boolean; // 사용자 정의 prop
+}
+
 function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />;
 }
@@ -39,8 +44,9 @@ function DialogOverlay({
 function DialogContent({
   className,
   children,
+  hideCloseButton = false,
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Content>) {
+}: CustomDialogContentProps) {
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
@@ -53,10 +59,19 @@ function DialogContent({
         {...props}
       >
         {children}
-        <DialogPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4">
-          <XIcon />
-          <span className="sr-only">Close</span>
-        </DialogPrimitive.Close>
+        {/* hideCloseButton이 아닐 때만 기본 닫기 버튼을 보여줌 */}
+        {!hideCloseButton && (
+          <DialogPrimitive.Close
+            data-slot="dialog-close"
+            className={cn(
+              'absolute top-4 right-4 rounded-xs opacity-70 transition-opacity',
+              'hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-none',
+            )}
+          >
+            <XIcon />
+            <span className="sr-only">Close</span>
+          </DialogPrimitive.Close>
+        )}
       </DialogPrimitive.Content>
     </DialogPortal>
   );

@@ -3,10 +3,19 @@ import { Drawer as DrawerPrimitive } from 'vaul';
 
 import { cn } from '@lib/utils';
 
-function Drawer({ ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) {
-  return <DrawerPrimitive.Root data-slot="drawer" {...props} />;
+type DrawerProps = React.PropsWithChildren<
+  React.ComponentProps<typeof DrawerPrimitive.Root> & {
+    handleOnly?: boolean;
+  }
+>;
+
+interface DrawerContentProps extends React.ComponentProps<typeof DrawerPrimitive.Content> {
+  hideIndicator?: boolean;
 }
 
+function Drawer({ handleOnly = false, ...props }: DrawerProps) {
+  return <DrawerPrimitive.Root handleOnly={handleOnly} data-slot="drawer" {...props} />;
+}
 function DrawerTrigger({ ...props }: React.ComponentProps<typeof DrawerPrimitive.Trigger>) {
   return <DrawerPrimitive.Trigger data-slot="drawer-trigger" {...props} />;
 }
@@ -38,8 +47,9 @@ function DrawerOverlay({
 function DrawerContent({
   className,
   children,
+  hideIndicator = false,
   ...props
-}: React.ComponentProps<typeof DrawerPrimitive.Content>) {
+}: DrawerContentProps) {
   return (
     <DrawerPortal data-slot="drawer-portal">
       <DrawerOverlay />
@@ -55,7 +65,10 @@ function DrawerContent({
         )}
         {...props}
       >
-        <div className="bg-muted mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
+        {/* hideIndicator가 false일 때만 인디케이터 렌더링 */}
+        {!hideIndicator && (
+          <div className="bg-muted mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
+        )}
         {children}
       </DrawerPrimitive.Content>
     </DrawerPortal>
