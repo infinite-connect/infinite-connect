@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ThirdStep from './ThirdStep';
 import { schema } from './signupSchema';
+import FourthStep from './FourthStep';
 
 type SignupData = z.infer<typeof schema>;
 
@@ -47,7 +48,7 @@ const SignupForm = (): React.JSX.Element => {
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
       <div className="w-full max-w-md bg-gray-800 p-6 rounded-lg shadow-lg">
         <h1 className="text-2xl font-bold text-center text-white mb-6">회원가입</h1>
-        <Progress value={(step / 3) * 100} />
+        {step !== 4 && <Progress value={(step / 3) * 100} />}
 
         <FormProvider {...methods}>
           {step === 1 && <FirstStep nextStep={nextStep} />}
@@ -59,7 +60,8 @@ const SignupForm = (): React.JSX.Element => {
               nextStep={nextStep}
             />
           )}
-          {step === 3 && <ThirdStep prevStep={prevStep} />}
+          {step === 3 && <ThirdStep prevStep={prevStep} nextStep={nextStep} />}
+          {step === 4 && <FourthStep />}
         </FormProvider>
       </div>
     </div>

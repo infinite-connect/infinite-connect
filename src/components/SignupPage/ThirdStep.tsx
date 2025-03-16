@@ -8,9 +8,10 @@ type SignupData = z.infer<typeof schema>; // 타입 추출
 
 interface ThirdStepProps {
   prevStep: () => void;
+  nextStep: () => void;
 }
 
-const ThirdStep: React.FC<ThirdStepProps> = ({ prevStep }) => {
+const ThirdStep: React.FC<ThirdStepProps> = ({ prevStep, nextStep }) => {
   const { getValues, handleSubmit } = useFormContext<SignupData>();
 
   // 회원가입 완료 핸들러
@@ -73,7 +74,8 @@ const ThirdStep: React.FC<ThirdStepProps> = ({ prevStep }) => {
         return;
       }
 
-      alert('회원가입이 완료되었습니다!');
+      alert('회원가입이 완료되었습니다! 이메일 인증을 진행해주세요.');
+      nextStep();
     } catch (error) {
       console.error('Unexpected Error:', error);
       alert('회원가입 처리 중 예상치 못한 오류가 발생했습니다.');
