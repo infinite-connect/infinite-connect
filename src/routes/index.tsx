@@ -19,6 +19,7 @@ import RealCardScanPage from '@pages/RealCardScanPage/RealCardScanPage';
 import UserInterestsPage from '@pages/UserInterestsPage/UserInterestsPage';
 import CardPreviewPage from '@pages/CardPreviewPage/CardPreviewPage';
 import QrScannerPage from '@pages/QrScannerPage/QrScannerPage';
+import BusinessCardBookPage from '@pages/BusinessCardBookPage/UserPage';
 
 const AppRouter = () => {
   return (
@@ -42,6 +43,7 @@ const AppRouter = () => {
       <Route path={RoutePaths.USERINTERESTS} element={<UserInterestsPage />} />
       <Route path={RoutePaths.CARDPREVIEW} element={<CardPreviewPage />} />
       <Route path={RoutePaths.QR_SCANNER} element={<QrScannerPage />} />
+      <Route path={RoutePaths.BUSINESSCARDBOOK} element={<BusinessCardBookPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

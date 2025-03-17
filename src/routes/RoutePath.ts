@@ -18,6 +18,7 @@ const RoutePaths = {
   USERINTERESTS: '/userinterests',
   CARDPREVIEW: '/cardpreview',
   QR_SCANNER: '/qr-scan',
+  BUSINESSCARDBOOK: '/businesscardbook',
 };
 
 export default RoutePaths;
