@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Icon } from '@iconify/react';
 
@@ -13,14 +13,35 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
   const {
     register,
     trigger,
+    setFocus,
     formState: { errors },
   } = useFormContext();
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // 다음 단계로 이동
   const handleNextStep = async () => {
     const isValid = await trigger(['nickname', 'email', 'password', 'confirmPassword']); // userId 유효성 검사 추가
     if (isValid) {
       nextStep(); // 유효성 검사를 통과하면 다음 단계로 이동
+    }
+  };
+
+  const handleKeyDown = async (
+    event: React.KeyboardEvent<HTMLInputElement>,
+    fieldName: string,
+    nextFieldIndex: number,
+  ) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // 기본 Enter 동작 방지
+      const isValid = await trigger(fieldName); // 현재 필드 유효성 검사
+
+      if (isValid) {
+        // 유효성 검사를 통과하면 다음 필드로 포커스 이동
+        inputRefs.current[nextFieldIndex]?.focus();
+      } else {
+        // 유효성 검사 실패 시 현재 필드에 머무름
+        setFocus(fieldName);
+      }
     }
   };
 
@@ -36,6 +57,10 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
         <input
           id="name"
           {...register('name')}
+          ref={(el) => {
+            inputRefs.current[0] = el;
+          }}
+          onKeyDown={(e) => handleKeyDown(e, 'name', 1)}
           placeholder="이름"
           className={`rounded-md border ${
             errors.name ? 'border-red-500' : 'border-gray-600'
@@ -54,6 +79,10 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
         <input
           id="userId"
           {...register('nickname')}
+          ref={(el) => {
+            inputRefs.current[1] = el;
+          }}
+          onKeyDown={(e) => handleKeyDown(e, 'nickname', 2)}
           placeholder="아이디"
           className={`rounded-md border ${
             errors.userId ? 'border-red-500' : 'border-gray-600'
@@ -72,6 +101,10 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
         <input
           id="email"
           {...register('email')}
+          ref={(el) => {
+            inputRefs.current[2] = el;
+          }}
+          onKeyDown={(e) => handleKeyDown(e, 'email', 3)}
           type="email"
           placeholder="이메일"
           className={`rounded-md border ${
@@ -92,6 +125,10 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
           <input
             id="password"
             {...register('password')}
+            ref={(el) => {
+              inputRefs.current[3] = el;
+            }}
+            onKeyDown={(e) => handleKeyDown(e, 'password', 4)}
             type={showPassword ? 'text' : 'password'}
             placeholder="비밀번호"
             className={`w-full rounded-md border ${
@@ -121,6 +158,10 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
           <input
             id="confirmPassword"
             {...register('confirmPassword')}
+            ref={(el) => {
+              inputRefs.current[4] = el;
+            }}
+            onKeyDown={(e) => handleKeyDown(e, 'confirmPassword', 5)}
             type={showConfirmPassword ? 'text' : 'password'}
             placeholder="비밀번호 확인"
             className={`w-full rounded-md border ${

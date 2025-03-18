@@ -15,6 +15,7 @@ const SignupForm = (): React.JSX.Element => {
   const [step, setStep] = useState<number>(1);
   const methods = useForm<SignupData>({
     resolver: zodResolver(schema),
+    mode: 'onBlur',
     defaultValues: {
       name: '',
       nickname: '',
