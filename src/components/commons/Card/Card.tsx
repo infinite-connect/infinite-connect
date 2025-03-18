@@ -26,9 +26,13 @@ const Card = ({
   const cardRef = useRef<HTMLDivElement>(null);
 
   // 명함 데이터를 가져오는 RTK Query 훅
-  const { data: cardData, isLoading: isCardLoading } = useGetBusinessCardByIdQuery(cardId || '');
+  const { data: cardData, isLoading: isCardLoading } = useGetBusinessCardByIdQuery(cardId || '', {
+    skip: !cardId,
+  });
 
-  const { data: userData, isLoading: isUserLoading } = useGetUserByNicknameQuery(nickname || '');
+  const { data: userData, isLoading: isUserLoading } = useGetUserByNicknameQuery(nickname || '', {
+    skip: !nickname,
+  });
 
   const handleMove = (e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>) => {
     if (!isInteractive) return;
