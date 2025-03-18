@@ -19,7 +19,7 @@ import RealCardScanPage from '@pages/RealCardScanPage/RealCardScanPage';
 import UserInterestsPage from '@pages/UserInterestsPage/UserInterestsPage';
 import CardPreviewPage from '@pages/CardPreviewPage/CardPreviewPage';
 import QrScannerPage from '@pages/QrScannerPage/QrScannerPage';
-import BusinessCardBookPage from '@pages/BusinessCardBookPage/UserPage';
+import BusinessCardBookPage from '@pages/BusinessCardBookPage/BusinessCardBookPage';
 
 const AppRouter = () => {
   return (
@@ -29,7 +29,7 @@ const AppRouter = () => {
       <Route path={RoutePaths.SIGNUP} element={<SignupPage />} />
       <Route path={RoutePaths.SELECTCARDDESIGN} element={<SelectCardDesignPage />} />
       <Route path={RoutePaths.ADDITIONALINFO} element={<AdditionalInfoPage />} />
-      <Route path={RoutePaths.USER} element={<UserPage />} />
+      <Route path={`${RoutePaths.USER}/:userId?`} element={<UserPage />} />
       <Route path={`${RoutePaths.USER}${RoutePaths.CARD}/:cardId?`} element={<UserCardPage />} />
       <Route path={`${RoutePaths.USER}${RoutePaths.SETTING}`} element={<UserSettingPage />} />
       <Route path={RoutePaths.INFO} element={<InfoPage />} />

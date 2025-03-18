@@ -18,13 +18,13 @@ const ThirdStep: React.FC<ThirdStepProps> = ({ prevStep, nextStep }) => {
   const onSubmit = async (formData: SignupData) => {
     try {
       // 1. Supabase Auth로 회원가입
-      const { data: authData, error: authError } = await supabase.auth.signUp({
+      const { error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
         options: {
           data: {
             name: formData.name,
-            userId: formData.userId,
+            nickname: formData.nickname,
           },
         },
       });
@@ -35,20 +35,11 @@ const ThirdStep: React.FC<ThirdStepProps> = ({ prevStep, nextStep }) => {
         return;
       }
 
-      // 2. `auth.users` → `public.users` 데이터 복사는 트리거로 자동 처리
-      const userId = authData.user?.id; // Supabase Auth에서 생성된 사용자 ID 가져오기
-
-      if (!userId) {
-        console.error('User ID not found after Auth signup.');
-        alert('사용자 ID를 가져오는 데 실패했습니다.');
-        return;
-      }
-
       // 3. 명함 생성은 트리거로 자동 처리되므로, 직무 및 세부 직무 추가
       const { data: businessCardData, error: businessCardFetchError } = await supabase
         .from('business_cards')
         .select('business_card_id')
-        .eq('user_id', userId)
+        .eq('nickname', formData.nickname)
         .single();
 
       if (businessCardFetchError || !businessCardData) {
@@ -86,7 +77,7 @@ const ThirdStep: React.FC<ThirdStepProps> = ({ prevStep, nextStep }) => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <h2 className="text-lg text-white">입력된 정보가 맞나요?</h2>
       <p className="text-sm text-gray-300">이름: {getValues('name')}</p>
-      <p className="text-sm text-gray-300">아이디: {getValues('userId')}</p>
+      <p className="text-sm text-gray-300">아이디: {getValues('nickname')}</p>
       <p className="text-sm text-gray-300">이메일: {getValues('email')}</p>
       <p className="text-sm text-gray-300">직무: {getValues('fieldsOfExpertise')}</p>
       <p className="text-sm text-gray-300">세부 직무: {getValues('subExpertise')}</p>

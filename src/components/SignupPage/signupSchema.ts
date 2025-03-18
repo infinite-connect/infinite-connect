@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const schema = z
   .object({
     name: z.string().min(1, { message: '이름은 필수입니다.' }),
-    userId: z
+    nickname: z
       .string()
       .min(4, { message: '아이디는 최소 4자 이상이어야 합니다' })
       .max(20, { message: '아이디는 최대 20자까지 가능합니다' })

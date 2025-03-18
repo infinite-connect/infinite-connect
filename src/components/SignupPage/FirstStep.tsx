@@ -18,7 +18,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
 
   // 다음 단계로 이동
   const handleNextStep = async () => {
-    const isValid = await trigger(['userId', 'email', 'password', 'confirmPassword']); // userId 유효성 검사 추가
+    const isValid = await trigger(['nickname', 'email', 'password', 'confirmPassword']); // userId 유효성 검사 추가
     if (isValid) {
       nextStep(); // 유효성 검사를 통과하면 다음 단계로 이동
     }
@@ -53,7 +53,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
         </label>
         <input
           id="userId"
-          {...register('userId')}
+          {...register('nickname')}
           placeholder="아이디"
           className={`rounded-md border ${
             errors.userId ? 'border-red-500' : 'border-gray-600'
