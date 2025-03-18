@@ -231,6 +231,31 @@ export const businessCardApi = createApi({
       },
       invalidatesTags: (_, __, cardId) => [{ type: 'BusinessCard', id: cardId }],
     }),
+    setPrimaryBusinessCard: builder.mutation<void, string>({
+      queryFn: async (cardId) => {
+        try {
+          const { error } = await supabase
+            .from('business_cards')
+            .update({ is_primary: true }) // is_primary를 true로 업데이트
+            .eq('business_card_id', cardId); // cardId 조건
+
+          if (error) throw error;
+
+          return { data: undefined };
+        } catch (error) {
+          return {
+            error: {
+              message: error instanceof Error ? error.message : 'Unknown error',
+              name: error instanceof Error ? error.name : 'Error',
+            },
+          };
+        }
+      },
+      invalidatesTags: (_, __, cardId) => [
+        { type: 'BusinessCard', id: cardId }, // 현재 대표 명함
+        { type: 'BusinessCard' }, // 모든 카드 목록 무효화
+      ],
+    }),
   }),
 });
 
@@ -239,4 +264,5 @@ export const {
   useAddBusinessCardMutation,
   useDeleteBusinessCardMutation,
   useGetUserByNicknameQuery,
+  useSetPrimaryBusinessCardMutation,
 } = businessCardApi;

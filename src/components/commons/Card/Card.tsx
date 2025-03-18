@@ -5,6 +5,7 @@ import {
   useDeleteBusinessCardMutation,
   useGetBusinessCardByIdQuery,
   useGetUserByNicknameQuery,
+  useSetPrimaryBusinessCardMutation,
 } from '@features/BusinessCard/api/businessCardApi';
 import {
   DropdownMenu,
@@ -44,9 +45,15 @@ const Card = ({
   });
 
   const [deleteBusinessCard] = useDeleteBusinessCardMutation();
+  const [setPrimaryBusinessCard] = useSetPrimaryBusinessCardMutation();
 
   const handleDelete = async () => {
     if (!cardId) return;
+
+    if (cardData?.isPrimary) {
+      alert('대표 명함은 삭제할 수 없습니다.');
+      return;
+    }
 
     if (confirm('정말로 이 명함을 삭제하시겠습니까?')) {
       try {
@@ -57,6 +64,18 @@ const Card = ({
         console.error('명함 삭제 중 오류 발생:', error);
         alert('명함 삭제 중 오류가 발생했습니다.');
       }
+    }
+  };
+
+  const handleSetPrimary = async () => {
+    if (!cardId) return;
+    try {
+      await setPrimaryBusinessCard(cardId).unwrap();
+      alert('대표 명함으로 설정되었습니다!');
+      refetch?.();
+    } catch (error) {
+      console.error('대표 명함 설정 중 오류 발생:', error);
+      alert('대표 명함 설정 중 오류가 발생했습니다.');
     }
   };
 
@@ -183,6 +202,9 @@ const Card = ({
 
   return (
     <div className="flex justify-center items-center h-full perspective-[1500px]">
+      {cardData?.isPrimary && (
+        <Icon icon="mdi:crown" className="absolute top-[10px] text-yellow-400 w-8 h-8 z-50" />
+      )}
       <DropdownMenu>
         <DropdownMenuTrigger className="absolute top-3 right-3 cursor-pointer z-50">
           <Icon icon="mdi:dots-vertical" className="w-6 h-6 text-black cursor-pointer" />
@@ -190,6 +212,12 @@ const Card = ({
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={handleDelete} className="text-red-500 hover:text-red-700">
             삭제
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={handleSetPrimary}
+            className="cursor-pointer px-4 py-2 hover:bg-gray-700 rounded-md"
+          >
+            대표 명함 설정
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
