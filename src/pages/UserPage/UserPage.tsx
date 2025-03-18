@@ -5,6 +5,7 @@ import { Button } from '@components/ui/button';
 import Card from '@components/commons/Card/Card';
 import { Icon } from '@iconify/react'; // Iconify 아이콘 컴포넌트
 import { useGetUserBusinessCardsQuery } from '@features/UserPage/api/userCardListApi';
+import { useAddBusinessCardMutation } from '@features/BusinessCard/api/businessCardApi';
 
 const MAX_CARDS = 3;
 
@@ -14,7 +15,8 @@ const UserPage = (): React.JSX.Element => {
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
 
-  const { data: cardIds, isLoading, error } = useGetUserBusinessCardsQuery(userId || '');
+  const { data: cardIds, isLoading, error, refetch } = useGetUserBusinessCardsQuery(userId || '');
+  const [addBusinessCard, { isLoading: isAdding }] = useAddBusinessCardMutation();
 
   // 현재 선택된 슬라이드 업데이트
   useEffect(() => {
@@ -24,7 +26,6 @@ const UserPage = (): React.JSX.Element => {
       setSelectedIndex(carouselApi.selectedScrollSnap());
     };
 
-    setScrollSnaps(carouselApi.scrollSnapList());
     carouselApi.on('select', onSelect);
 
     return () => {
@@ -33,10 +34,26 @@ const UserPage = (): React.JSX.Element => {
   }, [carouselApi]);
 
   useEffect(() => {
-    if (cardIds) {
-      console.log('Fetched card IDs:', cardIds[0]);
+    if (carouselApi && cardIds) {
+      if (carouselApi.reInit) {
+        carouselApi.reInit();
+      }
+      setScrollSnaps(carouselApi.scrollSnapList());
     }
-  }, [cardIds]);
+  }, [cardIds, carouselApi]);
+
+  const handleAddCard = async () => {
+    if (!userId) return;
+
+    try {
+      await addBusinessCard({ nickname: userId }).unwrap();
+      alert('카드가 성공적으로 추가되었습니다!');
+      refetch();
+    } catch (error) {
+      console.error('카드 추가 중 오류 발생:', error);
+      alert('카드 추가 중 오류가 발생했습니다.');
+    }
+  };
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error fetching card IDs</p>;
@@ -76,8 +93,14 @@ const UserPage = (): React.JSX.Element => {
                 <Button
                   variant="outline"
                   className="w-full h-full border-dashed border-2 border-gray-400 rounded-md flex items-center justify-center"
+                  onClick={handleAddCard} // 추가 버튼 클릭 시 카드 생성
+                  disabled={isAdding} // 카드 생성 중에는 버튼 비활성화
                 >
-                  <span className="text-gray-400 text-5xl font-bold">+</span>
+                  {isAdding ? (
+                    <span className="text-gray-400 text-xl font-bold">추가 중...</span>
+                  ) : (
+                    <span className="text-gray-400 text-5xl font-bold">+</span>
+                  )}
                 </Button>
               </CarouselItem>
             )}

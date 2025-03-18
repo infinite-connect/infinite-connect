@@ -143,7 +143,7 @@ export const businessCardApi = createApi({
           if (error) throw error;
 
           if (!data) return { data: null };
-          console.log(data);
+
           return { data };
         } catch (error) {
           return {
@@ -156,7 +156,64 @@ export const businessCardApi = createApi({
       },
       providesTags: (_, __, nickname) => [{ type: 'User', id: nickname }],
     }),
+    addBusinessCard: builder.mutation<BusinessCard, { nickname: string }>({
+      queryFn: async ({ nickname }) => {
+        try {
+          const { data, error } = await supabase
+            .from('business_cards')
+            .insert({
+              card_name: '', // 기본값
+              fields_of_expertise: '', // 기본값
+              sub_expertise: '', // 기본값
+              nickname, // 추가한 사람의 닉네임
+              is_public: false, // 기본값으로 비공개 설정
+              is_primary: false, // 대표 명함 아님
+              card_type: 'day', // 기본값으로 'day'
+            })
+            .select()
+            .single();
+
+          if (error) throw error;
+
+          const transformedData = {
+            businessCardId: data.business_card_id,
+            cardName: data.card_name,
+            fieldsOfExpertise: data.fields_of_expertise,
+            subExpertise: data.sub_expertise,
+            company: data.company ?? '',
+            interests: Array.isArray(data.interests) ? data.interests : [],
+            phone: data.phone ?? '',
+            email: data.email ?? '',
+            linkedin: data.linkedin ?? '',
+            businessWebsite: data.business_website ?? '',
+            website: data.website ?? '',
+            experienceYears: 0, // 기본값
+            viewCount: 0, // 기본값
+            isPublic: false, // 비공개
+            isPrimary: false, // 대표 명함 아님
+            createdAt: new Date().toISOString(), // 현재 시간
+            qrImageUrl: '',
+            nickname,
+            cardType: 'day',
+          };
+
+          return { data: transformedData };
+        } catch (error) {
+          return {
+            error:
+              error instanceof Error
+                ? { message: error.message, name: error.name }
+                : { message: 'Unknown Error', name: 'Error' },
+          };
+        }
+      },
+      invalidatesTags: ['BusinessCard'],
+    }),
   }),
 });
 
-export const { useGetBusinessCardByIdQuery, useGetUserByNicknameQuery } = businessCardApi;
+export const {
+  useGetBusinessCardByIdQuery,
+  useAddBusinessCardMutation,
+  useGetUserByNicknameQuery,
+} = businessCardApi;
