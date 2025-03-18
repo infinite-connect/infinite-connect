@@ -6,6 +6,8 @@ import Card from '@components/commons/Card/Card';
 import { Icon } from '@iconify/react'; // Iconify 아이콘 컴포넌트
 import { useGetUserBusinessCardsQuery } from '@features/UserPage/api/userCardListApi';
 
+const MAX_CARDS = 3;
+
 const UserPage = (): React.JSX.Element => {
   const { userId } = useParams<{ userId: string }>();
   const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
@@ -39,6 +41,8 @@ const UserPage = (): React.JSX.Element => {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error fetching card IDs</p>;
 
+  const showAddButton = cardIds!.length < MAX_CARDS;
+
   return (
     <div className="flex flex-col justify-center items-center h-screen">
       <div className="relative w-[300px] h-[400px]">
@@ -66,35 +70,40 @@ const UserPage = (): React.JSX.Element => {
               </CarouselItem>
             ))}
 
-            {/* 추가 버튼 카드 */}
-            <CarouselItem>
-              <Button
-                variant="outline"
-                className="w-full h-full border-dashed border-2 border-gray-400 rounded-md flex items-center justify-center"
-              >
-                <span className="text-gray-400 text-5xl font-bold">+</span>
-              </Button>
-            </CarouselItem>
+            {/* 추가 버튼 카드 (카드 개수가 MAX_CARDS보다 적을 때만 표시) */}
+            {showAddButton && (
+              <CarouselItem>
+                <Button
+                  variant="outline"
+                  className="w-full h-full border-dashed border-2 border-gray-400 rounded-md flex items-center justify-center"
+                >
+                  <span className="text-gray-400 text-5xl font-bold">+</span>
+                </Button>
+              </CarouselItem>
+            )}
           </CarouselContent>
         </Carousel>
       </div>
 
       {/* Indicators */}
       <div className="flex gap-2 mt-25">
-        {scrollSnaps.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => carouselApi?.scrollTo(index)} // 해당 슬라이드로 이동
-            className={`w-3 h-3 rounded-full transition-colors flex items-center justify-center ${
-              selectedIndex === index ? 'bg-blue-500' : 'bg-gray-300'
-            }`}
-          >
-            {/* 추가 버튼 카드의 인디케이터에만 Iconify plus 아이콘 표시 */}
-            {index === scrollSnaps.length - 1 ? (
-              <Icon icon="mdi:plus" className="text-white text-xs" />
-            ) : null}
-          </button>
-        ))}
+        {scrollSnaps.map(
+          (_, index) =>
+            index < cardIds!.length + (showAddButton ? 1 : 0) && ( // 인디케이터 개수 제한
+              <button
+                key={index}
+                onClick={() => carouselApi?.scrollTo(index)} // 해당 슬라이드로 이동
+                className={`w-3 h-3 rounded-full transition-colors flex items-center justify-center ${
+                  selectedIndex === index ? 'bg-blue-500' : 'bg-gray-300'
+                }`}
+              >
+                {/* 추가 버튼 카드의 인디케이터에만 Iconify plus 아이콘 표시 */}
+                {showAddButton && index === scrollSnaps.length - 1 ? (
+                  <Icon icon="mdi:plus" className="text-white text-xs" />
+                ) : null}
+              </button>
+            ),
+        )}
       </div>
     </div>
   );
