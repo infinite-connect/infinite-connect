@@ -19,7 +19,7 @@ interface CardProps {
   isInteractive?: boolean;
   cardId?: string; // 명함 ID
   nickname?: string;
-  cardColor: string;
+  cardColor?: string;
   refetch?: () => void;
 }
 
@@ -131,6 +131,25 @@ const Card = ({
     return `${usePound ? '#' : ''}${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
   };
 
+  const getCardColor = (): string => {
+    if (cardColor && (!cardData || !cardData.cardType)) return cardColor;
+
+    switch (cardData?.cardType.toLowerCase()) {
+      case 'dawn':
+        return '#E49759'; // 보라색
+      case 'morning':
+        return '#FFD700'; // 노란색
+      case 'day':
+        return '#1E90FF'; // 파란색
+      case 'evening':
+        return '#FD5E53'; // 주황색
+      case 'night':
+        return '#002BFF'; // 남색
+      default:
+        return '#002BFF'; // 기본 파란색
+    }
+  };
+
   // 카드 내용 렌더링 함수
   const renderCardContent = () => (
     <div className="text-white text-center flex flex-col justify-center items-center gap-2">
@@ -178,8 +197,8 @@ const Card = ({
         ref={cardRef}
         className={`w-[80mm] h-[128mm] rounded-3xl shadow-lg transform-style-preserve-3d transition-transform duration-300 ease-out relative flex flex-col justify-center items-center gap-2 will-change-transform`}
         style={{
-          backgroundImage: `linear-gradient(to bottom right, ${cardColor}, ${adjustColorBrightness(
-            cardColor,
+          backgroundImage: `linear-gradient(to bottom right, ${getCardColor()}, ${adjustColorBrightness(
+            getCardColor(),
             -30,
           )})`,
         }}
