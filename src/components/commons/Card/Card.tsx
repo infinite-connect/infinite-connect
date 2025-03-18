@@ -5,14 +5,17 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 interface CardProps {
   isGlossy: boolean;
   isMobile: boolean;
-  isChat: boolean;
+  isInteractive?: boolean;
+  cardId?: string;
   cardColor: string;
 }
 
-const Card = ({ isGlossy, isMobile, cardColor }: CardProps) => {
+const Card = ({ isGlossy, isMobile, isInteractive = true, cardColor }: CardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMove = (e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>) => {
+    if (!isInteractive) return; // 3D 효과 비활성화 시 이벤트 처리 중단
+
     const card = e.currentTarget as HTMLDivElement;
     const rect = card.getBoundingClientRect();
     const clientX = isMobile
@@ -39,6 +42,8 @@ const Card = ({ isGlossy, isMobile, cardColor }: CardProps) => {
   };
 
   const handleEnter = (e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>) => {
+    if (!isInteractive) return; // 3D 효과 비활성화 시 이벤트 처리 중단
+
     const card = e.currentTarget as HTMLDivElement;
     const glossyOverlay = card.querySelector('.overlay.glossy') as HTMLElement;
 
@@ -48,6 +53,8 @@ const Card = ({ isGlossy, isMobile, cardColor }: CardProps) => {
   };
 
   const handleLeave = (e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>) => {
+    if (!isInteractive) return; // 3D 효과 비활성화 시 이벤트 처리 중단
+
     const card = e.currentTarget as HTMLDivElement;
 
     // 카드 초기화
@@ -93,12 +100,12 @@ const Card = ({ isGlossy, isMobile, cardColor }: CardProps) => {
               -30,
             )})`,
           }}
-          onMouseEnter={!isMobile ? handleEnter : undefined}
-          onMouseMove={!isMobile ? handleMove : undefined}
-          onMouseLeave={!isMobile ? handleLeave : undefined}
-          onTouchStart={isMobile ? handleEnter : undefined}
-          onTouchMove={isMobile ? handleMove : undefined}
-          onTouchEnd={isMobile ? handleLeave : undefined}
+          onMouseEnter={!isMobile && isInteractive ? handleEnter : undefined}
+          onMouseMove={!isMobile && isInteractive ? handleMove : undefined}
+          onMouseLeave={!isMobile && isInteractive ? handleLeave : undefined}
+          onTouchStart={isMobile && isInteractive ? handleEnter : undefined}
+          onTouchMove={isMobile && isInteractive ? handleMove : undefined}
+          onTouchEnd={isMobile && isInteractive ? handleLeave : undefined}
         >
           {isGlossy && (
             <div className="overlay glossy absolute top-0 left-0 w-full h-full rounded-inherit pointer-events-none transition-opacity duration-300"></div>

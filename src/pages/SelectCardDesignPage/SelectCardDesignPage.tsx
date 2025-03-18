@@ -47,7 +47,7 @@ const SelectCardDesignPage = (): React.JSX.Element => {
   return (
     <div className="flex flex-col items-center gap-4 p-6">
       {/* Card 컴포넌트 */}
-      <Card isGlossy={true} isMobile={isMobileDevice} isChat={false} cardColor={cardColor} />
+      <Card isGlossy={true} isMobile={isMobileDevice} cardColor={cardColor} />
       <div className="flex justify-center items-center h-full text-white font-bold">
         카드 디자인
       </div>
