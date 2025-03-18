@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Carousel, CarouselContent, CarouselItem, CarouselApi } from '@components/ui/carousel';
 import { Button } from '@components/ui/button';
 import Card from '@components/commons/Card/Card';
 import { Icon } from '@iconify/react'; // Iconify 아이콘 컴포넌트
+import { useGetUserBusinessCardsQuery } from '@features/UserPage/api/userCardListApi';
 
 const UserPage = (): React.JSX.Element => {
+  const { userId } = useParams<{ userId: string }>();
   const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
+  const { data: cardIds, isLoading, error } = useGetUserBusinessCardsQuery(userId || '');
 
   // 현재 선택된 슬라이드 업데이트
   useEffect(() => {
@@ -25,6 +30,15 @@ const UserPage = (): React.JSX.Element => {
     };
   }, [carouselApi]);
 
+  useEffect(() => {
+    if (cardIds) {
+      console.log('Fetched card IDs:', cardIds[0]);
+    }
+  }, [cardIds]);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error fetching card IDs</p>;
+
   return (
     <div className="flex flex-col justify-center items-center h-screen">
       <div className="relative w-[300px] h-[400px]">
@@ -38,20 +52,17 @@ const UserPage = (): React.JSX.Element => {
           setApi={setCarouselApi}
         >
           <CarouselContent>
-            {/* 첫 번째 카드 */}
-            <CarouselItem>
-              <Card isGlossy={true} isMobile={false} isInteractive={false} cardColor="#1E90FF" />
-            </CarouselItem>
-
-            {/* 두 번째 카드 */}
-            <CarouselItem>
-              <Card isGlossy={true} isMobile={false} isInteractive={false} cardColor="#FF6347" />
-            </CarouselItem>
-
-            {/* 세 번째 카드 */}
-            <CarouselItem>
-              <Card isGlossy={true} isMobile={false} isInteractive={false} cardColor="#32CD32" />
-            </CarouselItem>
+            {/* 조회한 명함 개수만큼 Card 컴포넌트 렌더링 */}
+            {cardIds?.map((cardId, index) => (
+              <CarouselItem key={cardId}>
+                <Card
+                  isGlossy={true}
+                  isMobile={false}
+                  isInteractive={false}
+                  cardColor={index % 2 === 0 ? '#1E90FF' : '#FF6347'} // 색상은 임의로 설정
+                />
+              </CarouselItem>
+            ))}
 
             {/* 추가 버튼 카드 */}
             <CarouselItem>
