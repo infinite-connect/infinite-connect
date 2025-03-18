@@ -2,9 +2,16 @@ import { useRef, MouseEvent, TouchEvent } from 'react';
 import { Badge } from '@components/ui/badge';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import {
+  useDeleteBusinessCardMutation,
   useGetBusinessCardByIdQuery,
   useGetUserByNicknameQuery,
 } from '@features/BusinessCard/api/businessCardApi';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@components/ui/dropdown-menu';
 
 interface CardProps {
   isGlossy: boolean;
@@ -13,6 +20,7 @@ interface CardProps {
   cardId?: string; // 명함 ID
   nickname?: string;
   cardColor: string;
+  refetch?: () => void;
 }
 
 const Card = ({
@@ -22,6 +30,7 @@ const Card = ({
   cardId,
   nickname,
   cardColor,
+  refetch,
 }: CardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -33,6 +42,23 @@ const Card = ({
   const { data: userData, isLoading: isUserLoading } = useGetUserByNicknameQuery(nickname || '', {
     skip: !nickname,
   });
+
+  const [deleteBusinessCard] = useDeleteBusinessCardMutation();
+
+  const handleDelete = async () => {
+    if (!cardId) return;
+
+    if (confirm('정말로 이 명함을 삭제하시겠습니까?')) {
+      try {
+        await deleteBusinessCard(cardId).unwrap();
+        alert('명함이 성공적으로 삭제되었습니다!');
+        refetch?.();
+      } catch (error) {
+        console.error('명함 삭제 중 오류 발생:', error);
+        alert('명함 삭제 중 오류가 발생했습니다.');
+      }
+    }
+  };
 
   const handleMove = (e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>) => {
     if (!isInteractive) return;
@@ -138,6 +164,16 @@ const Card = ({
 
   return (
     <div className="flex justify-center items-center h-full perspective-[1500px]">
+      <DropdownMenu>
+        <DropdownMenuTrigger className="absolute top-3 right-3 cursor-pointer z-50">
+          <Icon icon="mdi:dots-vertical" className="w-6 h-6 text-black cursor-pointer" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={handleDelete} className="text-red-500 hover:text-red-700">
+            삭제
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <div
         ref={cardRef}
         className={`w-[80mm] h-[128mm] rounded-3xl shadow-lg transform-style-preserve-3d transition-transform duration-300 ease-out relative flex flex-col justify-center items-center gap-2 will-change-transform`}

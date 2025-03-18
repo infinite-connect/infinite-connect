@@ -82,7 +82,8 @@ const UserPage = (): React.JSX.Element => {
                   isInteractive={false}
                   cardId={cardIds[index]}
                   nickname={userId}
-                  cardColor={index % 2 === 0 ? '#1E90FF' : '#FF6347'} // 색상은 임의로 설정
+                  cardColor={index % 2 === 0 ? '#1E90FF' : '#FF6347'}
+                  refetch={refetch}
                 />
               </CarouselItem>
             ))}

@@ -209,11 +209,34 @@ export const businessCardApi = createApi({
       },
       invalidatesTags: ['BusinessCard'],
     }),
+    deleteBusinessCard: builder.mutation<void, string>({
+      queryFn: async (cardId) => {
+        try {
+          const { error } = await supabase
+            .from('business_cards')
+            .delete()
+            .eq('business_card_id', cardId);
+
+          if (error) throw error;
+
+          return { data: undefined };
+        } catch (error) {
+          return {
+            error: {
+              message: error instanceof Error ? error.message : 'Unknown error',
+              name: error instanceof Error ? error.name : 'Error',
+            },
+          };
+        }
+      },
+      invalidatesTags: (_, __, cardId) => [{ type: 'BusinessCard', id: cardId }],
+    }),
   }),
 });
 
 export const {
   useGetBusinessCardByIdQuery,
   useAddBusinessCardMutation,
+  useDeleteBusinessCardMutation,
   useGetUserByNicknameQuery,
 } = businessCardApi;
