@@ -17,7 +17,7 @@ const SignupForm = (): React.JSX.Element => {
     resolver: zodResolver(schema),
     defaultValues: {
       name: '',
-      userId: '',
+      nickname: '',
       email: '',
       password: '',
       confirmPassword: '',
