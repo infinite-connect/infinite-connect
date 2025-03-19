@@ -20,7 +20,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
 
   // 다음 단계로 이동
   const handleNextStep = async () => {
-    const isValid = await trigger(['nickname', 'email', 'password', 'confirmPassword']); // userId 유효성 검사 추가
+    const isValid = await trigger(['name', 'nickname', 'email', 'password', 'confirmPassword']);
     if (isValid) {
       nextStep(); // 유효성 검사를 통과하면 다음 단계로 이동
     }
@@ -58,6 +58,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
           id="name"
           {...register('name')}
           ref={(el) => {
+            register('name').ref(el);
             inputRefs.current[0] = el;
           }}
           onKeyDown={(e) => handleKeyDown(e, 'name', 1)}
@@ -73,23 +74,24 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
 
       {/* 아이디 */}
       <div className="flex flex-col">
-        <label htmlFor="userId" className="text-sm text-gray-400">
+        <label htmlFor="nickname" className="text-sm text-gray-400">
           아이디
         </label>
         <input
-          id="userId"
+          id="nickname"
           {...register('nickname')}
           ref={(el) => {
+            register('nickname').ref(el);
             inputRefs.current[1] = el;
           }}
           onKeyDown={(e) => handleKeyDown(e, 'nickname', 2)}
           placeholder="아이디"
           className={`rounded-md border ${
-            errors.userId ? 'border-red-500' : 'border-gray-600'
+            errors.nickname ? 'border-red-500' : 'border-gray-600'
           } bg-gray-700 px-4 py-2 text-white`}
         />
-        {errors.userId && (
-          <span className="text-xs text-red-500">{errors.userId.message?.toString()}</span>
+        {errors.nickname && (
+          <span className="text-xs text-red-500">{errors.nickname.message?.toString()}</span>
         )}
       </div>
 
@@ -102,6 +104,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
           id="email"
           {...register('email')}
           ref={(el) => {
+            register('email').ref(el);
             inputRefs.current[2] = el;
           }}
           onKeyDown={(e) => handleKeyDown(e, 'email', 3)}
@@ -126,6 +129,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
             id="password"
             {...register('password')}
             ref={(el) => {
+              register('password').ref(el);
               inputRefs.current[3] = el;
             }}
             onKeyDown={(e) => handleKeyDown(e, 'password', 4)}
@@ -159,6 +163,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
             id="confirmPassword"
             {...register('confirmPassword')}
             ref={(el) => {
+              register('confirmPassword').ref(el);
               inputRefs.current[4] = el;
             }}
             onKeyDown={(e) => handleKeyDown(e, 'confirmPassword', 5)}
