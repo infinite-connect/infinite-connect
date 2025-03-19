@@ -1,6 +1,10 @@
 import React, { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Icon } from '@iconify/react';
+import {
+  useLazyCheckEmailDuplicateQuery,
+  useLazyCheckNicknameDuplicateQuery,
+} from '@features/SignupPage/api/InfoDuplicateCheckApi';
 
 interface FirstStepProps {
   nextStep: () => void;
@@ -9,20 +13,65 @@ interface FirstStepProps {
 const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const [triggerCheckEmailDuplicate] = useLazyCheckEmailDuplicateQuery();
+  const [triggerCheckNicknameDuplicate] = useLazyCheckNicknameDuplicateQuery();
   const {
     register,
     trigger,
     setFocus,
+    setError, // 특정 필드에 에러 설정
+    clearErrors,
     formState: { errors },
   } = useFormContext();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // 다음 단계로 이동
   const handleNextStep = async () => {
-    const isValid = await trigger(['name', 'nickname', 'email', 'password', 'confirmPassword']);
-    if (isValid) {
-      nextStep(); // 유효성 검사를 통과하면 다음 단계로 이동
+    const nickname = inputRefs.current[1]?.value; // 닉네임 값 가져오기
+    const email = inputRefs.current[2]?.value; // 이메일 값 가져오기
+
+    try {
+      // 유효성 검사와 중복 확인 병렬 실행
+      const [isValid, isNicknameDuplicate, isEmailDuplicate] = await Promise.all([
+        trigger(['name', 'nickname', 'email', 'password', 'confirmPassword']), // 유효성 검사
+        nickname ? triggerCheckNicknameDuplicate(nickname).unwrap() : false, // 닉네임 중복 확인
+        email ? triggerCheckEmailDuplicate(email).unwrap() : false, // 이메일 중복 확인
+      ]);
+
+      // 닉네임 유효성 검사 및 중복 확인 결과 처리
+      if (errors.nickname) {
+        setError('nickname', {
+          type: 'manual',
+          message:
+            typeof errors.nickname?.message === 'string'
+              ? errors.nickname.message
+              : '유효성 검사 실패',
+        }); // 기존 유효성 검사 에러 유지
+      } else if (isNicknameDuplicate) {
+        setError('nickname', { type: 'manual', message: '이미 사용 중인 아이디입니다.' }); // 중복 에러 설정
+      } else {
+        clearErrors('nickname'); // 에러 제거
+      }
+
+      // 이메일 유효성 검사 및 중복 확인 결과 처리
+      if (errors.email) {
+        setError('email', {
+          type: 'manual',
+          message:
+            typeof errors.email?.message === 'string' ? errors.email.message : '유효성 검사 실패',
+        }); // 기존 유효성 검사 에러 유지
+      } else if (isEmailDuplicate) {
+        setError('email', { type: 'manual', message: '이미 사용 중인 이메일입니다.' }); // 중복 에러 설정
+      } else {
+        clearErrors('email'); // 에러 제거
+      }
+
+      // 모든 필드가 유효성을 통과하고 중복되지 않은 경우 다음 단계로 이동
+      if (isValid && !isNicknameDuplicate && !isEmailDuplicate) {
+        nextStep();
+      }
+    } catch (error) {
+      console.error('중복 확인 중 오류 발생:', error);
     }
   };
 
@@ -32,16 +81,50 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
     nextFieldIndex: number,
   ) => {
     if (event.key === 'Enter') {
-      event.preventDefault(); // 기본 Enter 동작 방지
-      const isValid = await trigger(fieldName); // 현재 필드 유효성 검사
+      event.preventDefault();
 
-      if (isValid) {
-        // 유효성 검사를 통과하면 다음 필드로 포커스 이동
-        inputRefs.current[nextFieldIndex]?.focus();
-      } else {
-        // 유효성 검사 실패 시 현재 필드에 머무름
+      const isValid = await trigger(fieldName);
+
+      if (!isValid) {
         setFocus(fieldName);
+        return;
       }
+
+      if (fieldName === 'nickname') {
+        const nickname = inputRefs.current[nextFieldIndex - 1]?.value;
+        try {
+          const isNicknameDuplicate = await triggerCheckNicknameDuplicate(nickname!).unwrap();
+          if (isNicknameDuplicate) {
+            setError('nickname', { type: 'manual', message: '이미 사용 중인 아이디입니다.' });
+            setFocus('nickname');
+            return;
+          } else {
+            clearErrors('nickname');
+          }
+        } catch (error) {
+          console.error('닉네임 중복 확인 중 오류 발생:', error);
+          return;
+        }
+      }
+
+      if (fieldName === 'email') {
+        const email = inputRefs.current[nextFieldIndex - 1]?.value;
+        try {
+          const isEmailDuplicate = await triggerCheckEmailDuplicate(email!).unwrap();
+          if (isEmailDuplicate) {
+            setError('email', { type: 'manual', message: '이미 사용 중인 이메일입니다.' });
+            setFocus('email');
+            return;
+          } else {
+            clearErrors('email');
+          }
+        } catch (error) {
+          console.error('이메일 중복 확인 중 오류 발생:', error);
+          return;
+        }
+      }
+
+      inputRefs.current[nextFieldIndex]?.focus();
     }
   };
 
@@ -84,6 +167,25 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
             register('nickname').ref(el);
             inputRefs.current[1] = el;
           }}
+          onBlur={async () => {
+            const isValid = await trigger('nickname'); // 유효성 검사 실행
+
+            if (!isValid) {
+              return; // 유효성 검사를 통과하지 못하면 중복 확인 건너뜀
+            }
+
+            const nickname = inputRefs.current[1]?.value;
+            try {
+              const isNicknameDuplicate = await triggerCheckNicknameDuplicate(nickname!).unwrap();
+              if (isNicknameDuplicate) {
+                setError('nickname', { type: 'manual', message: '이미 사용 중인 아이디입니다.' });
+              } else {
+                clearErrors('nickname');
+              }
+            } catch (error) {
+              console.error('닉네임 중복 확인 중 오류 발생:', error);
+            }
+          }}
           onKeyDown={(e) => handleKeyDown(e, 'nickname', 2)}
           placeholder="아이디"
           className={`rounded-md border ${
@@ -106,6 +208,25 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
           ref={(el) => {
             register('email').ref(el);
             inputRefs.current[2] = el;
+          }}
+          onBlur={async () => {
+            const isValid = await trigger('email'); // 유효성 검사 실행
+
+            if (!isValid) {
+              return; // 유효성 검사를 통과하지 못하면 중복 확인 건너뜀
+            }
+
+            const email = inputRefs.current[2]?.value;
+            try {
+              const isEmailDuplicate = await triggerCheckEmailDuplicate(email!).unwrap();
+              if (isEmailDuplicate) {
+                setError('email', { type: 'manual', message: '이미 사용 중인 이메일입니다.' });
+              } else {
+                clearErrors('email');
+              }
+            } catch (error) {
+              console.error('이메일 중복 확인 중 오류 발생:', error);
+            }
           }}
           onKeyDown={(e) => handleKeyDown(e, 'email', 3)}
           type="email"
