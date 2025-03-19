@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@components/ui/tabs';
 import DropDown from '@components/ui/dropDown';
 import { Button } from '@components/ui/button';
+import SearchBar from '@components/BusinessCardBook/SearchBar';
 
 // 필터링 된 데이터가 이렇게 왔다고 가정...
 const profiles = [
@@ -113,13 +114,7 @@ const BusinessCardBookPage = (): React.JSX.Element => {
           <div className="p-4">
             {/* 검색 필드 */}
             <div className="flex items-center gap-2 mb-4">
-              <input
-                type="text"
-                placeholder="이름을 검색하세요"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-600 rounded bg-gray-800 text-white"
-              />
+              <SearchBar value={searchTerm} onChange={setSearchTerm} />
               <Button>정렬</Button>
 
               {/* 필터 DropDown */}
