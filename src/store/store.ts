@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { userCardListApi } from '@features/UserPage/api/userCardListApi';
 import { businessCardApi } from '@features/BusinessCard/api/businessCardApi';
-import { infoDuplicateCheckApi } from '@features/SignupPage/api/InfoDuplicateCheckApi';
+import { infoDuplicateCheckApi } from '@features/SignupPage/api/infoDuplicateCheckApi';
 
 const store = configureStore({
   reducer: {

@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react';
 import {
   useLazyCheckEmailDuplicateQuery,
   useLazyCheckNicknameDuplicateQuery,
-} from '@features/SignupPage/api/InfoDuplicateCheckApi';
+} from '@features/SignupPage/api/infoDuplicateCheckApi';
 
 interface FirstStepProps {
   nextStep: () => void;
