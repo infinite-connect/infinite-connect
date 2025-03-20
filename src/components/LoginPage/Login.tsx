@@ -4,11 +4,41 @@ import { Separator } from '@components/ui/separator';
 import { Checkbox } from '@components/ui/checkbox';
 import React, { useState } from 'react';
 import { Icon } from '@iconify/react';
+import { supabase } from '@utils/supabaseClient';
+import { useNavigate } from 'react-router-dom';
 
 const Login = (): React.JSX.Element => {
   const [userEmail, setUserEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: userEmail,
+        password: password,
+      });
+
+      if (error) {
+        if (error.message === 'Email not confirmed') {
+          alert('이메일 인증이 필요합니다.');
+        } else {
+          alert(`로그인 실패: ${error.message}`);
+        }
+        return;
+      }
+
+      if (data?.user) {
+        alert('로그인 성공!');
+        navigate('/'); // 로그인 성공 시 홈으로 이동
+      }
+    } catch (err) {
+      console.error('로그인 중 오류 발생:', err);
+      alert('알 수 없는 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
@@ -57,7 +87,7 @@ const Login = (): React.JSX.Element => {
           </div>
 
           {/* 로그인 버튼 */}
-          <Button variant="default" className="w-full py-2 mt-4">
+          <Button variant="default" className="w-full py-2 mt-4" onClick={handleLogin}>
             ➡️ 로그인
           </Button>
 
