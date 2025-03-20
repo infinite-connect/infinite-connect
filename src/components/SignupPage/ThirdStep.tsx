@@ -1,113 +1,96 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { z } from 'zod';
-import { schema } from './signupSchema';
 import { supabase } from '@utils/supabaseClient';
+import { useNavigate } from 'react-router-dom';
 
-type SignupData = z.infer<typeof schema>; // 타입 추출
+const ThirdStep: React.FC = () => {
+  const { getValues } = useFormContext(); // react-hook-form에서 폼 데이터 가져오기
+  const [isChecking, setIsChecking] = useState(false); // 이메일 인증 상태 확인 중 여부
+  const [isVerified, setIsVerified] = useState(false); // 이메일 인증 여부
+  const navigate = useNavigate();
 
-interface ThirdStepProps {
-  prevStep: () => void;
-  nextStep: () => void;
-}
+  const checkEmailVerification = async () => {
+    setIsChecking(true);
 
-const ThirdStep: React.FC<ThirdStepProps> = ({ prevStep, nextStep }) => {
-  const { getValues, handleSubmit } = useFormContext<SignupData>();
-
-  // 회원가입 완료 핸들러
-  const onSubmit = async (formData: SignupData) => {
     try {
-      // 1. Supabase Auth로 회원가입
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-          data: {
-            name: formData.name,
-            userId: formData.userId,
-          },
-        },
+      // 폼 데이터에서 이메일과 비밀번호 가져오기
+      const email = getValues('email');
+      const password = getValues('password');
+
+      if (!email || !password) {
+        alert('이메일 또는 비밀번호 정보가 없습니다. 다시 시도해주세요.');
+        setIsChecking(false);
+        return;
+      }
+
+      // Supabase Auth로 로그인 시도
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
-      if (authError) {
-        console.error('Auth Error:', authError.message);
-        alert('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
+      if (authError || !authData.user) {
+        console.error('로그인 중 오류 발생:', authError?.message);
+        alert('이메일 인증이 완료되지 않았거나 로그인에 실패했습니다. 이메일을 확인해주세요.');
+        setIsChecking(false);
         return;
       }
 
-      // 2. `auth.users` → `public.users` 데이터 복사는 트리거로 자동 처리
-      const userId = authData.user?.id; // Supabase Auth에서 생성된 사용자 ID 가져오기
-
-      if (!userId) {
-        console.error('User ID not found after Auth signup.');
-        alert('사용자 ID를 가져오는 데 실패했습니다.');
-        return;
+      // 이메일 인증 여부 확인
+      if (authData.user.email_confirmed_at) {
+        setIsVerified(true);
+        alert('이메일 인증이 완료되었습니다!');
+      } else {
+        alert('이메일 인증이 아직 완료되지 않았습니다. 이메일을 확인해주세요.');
       }
-
-      // 3. 명함 생성은 트리거로 자동 처리되므로, 직무 및 세부 직무 추가
-      const { data: businessCardData, error: businessCardFetchError } = await supabase
-        .from('business_cards')
-        .select('business_card_id')
-        .eq('user_id', userId)
-        .single();
-
-      if (businessCardFetchError || !businessCardData) {
-        console.error('Business Card Fetch Error:', businessCardFetchError?.message);
-        alert('명함 데이터를 가져오는 중 오류가 발생했습니다.');
-        return;
-      }
-
-      const businessCardId = businessCardData.business_card_id;
-
-      // 4. 직무 및 세부 직무 업데이트
-      const { error: updateError } = await supabase
-        .from('business_cards')
-        .update({
-          fields_of_expertise: formData.fieldsOfExpertise,
-          sub_expertise: formData.subExpertise,
-        })
-        .eq('business_card_id', businessCardId);
-
-      if (updateError) {
-        console.error('Business Card Update Error:', updateError.message);
-        alert('명함 정보를 업데이트하는 중 오류가 발생했습니다.');
-        return;
-      }
-
-      alert('회원가입이 완료되었습니다! 이메일 인증을 진행해주세요.');
-      nextStep();
     } catch (error) {
       console.error('Unexpected Error:', error);
-      alert('회원가입 처리 중 예상치 못한 오류가 발생했습니다.');
+      alert('이메일 인증 상태를 확인하는 중 오류가 발생했습니다.');
+    } finally {
+      setIsChecking(false);
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <h2 className="text-lg text-white">입력된 정보가 맞나요?</h2>
-      <p className="text-sm text-gray-300">이름: {getValues('name')}</p>
-      <p className="text-sm text-gray-300">아이디: {getValues('userId')}</p>
-      <p className="text-sm text-gray-300">이메일: {getValues('email')}</p>
-      <p className="text-sm text-gray-300">직무: {getValues('fieldsOfExpertise')}</p>
-      <p className="text-sm text-gray-300">세부 직무: {getValues('subExpertise')}</p>
+  const handleNext = () => {
+    if (!isVerified) {
+      alert('이메일 인증이 완료되지 않았습니다. 이메일을 확인해주세요.');
+      return;
+    }
 
-      {/* 이전 및 등록 완료 버튼 */}
-      <div className="flex justify-between">
-        <button
-          type="button"
-          onClick={prevStep}
-          className="py-2 px-4 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-md"
-        >
-          이전 단계
-        </button>
-        <button
-          type="submit"
-          className="py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md"
-        >
-          등록 완료
-        </button>
-      </div>
-    </form>
+    navigate('/selectcarddesign'); // 카드 디자인 선택 페이지로 이동
+  };
+
+  return (
+    <div className="w-full max-w-md bg-gray-800 p-6 rounded-lg shadow-lg">
+      <h1 className="text-2xl font-bold text-center text-white mb-6">이메일 인증</h1>
+      <p className="text-sm text-gray-300 mb-6 text-center">
+        회원가입 시 입력한 이메일로 인증 메일이 발송되었습니다.
+        <br />
+        이메일을 확인하고 아래 버튼을 눌러주세요.
+      </p>
+
+      {/* 인증 확인 버튼 */}
+      <button
+        onClick={checkEmailVerification}
+        disabled={isChecking}
+        className={`w-full py-2 px-4 mb-4 ${
+          isChecking ? 'bg-gray-600' : 'bg-blue-600 hover:bg-blue-700'
+        } text-white font-medium rounded-md`}
+      >
+        {isChecking ? '확인 중...' : '인증 확인'}
+      </button>
+
+      {/* 다음 단계로 이동 버튼 */}
+      <button
+        onClick={handleNext}
+        disabled={!isVerified}
+        className={`w-full py-2 px-4 mb-4 ${
+          isVerified ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-600'
+        } text-white font-medium rounded-md`}
+      >
+        카드 디자인 선택으로 이동
+      </button>
+    </div>
   );
 };
 

@@ -5,9 +5,8 @@ import { Progress } from '@components/ui/progress';
 import { useForm, FormProvider } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import ThirdStep from './ThirdStep';
 import { schema } from './signupSchema';
-import FourthStep from './FourthStep';
+import ThirdStep from './ThirdStep';
 
 type SignupData = z.infer<typeof schema>;
 
@@ -15,9 +14,10 @@ const SignupForm = (): React.JSX.Element => {
   const [step, setStep] = useState<number>(1);
   const methods = useForm<SignupData>({
     resolver: zodResolver(schema),
+    mode: 'onBlur',
     defaultValues: {
       name: '',
-      userId: '',
+      nickname: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -60,8 +60,7 @@ const SignupForm = (): React.JSX.Element => {
               nextStep={nextStep}
             />
           )}
-          {step === 3 && <ThirdStep prevStep={prevStep} nextStep={nextStep} />}
-          {step === 4 && <FourthStep />}
+          {step === 3 && <ThirdStep />}
         </FormProvider>
       </div>
     </div>
