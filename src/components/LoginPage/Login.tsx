@@ -51,10 +51,6 @@ const Login = (): React.JSX.Element => {
           {/* 아이디 저장 및 자동 로그인 */}
           <div className="flex items-center justify-between mt-2">
             <label className="flex items-center text-sm text-gray-400">
-              <Checkbox id="remember-id" />
-              <span className="ml-2">아이디 저장</span>
-            </label>
-            <label className="flex items-center text-sm text-gray-400">
               <Checkbox id="auto-login" />
               <span className="ml-2">자동 로그인</span>
             </label>
