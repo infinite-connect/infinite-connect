@@ -19,7 +19,7 @@ import RealCardScanPage from '@pages/RealCardScanPage/RealCardScanPage';
 import UserInterestsPage from '@pages/UserInterestsPage/UserInterestsPage';
 import CardPreviewPage from '@pages/CardPreviewPage/CardPreviewPage';
 import QrScannerPage from '@pages/QrScannerPage/QrScannerPage';
-import BusinessCardBookPage from '@pages/BusinessCardBookPage/UserPage';
+import BusinessCardBookPage from '@pages/BusinessCardBookPage/BusinessCardBookPage';
 
 const AppRouter = () => {
   return (
