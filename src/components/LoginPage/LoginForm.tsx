@@ -9,8 +9,6 @@ import { Button } from '@components/commons/Button/Button';
 import { Input } from '@components/ui/input';
 
 const LoginForm = (): React.JSX.Element => {
-  const [isHover, setIsHover] = useState(false);
-
   const [userEmail, setUserEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -85,7 +83,7 @@ const LoginForm = (): React.JSX.Element => {
     <div className="space-y-6">
       {/* Email */}
       <div className="space-y-[6px]">
-        <div className="text-[var(--color-text-primary)]">Email</div>
+        <div className="text-[var(--text-primary)]">Email</div>
         {/* Email Input */}
         <Input
           id="email"
@@ -100,7 +98,7 @@ const LoginForm = (): React.JSX.Element => {
       <div className="space-y-[6px]">
         {' '}
         {/* Password Input */}
-        <div className="text-[var(--color-text-primary)]">Password</div>
+        <div className="text-[var(--text-primary)]">Password</div>
         <div className="relative">
           <Input
             id="password"
@@ -133,23 +131,11 @@ const LoginForm = (): React.JSX.Element => {
       </div>
 
       {/* 로그인 버튼 */}
-      <Button
-        btntype="enabled"
-        state={isHover ? 'hover' : 'default'}
-        className="w-full py-2 mt-4"
-        onMouseEnter={() => setIsHover(true)}
-        onMouseLeave={() => setIsHover(false)}
-        onClick={handleLogin}
-      >
+      <Button btntype="enabled" className="w-full py-2 mt-4" onClick={handleLogin}>
         로그인
       </Button>
 
-      <Button
-        btntype="secondary"
-        state="default"
-        className="w-full py-2 mt-4"
-        onClick={handleSignUp}
-      >
+      <Button btntype="secondary" className="w-full py-2 mt-4" onClick={handleSignUp}>
         회원가입
       </Button>
     </div>

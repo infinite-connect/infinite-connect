@@ -17,48 +17,29 @@ const buttonVariants = cva(
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',
         // sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
         // lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
-        icon: 'pl-3 pr-3 size-9',
+        icon: 'pl-3 pr-3 size-9 [&_svg]:size-5',
       },
       btntype: {
         enabled: '',
         disabled: '',
         secondary: '',
       },
-      state: {
-        default: '',
-        hover: '',
-      },
     },
 
     compoundVariants: [
       {
         btntype: 'enabled',
-        state: 'default',
-        className: 'bg-[var(--color-btn-primary)]',
-      },
-
-      {
-        btntype: 'enabled',
-        state: 'hover',
-        className: 'hover:bg-[var(--btn-primary-hover)]',
+        className: 'bg-[var(--btn-primary)] hover:bg-[var(--btn-primary-hover)]',
       },
 
       {
         btntype: 'secondary',
-        state: 'default',
-        className: 'bg-[var(--color-btn-secondary)]',
+        className: 'bg-[var(--btn-secondary)]',
       },
 
       {
         btntype: 'disabled',
-        state: 'default',
-        className: 'bg-[var(--color-btn-disabled)]',
-      },
-
-      {
-        btntype: 'disabled',
-        state: 'hover',
-        className: 'hover:bg-[var(--btn-disabled-hover)]',
+        className: 'bg-[var(--btn-disabled)] hover:bg-[var(--btn-disabled-hover)]',
       },
     ],
 
@@ -66,14 +47,12 @@ const buttonVariants = cva(
       variant: 'default',
       size: 'default',
       btntype: 'enabled',
-      state: 'default',
     },
   },
 );
 
 interface ButtonProps extends React.ComponentProps<'button'>, VariantProps<typeof buttonVariants> {
   btntype?: 'enabled' | 'disabled' | 'secondary';
-  state?: 'default' | 'hover';
   asChild?: boolean;
 }
 
@@ -82,7 +61,6 @@ function Button({
   variant,
   size,
   btntype = 'enabled',
-  state = 'default',
   asChild = false,
   ...props
 }: ButtonProps) {
@@ -91,7 +69,7 @@ function Button({
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, btntype, state, className }))}
+      className={cn(buttonVariants({ variant, size, btntype, className }))}
       {...props}
     />
   );
