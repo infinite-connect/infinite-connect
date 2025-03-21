@@ -4,6 +4,7 @@ import { businessCardApi } from '@features/BusinessCard/api/businessCardApi';
 import { infoDuplicateCheckApi } from '@features/SignupPage/api/infoDuplicateCheckApi';
 import { networkingApi } from '@features/Networking/networkingApi';
 import { userCardApi } from '@features/UserCardPage/userCardApi';
+import userReducer from '@features/User/slice/userSlice';
 
 export const store = configureStore({
   reducer: {

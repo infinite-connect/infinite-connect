@@ -4,11 +4,77 @@ import { Separator } from '@components/ui/separator';
 import { Checkbox } from '@components/ui/checkbox';
 import React, { useState } from 'react';
 import { Icon } from '@iconify/react';
+import { supabase } from '@utils/supabaseClient';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from '@features/User/slice/userSlice';
 
 const Login = (): React.JSX.Element => {
   const [userEmail, setUserEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [autoLogin, setAutoLogin] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogin = async () => {
+    try {
+      // Supabase를 통해 이메일/비밀번호로 로그인
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: userEmail,
+        password: password,
+      });
+
+      if (error) {
+        if (error.message === 'Email not confirmed') {
+          alert('이메일 인증이 필요합니다.');
+        } else {
+          alert(`로그인 실패: ${error.message}`);
+        }
+        return;
+      }
+
+      if (data.user && data.session) {
+        // 로그인 성공 시 추가 사용자 정보를 가져옴
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('nickname')
+          .eq('user_id', data.user.id)
+          .single();
+
+        if (userError) {
+          console.error('사용자 정보를 가져오는 중 오류 발생:', userError);
+          alert('사용자 정보를 가져오는 중 오류가 발생했습니다.');
+          return;
+        }
+
+        // Redux 상태 업데이트
+        dispatch(
+          loginSuccess({
+            id: data.user.id,
+            email: data.user.email ?? '',
+            nickname: userData?.nickname ?? '',
+          }),
+        );
+
+        // refresh_token 저장 (자동 로그인용)
+        localStorage.setItem('refresh_token', data.session.refresh_token);
+
+        if (autoLogin) {
+          localStorage.setItem('auto_login', 'true');
+        } else {
+          localStorage.removeItem('auto_login');
+        }
+
+        alert('로그인 성공!');
+        navigate('/'); // 홈 화면으로 이동
+      }
+    } catch (err) {
+      console.error('로그인 중 오류 발생:', err);
+      alert('알 수 없는 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
@@ -51,17 +117,19 @@ const Login = (): React.JSX.Element => {
           {/* 아이디 저장 및 자동 로그인 */}
           <div className="flex items-center justify-between mt-2">
             <label className="flex items-center text-sm text-gray-400">
-              <Checkbox id="remember-id" />
-              <span className="ml-2">아이디 저장</span>
-            </label>
-            <label className="flex items-center text-sm text-gray-400">
-              <Checkbox id="auto-login" />
+              <Checkbox
+                id="auto-login"
+                checked={autoLogin}
+                onCheckedChange={
+                  (checked) => setAutoLogin(checked === true) // CheckedState를 boolean으로 변환
+                }
+              />
               <span className="ml-2">자동 로그인</span>
             </label>
           </div>
 
           {/* 로그인 버튼 */}
-          <Button variant="default" className="w-full py-2 mt-4">
+          <Button variant="default" className="w-full py-2 mt-4" onClick={handleLogin}>
             ➡️ 로그인
           </Button>
 
