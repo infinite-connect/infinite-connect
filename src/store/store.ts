@@ -13,7 +13,7 @@ export const store = configureStore({
     [infoDuplicateCheckApi.reducerPath]: infoDuplicateCheckApi.reducer,
     [networkingApi.reducerPath]: networkingApi.reducer,
     [userCardApi.reducerPath]: userCardApi.reducer,
-    counter: counterReducer,
+    user: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
