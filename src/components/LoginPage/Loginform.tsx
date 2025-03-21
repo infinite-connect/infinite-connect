@@ -20,7 +20,7 @@ const LoginForm = (): React.JSX.Element => {
   const dispatch = useDispatch();
 
   const handleSignUp = () => {
-    navigate('/register');
+    navigate('/signup');
   };
 
   const handleLogin = async () => {
