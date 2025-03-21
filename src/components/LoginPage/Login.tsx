@@ -1,35 +1,29 @@
 import React from 'react';
 import LoginForm from '@components/LoginPage/LoginForm';
 import SocialLogin from '@components/LoginPage/SocialLogin';
-import { Separator } from '@components/ui/separator';
 
 const Login = (): React.JSX.Element => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[var(--bg-default-black)]">
-      <div className="w-full max-w-md bg-gray-800 p-6 rounded-lg shadow-lg">
-        {/* 타이틀 */}
-        <h1 className="text-2xl font-bold text-center text-white mb-6">Infinite Connect</h1>
+    <div className="flex flex-col justify-center min-h-screen bg-[var(--bg-default-black)] px-6">
+      {/* 타이틀 */}
+      <h1 className="text-2xl font-bold text-white mb-1 mt-20">
+        INFINITE
+        <br />
+        CONNECT
+      </h1>
+      <h5 className="text-l font-bold text-white mb-10">무한한 기회, 가벼운 시작</h5>
 
+      <div>
         {/* 로그인 폼 */}
         <LoginForm />
+      </div>
 
-        {/* 구분선 */}
-        <div className="flex items-center my-4">
-          <Separator className="flex-grow h-px bg-gray-600" />
-        </div>
+      {/* 회원가입 링크 */}
+      <div className="mt-10 space-y-6 text-center">
+        <p className="text-[var(--color-text-primary)]">SNS 계정으로 간편하게 가입하기</p>
 
         {/* 소셜 로그인 */}
         <SocialLogin />
-
-        {/* 회원가입 링크 */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-400">
-            계정이 없으신가요?{' '}
-            <a href="/register" className="text-blue-400 hover:underline">
-              회원가입
-            </a>
-          </p>
-        </div>
       </div>
     </div>
   );

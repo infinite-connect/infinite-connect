@@ -1,26 +1,26 @@
 import React from 'react';
-import { Button } from '@components/ui/button';
 import { Icon } from '@iconify/react';
+import { Button } from '@components/commons/Button/Button';
 
 const SocialLogin = (): React.JSX.Element => {
   return (
     <div className="flex justify-center gap-x-4">
-      {/* Google 로그인 */}
-      <Button
-        variant="outline"
-        size="sm"
-        className="w-[50px] h-[50px] rounded-md bg-white flex items-center justify-center shadow-md hover:shadow-lg"
-      >
-        <Icon icon="logos:google-icon" width={24} height={24} />
-      </Button>
-
       {/* GitHub 로그인 */}
       <Button
-        variant="outline"
-        size="sm"
-        className="w-[50px] h-[50px] rounded-md bg-black flex items-center justify-center shadow-md hover:shadow-lg"
+        variant="icon"
+        size="icon"
+        className="w-[50px] h-[50px] rounded-md bg-[var(--color-btn-secondary)] flex items-center justify-center shadow-md hover:shadow-lg"
       >
-        <Icon icon="mdi:github" color="#ffffff" width={24} height={24} />
+        <Icon icon="mdi:github" color="#ffffff" />
+      </Button>
+
+      {/* Google 로그인 */}
+      <Button
+        variant="icon"
+        size="icon"
+        className="w-[50px] h-[50px] rounded-md bg-[var(--color-btn-secondary)] flex items-center justify-center shadow-md hover:shadow-lg"
+      >
+        <Icon icon="logos:google-icon" />
       </Button>
     </div>
   );

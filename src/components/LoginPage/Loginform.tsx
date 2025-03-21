@@ -9,6 +9,8 @@ import { loginSuccess } from '@features/User/slice/userSlice';
 import { Button } from '@components/commons/Button/Button';
 
 const LoginForm = (): React.JSX.Element => {
+  const [isHover, setIsHover] = useState(false);
+
   const [userEmail, setUserEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -16,6 +18,10 @@ const LoginForm = (): React.JSX.Element => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const handleSignUp = () => {
+    navigate('/register');
+  };
 
   const handleLogin = async () => {
     try {
@@ -77,34 +83,43 @@ const LoginForm = (): React.JSX.Element => {
 
   return (
     <div className="space-y-6">
-      {/* Email Input */}
-      <FloatingLabelInput
-        id="email"
-        type="email"
-        value={userEmail}
-        onChange={(e) => setUserEmail(e.target.value)}
-        label="Email"
-        className="w-full rounded-md border border-gray-600 bg-transparent px-4 pt-[10px] pb-[8px] text-sm text-white text-left leading-[1.25rem] focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-      />
-
-      {/* Password Input */}
-      <div className="relative">
+      {/* Email */}
+      <div className="space-y-[6px]">
+        <div className="text-[var(--color-text-primary)]">Email</div>
+        {/* Email Input */}
         <FloatingLabelInput
-          id="password"
-          type={showPassword ? 'text' : 'password'}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          label="Password"
+          id="email"
+          type="email"
+          value={userEmail}
+          onChange={(e) => setUserEmail(e.target.value)}
+          label="Email"
           className="w-full rounded-md border border-gray-600 bg-transparent px-4 pt-[10px] pb-[8px] text-sm text-white text-left leading-[1.25rem] focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         />
-        {/* 비밀번호 보기 아이콘 */}
-        <button
-          type="button"
-          onClick={() => setShowPassword((prev) => !prev)}
-          className="absolute right-3 top-[50%] translate-y-[-50%] text-gray-400 hover:text-gray-200"
-        >
-          <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} width={20} height={20} />
-        </button>
+      </div>
+
+      {/* password */}
+      <div className="space-y-[6px]">
+        {' '}
+        {/* Password Input */}
+        <div className="text-[var(--color-text-primary)]">Password</div>
+        <div className="relative">
+          <FloatingLabelInput
+            id="password"
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            label="Password"
+            className="w-full rounded-md border border-gray-600 bg-transparent px-4 pt-[10px] pb-[8px] text-sm text-white text-left leading-[1.25rem] focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+          />
+          {/* 비밀번호 보기 아이콘 */}
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-3 top-[50%] translate-y-[-50%] text-gray-400 hover:text-gray-200"
+          >
+            <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} width={20} height={20} />
+          </button>
+        </div>
       </div>
 
       {/* 아이디 저장 및 자동 로그인 */}
@@ -120,8 +135,24 @@ const LoginForm = (): React.JSX.Element => {
       </div>
 
       {/* 로그인 버튼 */}
-      <Button variant="default" className="w-full py-2 mt-4" onClick={handleLogin}>
+      <Button
+        btntype="enabled"
+        state={isHover ? 'hover' : 'default'}
+        className="w-full py-2 mt-4"
+        onMouseEnter={() => setIsHover(true)}
+        onMouseLeave={() => setIsHover(false)}
+        onClick={handleLogin}
+      >
         로그인
+      </Button>
+
+      <Button
+        btntype="secondary"
+        state="default"
+        className="w-full py-2 mt-4"
+        onClick={handleSignUp}
+      >
+        회원가입
       </Button>
     </div>
   );
