@@ -1,10 +1,10 @@
 import React from 'react';
-import LoginForm from '@components/LoginPage/LoginForm';
 import SocialLogin from '@components/LoginPage/SocialLogin';
+import LoginForm from '@components/LoginPage/LoginForm';
 
 const Login = (): React.JSX.Element => {
   return (
-    <div className="flex flex-col justify-center min-h-screen bg-[var(--bg-default-black)] px-6">
+    <div className="relative flex flex-col justify-center min-h-screen bg-[radial-gradient(198.03%_32.79%_at_47.73%_100%,_#6262BB_0%,_#121212_51.3%)] px-6">
       {/* 타이틀 */}
       <h1 className="text-2xl font-bold text-white mb-1 mt-20">
         INFINITE
