@@ -7,13 +7,21 @@
   --bg-default-black: #121212;
 
   /* btn */
-  --color-btn-primary: #7253ff;
-  --color-btn-secondary: rgba(255, 255, 255, 0.1);
+  --btn-primary: #7253ff;
+  --btn-secondary: rgba(255, 255, 255, 0.1);
+  --btn-primary-hover: #8971fb;
+  --btn-disabled: #737373;
+  --btn-disabled-hover: #9b9b9b;
 
   /* text */
-  --color-text-primary: #ffffff;
-  --color-text-secondary: rgba(255, 255, 255, 0.7);
-  --color-text-black: #020617;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-black: #020617;
+  --text-tertiary: rgba(255, 255, 255, 0.4);
+
+  /* semantic */
+  --success: rgba(85, 252, 177, 0.8);
+  --error: rgba(252, 85, 85, 0.8);
 }
 
 :root {

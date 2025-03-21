@@ -9,7 +9,7 @@ const SocialLogin = (): React.JSX.Element => {
       <Button
         variant="icon"
         size="icon"
-        className="w-[50px] h-[50px] rounded-md bg-[var(--color-btn-secondary)] flex items-center justify-center shadow-md hover:shadow-lg"
+        className="w-[50px] h-[50px] rounded-md bg-[var(--btn-secondary)] flex items-center justify-center"
       >
         <Icon icon="mdi:github" color="#ffffff" />
       </Button>
@@ -18,7 +18,7 @@ const SocialLogin = (): React.JSX.Element => {
       <Button
         variant="icon"
         size="icon"
-        className="w-[50px] h-[50px] rounded-md bg-[var(--color-btn-secondary)] flex items-center justify-center shadow-md hover:shadow-lg"
+        className="w-[50px] h-[50px] rounded-md bg-[var(--btn-secondary)] flex items-center justify-center"
       >
         <Icon icon="logos:google-icon" />
       </Button>

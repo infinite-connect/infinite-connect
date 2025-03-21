@@ -18,7 +18,7 @@ const Login = (): React.JSX.Element => {
 
       {/* 회원가입 링크 */}
       <div className="mt-10 space-y-6 text-center">
-        <p className="text-[var(--color-text-primary)]">SNS 계정으로 간편하게 가입하기</p>
+        <p className="text-[var(--text-primary)]">SNS 계정으로 간편하게 가입하기</p>
 
         {/* 소셜 로그인 */}
         <SocialLogin />
