@@ -1,15 +1,16 @@
 import { useRef, MouseEvent, TouchEvent } from 'react';
 import { Button } from '@components/ui/button';
-
+import { BusinessCard } from '@features/Networking/networkingApi';
 interface CardProps {
   isGlossy: boolean;
   isMobile: boolean;
   isChat: boolean;
+  businessCardData?: BusinessCard;
 }
 
-const Card = ({ isGlossy, isMobile, isChat }: CardProps) => {
+const Card = ({ isGlossy, isMobile, isChat, businessCardData }: CardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
-
+  console.log('businessCard 데이터 확인:', businessCardData);
   const handleMove = (e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>) => {
     const card = e.currentTarget as HTMLDivElement;
     const rect = card.getBoundingClientRect();
@@ -91,7 +92,7 @@ const Card = ({ isGlossy, isMobile, isChat }: CardProps) => {
           <div className="text-white text-center flex flex-col justify-center items-center">
             <h1>이종혁</h1>
             <p className="font-bold text-2xl">프론트엔드 개발자</p>
-            <p>E-mail: jonghyeok@example.com</p>
+            <p>E-mail: {businessCardData?.email}</p>
             <p>Phone: +123-456-7890</p>
 
             <div className="flex items-center">
