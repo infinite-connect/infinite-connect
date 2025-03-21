@@ -11,16 +11,18 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+        icon: '',
       },
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',
         // sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
         // lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
-        // icon: 'size-9',
+        icon: 'pl-3 pr-3 size-9',
       },
-      type: {
+      btntype: {
         enabled: '',
         disabled: '',
+        secondary: '',
       },
       state: {
         default: '',
@@ -30,25 +32,31 @@ const buttonVariants = cva(
 
     compoundVariants: [
       {
-        type: 'enabled',
+        btntype: 'enabled',
         state: 'default',
         className: 'bg-[var(--color-btn-primary)]',
       },
 
       {
-        type: 'enabled',
+        btntype: 'enabled',
         state: 'hover',
         className: 'hover:bg-[var(--btn-primary-hover)]',
       },
 
       {
-        type: 'disabled',
+        btntype: 'secondary',
+        state: 'default',
+        className: 'bg-[var(--color-btn-secondary)]',
+      },
+
+      {
+        btntype: 'disabled',
         state: 'default',
         className: 'bg-[var(--color-btn-disabled)]',
       },
 
       {
-        type: 'disabled',
+        btntype: 'disabled',
         state: 'hover',
         className: 'hover:bg-[var(--btn-disabled-hover)]',
       },
@@ -57,30 +65,33 @@ const buttonVariants = cva(
     defaultVariants: {
       variant: 'default',
       size: 'default',
-      type: 'enabled',
+      btntype: 'enabled',
       state: 'default',
     },
   },
 );
 
+interface ButtonProps extends React.ComponentProps<'button'>, VariantProps<typeof buttonVariants> {
+  btntype?: 'enabled' | 'disabled' | 'secondary';
+  state?: 'default' | 'hover';
+  asChild?: boolean;
+}
+
 function Button({
   className,
   variant,
   size,
-  type,
-  state,
+  btntype = 'enabled',
+  state = 'default',
   asChild = false,
   ...props
-}: React.ComponentProps<'button'> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
-  }) {
+}: ButtonProps) {
   const Comp = asChild ? Slot : 'button';
 
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, type, state, className }))}
+      className={cn(buttonVariants({ variant, size, btntype, state, className }))}
       {...props}
     />
   );
