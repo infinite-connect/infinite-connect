@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { FloatingLabelInput } from '@components/commons/FloatingLabelInput';
 import { Checkbox } from '@components/ui/checkbox';
 import { Icon } from '@iconify/react';
 import { supabase } from '@utils/supabaseClient';
@@ -7,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '@features/User/slice/userSlice';
 import { Button } from '@components/commons/Button/Button';
+import { Input } from '@components/ui/input';
 
 const LoginForm = (): React.JSX.Element => {
   const [isHover, setIsHover] = useState(false);
@@ -87,12 +87,11 @@ const LoginForm = (): React.JSX.Element => {
       <div className="space-y-[6px]">
         <div className="text-[var(--color-text-primary)]">Email</div>
         {/* Email Input */}
-        <FloatingLabelInput
+        <Input
           id="email"
           type="email"
           value={userEmail}
           onChange={(e) => setUserEmail(e.target.value)}
-          label="Email"
           className="w-full rounded-md border border-gray-600 bg-transparent px-4 pt-[10px] pb-[8px] text-sm text-white text-left leading-[1.25rem] focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         />
       </div>
@@ -103,12 +102,11 @@ const LoginForm = (): React.JSX.Element => {
         {/* Password Input */}
         <div className="text-[var(--color-text-primary)]">Password</div>
         <div className="relative">
-          <FloatingLabelInput
+          <Input
             id="password"
             type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            label="Password"
             className="w-full rounded-md border border-gray-600 bg-transparent px-4 pt-[10px] pb-[8px] text-sm text-white text-left leading-[1.25rem] focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
           />
           {/* 비밀번호 보기 아이콘 */}
