@@ -6,7 +6,7 @@ const MainPage = (): React.JSX.Element => {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
 
   return (
-    <div>
+    <div className="px-20">
       <h1>홈 페이지</h1>
       {userInfo ? (
         <div>
