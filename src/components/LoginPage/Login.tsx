@@ -39,7 +39,7 @@ const Login = (): React.JSX.Element => {
         // 로그인 성공 시 추가 사용자 정보를 가져옴
         const { data: userData, error: userError } = await supabase
           .from('users')
-          .select('nickname')
+          .select('nickname, name')
           .eq('user_id', data.user.id)
           .single();
 
@@ -55,6 +55,7 @@ const Login = (): React.JSX.Element => {
             id: data.user.id,
             email: data.user.email ?? '',
             nickname: userData?.nickname ?? '',
+            name: userData?.name ?? '',
           }),
         );
 

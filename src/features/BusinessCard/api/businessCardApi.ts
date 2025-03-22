@@ -114,7 +114,7 @@ export const businessCardApi = createApi({
             createdAt: data.created_at ?? '',
             qrImageUrl: data.qr_image_url ?? '',
             nickname: data.nickname ?? '',
-            cardType: data.card_type ?? 'day',
+            cardType: data.card_type ?? 'dawn',
           };
 
           return { data: transformedData };
@@ -168,7 +168,7 @@ export const businessCardApi = createApi({
               nickname, // 추가한 사람의 닉네임
               is_public: false, // 기본값으로 비공개 설정
               is_primary: false, // 대표 명함 아님
-              card_type: 'day', // 기본값으로 'day'
+              card_type: 'dawn', // 기본값으로 'dawn'
             })
             .select()
             .single();
@@ -194,7 +194,7 @@ export const businessCardApi = createApi({
             createdAt: new Date().toISOString(), // 현재 시간
             qrImageUrl: '',
             nickname,
-            cardType: 'day',
+            cardType: 'dawn',
           };
 
           return { data: transformedData };
