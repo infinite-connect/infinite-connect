@@ -1,60 +1,70 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import TypeCard from './TypeCard'; // TypeCard 컴포넌트 import
+import TypeCard from './TypeCard';
+import { CardType } from '@components/SelectCardDesignPage/types';
+import { CARD_TYPE_TEXT } from '@constants/cardType';
 
-import cardOneFront from '@assets/cardOneFront.png';
-import cardOneBack from '@assets/cardOneBack.png';
-import cardTwoFront from '@assets/cardTwoFront.png';
-import cardTwoBack from '@assets/cardTwoBack.png';
-import cardThreeFront from '@assets/cardThreeFront.png';
-import cardThreeBack from '@assets/cardThreeBack.png';
-import cardFourFront from '@assets/cardFourFront.png';
-import cardFourBack from '@assets/cardFourBack.png';
-import cardFiveFront from '@assets/cardFiveFront.png';
-import cardFiveBack from '@assets/cardFiveBack.png';
+interface TypeCardCarouselProps {
+  onCardTypeChange: (newCardType: CardType) => void;
+}
 
-// 이미지 파일 경로 상수 선언 (위에서 정의한 CARD_IMAGES 사용)
-const CARD_IMAGES = [
-  { frontImage: cardOneFront, backImage: cardOneBack },
-  { frontImage: cardTwoFront, backImage: cardTwoBack },
-  { frontImage: cardThreeFront, backImage: cardThreeBack },
-  { frontImage: cardFourFront, backImage: cardFourBack },
-  { frontImage: cardFiveFront, backImage: cardFiveBack },
-];
-
-const TypeCardCarousel = () => {
-  const [currentSlide, setCurrentSlide] = useState<number>(0); // 현재 선택된 슬라이드 추적
-  const [animatingSlide, setAnimatingSlide] = useState<number | null>(null); // 애니메이션 중인 슬라이드 추적
+const TypeCardCarousel = ({ onCardTypeChange }: TypeCardCarouselProps): React.JSX.Element => {
+  const [currentSlide, setCurrentSlide] = useState<number>(0);
+  const [animatingSlide, setAnimatingSlide] = useState<number | null>(null);
 
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     centerMode: true,
-    centerPadding: '15%', // 양쪽 이웃 카드가 균일하게 보이도록 설정
+    centerPadding: '60px',
     slidesToShow: 1,
     speed: 500,
     swipeToSlide: true,
     adaptiveHeight: false,
     beforeChange: (_: number, newIndex: number) => {
-      setAnimatingSlide(newIndex); // 애니메이션 중인 슬라이드 업데이트
-      setCurrentSlide(newIndex); // 현재 슬라이드 업데이트
+      setAnimatingSlide(newIndex);
+      setCurrentSlide(newIndex);
+
+      // 카드 타입 변경 로직
+      const newCardType = ['dawn', 'morning', 'day', 'evening', 'night'][newIndex] as CardType;
+      onCardTypeChange(newCardType);
     },
   };
 
+  // 현재 슬라이드에 해당하는 시간 범위 가져오기
+  const currentTimeRange =
+    CARD_TYPE_TEXT[['dawn', 'morning', 'day', 'evening', 'night'][currentSlide] as CardType]
+      .timeRange;
+
   return (
-    <div className="w-120 mx-auto overflow-visible">
-      <Slider {...settings}>
-        {CARD_IMAGES.map((card, index) => (
-          <TypeCard
-            key={index}
-            isActive={animatingSlide === index || currentSlide === index}
-            frontImage={card.frontImage}
-            backImage={card.backImage}
-          />
-        ))}
-      </Slider>
+    <div>
+      <div className="text-center mb-4">
+        <h2 className="text-xl font-bold text-gray-700">{currentTimeRange}</h2>
+      </div>
+      <div className="w-[375px] py-2 mx-auto overflow-visible">
+        <Slider {...settings}>
+          {['dawn', 'morning', 'day', 'evening', 'night'].map((type, index) => (
+            <TypeCard
+              key={index}
+              isActive={animatingSlide === index || currentSlide === index}
+              type={type as CardType} // 카드 타입 전달
+            />
+          ))}
+        </Slider>
+        <div className="flex justify-center gap-[8px] mt-4">
+          {['dawn', 'morning', 'day', 'evening', 'night'].map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)} // 클릭 시 슬라이드 이동
+              className={`w-[8px] h-[8px] rounded-full ${
+                currentSlide === index ? 'bg-blue-500' : 'bg-gray-400'
+              }`}
+            ></button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
