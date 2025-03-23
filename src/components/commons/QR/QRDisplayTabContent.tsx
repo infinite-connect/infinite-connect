@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import Slider from 'react-slick';
+import React, { useState, useRef } from 'react';
+import Slider, { LazyLoadTypes } from 'react-slick';
 import { QRCodeCanvas } from 'qrcode.react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/store';
@@ -20,20 +20,12 @@ const cardImages = [
 
 const QRDisplayTabContent: React.FC = () => {
   const nickname = useSelector((state: RootState) => state.user.userInfo?.nickname);
-  const [mainSlider, setMainSlider] = useState<Slider | undefined>(undefined);
-  const [navSlider, setNavSlider] = useState<Slider | undefined>(undefined);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const { data: businessCards, isLoading, isError } = useGetUserBusinessCardsQuery(nickname || '');
 
-  const mainSliderRef = useRef<Slider | null>(null);
-  const navSliderRef = useRef<Slider | null>(null);
-
-  // 슬라이더 참조를 상태로 업데이트
-  useEffect(() => {
-    setMainSlider(mainSliderRef.current || undefined);
-    setNavSlider(navSliderRef.current || undefined);
-  }, []);
+  const mainSliderRef = useRef<Slider | null>(null); // 초기값을 null로 설정
+  const navSliderRef = useRef<Slider | null>(null); // 초기값을 null로 설정
 
   // 메인 슬라이더 설정
   const mainSettings = {
@@ -41,13 +33,16 @@ const QRDisplayTabContent: React.FC = () => {
     infinite: true,
     centerMode: true,
     speed: 500,
-    centerPadding: '0px', // QR 코드를 중앙에 위치시키기 위해 패딩 제거
+    centerPadding: '0px',
     slidesToShow: 1,
     slidesToScroll: 1,
-    asNavFor: navSlider, // 상태로 관리된 navSlider 사용
     arrows: false,
     focusOnSelect: true,
-    afterChange: (index: number) => setCurrentIndex(index), // 현재 슬라이드 인덱스 업데이트
+    lazyLoad: 'ondemand' as LazyLoadTypes,
+    afterChange: (index: number) => {
+      setCurrentIndex(index); // 현재 슬라이드 인덱스 업데이트
+      navSliderRef.current?.slickGoTo(index); // 네비게이션 슬라이더 이동
+    },
   };
 
   // 네비게이션 슬라이더 설정
@@ -55,12 +50,16 @@ const QRDisplayTabContent: React.FC = () => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 1, // 모든 이미지를 보여줌
+    slidesToShow: 1, // 한 개만 보여줌
     slidesToScroll: 1,
     centerMode: true,
     centerPadding: '10%',
     focusOnSelect: true,
-    asNavFor: mainSlider, // 상태로 관리된 mainSlider 사용
+    lazyLoad: 'ondemand' as LazyLoadTypes,
+    beforeChange: (_current: number, next: number) => {
+      setCurrentIndex(next); // 네비게이션 변경 시 메인 슬라이더 이동
+      mainSliderRef.current?.slickGoTo(next);
+    },
   };
 
   if (!nickname) {
@@ -84,7 +83,11 @@ const QRDisplayTabContent: React.FC = () => {
 
       {/* 메인 슬라이더 */}
       <div className="slider-container">
-        <Slider {...mainSettings} ref={mainSliderRef}>
+        <Slider
+          {...mainSettings}
+          ref={mainSliderRef}
+          asNavFor={navSliderRef.current as Slider | undefined}
+        >
           {businessCards.map((businessCardId) => (
             <div key={businessCardId} className="flex justify-center items-center w-full h-full">
               <div className="flex justify-self-center">
@@ -104,7 +107,11 @@ const QRDisplayTabContent: React.FC = () => {
 
       {/* 네비게이션 슬라이더 */}
       <div className="mt-6 slider-container">
-        <Slider {...navSettings} ref={navSliderRef}>
+        <Slider
+          {...navSettings}
+          ref={navSliderRef}
+          asNavFor={mainSliderRef.current as Slider | undefined}
+        >
           {cardImages.map(({ key, src }) => (
             <div key={key}>
               <img
