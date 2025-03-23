@@ -26,7 +26,7 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
             { facingMode: 'environment' }, // 후면 카메라 설정
             {
               fps: 10,
-              qrbox: 250, // QR 스캔 영역 설정
+              qrbox: 300, // QR 스캔 영역 설정
               aspectRatio, // �����라 ��면 비�� 설정
             },
             (decodedText) => {
