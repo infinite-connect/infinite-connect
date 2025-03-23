@@ -3,11 +3,13 @@ import { userCardListApi } from '@features/UserPage/api/userCardListApi';
 import { businessCardApi } from '@features/BusinessCard/api/businessCardApi';
 import { infoDuplicateCheckApi } from '@features/SignupPage/api/infoDuplicateCheckApi';
 import userReducer from '@features/User/slice/userSlice';
+import { selectCardDesignApi } from '@features/BusinessCard/api/selectCardDesignApi';
 
 const store = configureStore({
   reducer: {
     [userCardListApi.reducerPath]: userCardListApi.reducer,
     [businessCardApi.reducerPath]: businessCardApi.reducer,
+    [selectCardDesignApi.reducerPath]: selectCardDesignApi.reducer,
     [infoDuplicateCheckApi.reducerPath]: infoDuplicateCheckApi.reducer,
     user: userReducer,
   },
@@ -17,6 +19,7 @@ const store = configureStore({
     }).concat(
       userCardListApi.middleware,
       businessCardApi.middleware,
+      selectCardDesignApi.middleware,
       infoDuplicateCheckApi.middleware,
     ),
 });
