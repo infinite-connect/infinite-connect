@@ -7,7 +7,7 @@ interface QRDrawerProps {
   onClose: () => void;
 }
 
-const QRDrawer: React.FC<QRDrawerProps> = ({ isOpen, onClose }) => {
+const QRDisplayDrawer: React.FC<QRDrawerProps> = ({ isOpen, onClose }) => {
   const qrCodeData = 'user/1'; // QR 코드에 넣을 데이터
 
   return (
@@ -31,4 +31,4 @@ const QRDrawer: React.FC<QRDrawerProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default QRDrawer;
+export default QRDisplayDrawer;

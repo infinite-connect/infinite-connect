@@ -6,7 +6,7 @@ import AddModal from '@components/NetworkingListPage/AddModal';
 import { Check, Plus } from 'lucide-react';
 import { Button } from '@components/ui/button';
 import { QrCode, Scan } from 'lucide-react';
-import QRDrawer from '@components/commons/QR/QRDrawer';
+import QRDisplayDrawer from '@components/commons/QR/QRDisplayDrawer';
 import { useGetBusinessCardQuery } from '@features/Networking/networkingApi';
 import {
   useCreateConnectionMutation,
@@ -157,7 +157,7 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
       />
 
       {/* QR Drawer */}
-      <QRDrawer isOpen={isQRDrawerOpen} onClose={() => setIsQRDrawerOpen(false)} />
+      <QRDisplayDrawer isOpen={isQRDrawerOpen} onClose={() => setIsQRDrawerOpen(false)} />
     </div>
   );
 };
