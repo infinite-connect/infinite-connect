@@ -3,6 +3,7 @@ import { Dialog, DialogContent } from '@components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@components/ui/tabs';
 import { X } from 'lucide-react';
 import QRScannerTabContent from './QRScannerTabContent';
+import QRDisplayTabContent from './QRDisplayTabContent';
 
 interface QRScanDisplayModalProps {
   isOpen: boolean;
@@ -43,8 +44,7 @@ const QRScanDisplayModal: React.FC<QRScanDisplayModalProps> = ({ isOpen, onClose
             <QRScannerTabContent />
           </TabsContent>
           <TabsContent value="tab2" className="p-6 text-white">
-            {/* 두 번째 탭 내용 */}
-            <p>두 번째 탭 내용입니다.</p>
+            <QRDisplayTabContent />
           </TabsContent>
         </Tabs>
       </DialogContent>
