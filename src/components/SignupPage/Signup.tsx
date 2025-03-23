@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { schema } from './signupSchema';
 import ThirdStep from './ThirdStep';
+import { fieldsOfExpertise, subExpertise } from '@constants/expertiseConstants';
 
 type SignupData = z.infer<typeof schema>;
 
@@ -16,6 +17,7 @@ const SignupForm = (): React.JSX.Element => {
     mode: 'onBlur',
     defaultValues: {
       name: '',
+      phoneNumber: '',
       nickname: '',
       email: '',
       password: '',
@@ -24,21 +26,6 @@ const SignupForm = (): React.JSX.Element => {
       subExpertise: '',
     },
   });
-
-  const fieldsOfExpertise = [
-    'Development',
-    'Design',
-    'PM / 기획',
-    'Data & AI',
-    'Operation & Others',
-  ];
-  const subExpertise = {
-    Development: ['Frontend Developer', 'Backend Developer', 'Fullstack Developer'],
-    Design: ['UI/UX Designer', 'Graphic Designer'],
-    'PM / 기획': ['Project Manager', 'Product Owner'],
-    'Data & AI': ['Data Scientist', 'AI Engineer'],
-    'Operation & Others': ['HR Manager', 'Finance Specialist'],
-  };
 
   const nextStep = () => setStep((prev) => prev + 1);
   const prevStep = () => setStep((prev) => prev - 1);
