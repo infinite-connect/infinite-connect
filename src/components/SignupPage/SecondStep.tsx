@@ -3,6 +3,8 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 import { schema } from './signupSchema';
+import { Button } from '@components/commons/Button/Button';
+import { formatPhoneNumber } from '@utils/formatPhoneNumber';
 
 type SignupData = z.infer<typeof schema>;
 
@@ -31,6 +33,7 @@ const SecondStep: React.FC<SecondStepProps> = ({
 
   const onSubmit = async (formData: SignupData) => {
     try {
+      const formattedPhoneNumber = formatPhoneNumber(formData.phoneNumber);
       // Supabase Auth로 회원가입
       const { error: authError } = await supabase.auth.signUp({
         email: formData.email,
@@ -39,6 +42,7 @@ const SecondStep: React.FC<SecondStepProps> = ({
           data: {
             name: formData.name,
             nickname: formData.nickname,
+            phone_number: formattedPhoneNumber,
           },
         },
       });
@@ -88,11 +92,9 @@ const SecondStep: React.FC<SecondStepProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <h2 className="text-lg text-white">직무 선택</h2>
-
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-[20px]">
       {/* 첫 번째 드롭다운 */}
-      <div className="flex flex-col">
+      <div className="flex flex-col space-y-[6px]">
         <label htmlFor="fieldsOfExpertise" className="text-sm text-gray-400">
           직무
         </label>
@@ -113,7 +115,7 @@ const SecondStep: React.FC<SecondStepProps> = ({
       </div>
 
       {/* 두 번째 드롭다운 */}
-      <div className="flex flex-col">
+      <div className="flex flex-col space-y-[6px]">
         <label htmlFor="subExpertise" className="text-sm text-gray-400">
           세부 직무
         </label>
@@ -140,23 +142,18 @@ const SecondStep: React.FC<SecondStepProps> = ({
       </div>
 
       {/* 이전 및 등록 완료 버튼 */}
-      <div className="flex justify-between">
-        <button
-          onClick={prevStep}
-          type="button"
-          className="py-2 px-4 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-md"
-        >
+      <div className="flex flex-col justify-between space-y-7.5 pt-[16px] pb-[30px]">
+        <Button onClick={prevStep} type="button" className="w-full py-2 mt-4">
           이전 단계
-        </button>
-        <button
+        </Button>
+        <Button
           type="submit"
           disabled={!isNextEnabled}
-          className={`py-2 px-4 ${
-            isNextEnabled ? 'bg-green-600 hover:bg-green-700' : 'bg-green-400 cursor-not-allowed'
-          } text-white font-medium rounded-md`}
+          btntype={isNextEnabled ? 'enabled' : 'disabled'}
+          className="w-full py-2 mt-4"
         >
           회원가입 완료
-        </button>
+        </Button>
       </div>
     </form>
   );
