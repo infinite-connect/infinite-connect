@@ -58,7 +58,7 @@ const QRDisplayTabContent: React.FC = () => {
     slidesToShow: 1, // 모든 이미지를 보여줌
     slidesToScroll: 1,
     centerMode: true,
-    centerPadding: '20%',
+    centerPadding: '10%',
     focusOnSelect: true,
     asNavFor: mainSlider, // 상태로 관리된 mainSlider 사용
   };
