@@ -5,11 +5,13 @@ import { infoDuplicateCheckApi } from '@features/SignupPage/api/infoDuplicateChe
 import { networkingApi } from '@features/Networking/networkingApi';
 import { userCardApi } from '@features/UserCardPage/userCardApi';
 import userReducer from '@features/User/slice/userSlice';
+import { selectCardDesignApi } from '@features/BusinessCard/api/selectCardDesignApi';
 
 export const store = configureStore({
   reducer: {
     [userCardListApi.reducerPath]: userCardListApi.reducer,
     [businessCardApi.reducerPath]: businessCardApi.reducer,
+    [selectCardDesignApi.reducerPath]: selectCardDesignApi.reducer,
     [infoDuplicateCheckApi.reducerPath]: infoDuplicateCheckApi.reducer,
     [networkingApi.reducerPath]: networkingApi.reducer,
     [userCardApi.reducerPath]: userCardApi.reducer,
@@ -21,6 +23,7 @@ export const store = configureStore({
     }).concat(
       userCardListApi.middleware,
       businessCardApi.middleware,
+      selectCardDesignApi.middleware,
       infoDuplicateCheckApi.middleware,
       userCardApi.middleware,
       networkingApi.middleware,

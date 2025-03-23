@@ -26,7 +26,7 @@ const useAutoLogin = () => {
         if (data?.session && data?.user) {
           const { data: userData, error: userError } = await supabase
             .from('users')
-            .select('nickname')
+            .select('nickname, name')
             .eq('user_id', data.user.id)
             .single();
 
@@ -40,6 +40,7 @@ const useAutoLogin = () => {
               id: data.user.id,
               email: data.user.email ?? '',
               nickname: userData?.nickname ?? '',
+              name: userData?.name ?? '',
             }),
           );
           console.log('자동 로그인 성공:', data.user);

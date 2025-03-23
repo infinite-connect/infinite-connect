@@ -1,75 +1,58 @@
-import Card from '@components/commons/Card/Card';
+import TypeCardCarousel from '@components/commons/Card/TypeCardCarousel';
+import { CardType } from '@components/SelectCardDesignPage/types';
 import { Button } from '@components/ui/button';
-import React, { useEffect, useState } from 'react';
-import { isMobile as detectMobile } from 'react-device-detect';
-import { useNavigate } from 'react-router-dom';
+import { useUpdateBusinessCardTypeMutation } from '@features/BusinessCard/api/selectCardDesignApi';
+import { RootState } from '@store/store';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 
+const myCardId = '08ac9bd2-63bf-4d9f-a49b-a74b54ae7fa2';
 const SelectCardDesignPage = (): React.JSX.Element => {
-  const [isMobileDevice, setIsMobileDevice] = useState(false);
-  const [cardColor, setCardColor] = useState('#ff9999');
   const navigate = useNavigate();
+  const userInfo = useSelector((state: RootState) => state.user.userInfo);
+  const [cardType, setCardType] = useState<CardType>('dawn');
+  const [updateCardType, { isLoading }] = useUpdateBusinessCardTypeMutation();
 
-  useEffect(() => {
-    const checkIfMobile = () => {
-      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      const isSmallScreen = window.innerWidth <= 768;
-      setIsMobileDevice(detectMobile || (isTouchDevice && isSmallScreen));
-    };
+  const location = useLocation();
+  const { businessCardId } = location.state || {};
 
-    checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
-    return () => window.removeEventListener('resize', checkIfMobile);
-  }, []);
+  const handleCompleteSelection = async () => {
+    const validBusinessCardId = businessCardId || myCardId;
 
-  const handleButtonClick = (type: string) => {
-    switch (type) {
-      case 'A':
-        setCardColor('#d32f2f');
-        break;
-      case 'B':
-        setCardColor('#303f9f');
-        break;
-      case 'C':
-        setCardColor('#388e3c');
-        break;
-      case 'D':
-        setCardColor('#00838f');
-        break;
-      default:
-        setCardColor('#424242');
+    if (!validBusinessCardId) {
+      alert('유효한 명함 ID가 없습니다.');
+      return;
+    }
+
+    try {
+      await updateCardType({ cardId: validBusinessCardId, cardType });
+      console.log('선택한 타입:', cardType);
+      alert('명함 타입이 성공적으로 업데이트되었습니다!');
+      navigate('/additionalinfo');
+    } catch (error) {
+      console.error('명함 타입 업데이트 중 오류 발생:', error);
+      alert('명함 타입 업데이트에 실패했습니다.');
     }
   };
 
-  const handleCompleteSelection = () => {
-    navigate('/additionalinfo');
-  };
+  if (!businessCardId && !myCardId) {
+    return <p>유효한 명함 ID가 없습니다.</p>;
+  }
 
   return (
-    <div className="flex flex-col items-center gap-4 p-6">
-      {/* Card 컴포넌트 */}
-      <Card isGlossy={true} isMobile={isMobileDevice} cardColor={cardColor} />
-      <div className="flex justify-center items-center h-full text-white font-bold">
-        카드 디자인
-      </div>
-
-      {/* 버튼 그룹 */}
-      <div className="flex gap-4">
-        <Button variant="outline" onClick={() => handleButtonClick('A')}>
-          A 유형
-        </Button>
-        <Button variant="outline" onClick={() => handleButtonClick('B')}>
-          B 유형
-        </Button>
-        <Button variant="outline" onClick={() => handleButtonClick('C')}>
-          C 유형
-        </Button>
-        <Button variant="outline" onClick={() => handleButtonClick('D')}>
-          D 유형
-        </Button>
-      </div>
-      <div className="mt-4">
-        <Button variant="outline" onClick={handleCompleteSelection}>
-          선택 완료
+    <div
+      className="flex justify-center items-center h-screen" // 화면 중앙 배치를 위한 스타일 추가
+    >
+      <div className="w-120 flex flex-col items-center gap-4 p-6">
+        <h1>{userInfo?.name}님이 선호하는 네트워킹 시간대를 선택해주세요</h1>
+        <div className="mb-10 items-center">
+          <TypeCardCarousel
+            onCardTypeChange={(newCardType: CardType) => setCardType(newCardType)}
+          />
+        </div>
+        <Button variant="outline" onClick={handleCompleteSelection} disabled={isLoading}>
+          {isLoading ? '설정 중...' : '선택 완료'}
         </Button>
       </div>
     </div>

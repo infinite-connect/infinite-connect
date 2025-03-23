@@ -7,6 +7,7 @@ const ThirdStep: React.FC = () => {
   const { getValues } = useFormContext(); // react-hook-form에서 폼 데이터 가져오기
   const [isChecking, setIsChecking] = useState(false); // 이메일 인증 상태 확인 중 여부
   const [isVerified, setIsVerified] = useState(false); // 이메일 인증 여부
+  const [businessCardId, setBusinessCardId] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const checkEmailVerification = async () => {
@@ -40,6 +41,19 @@ const ThirdStep: React.FC = () => {
       if (authData.user.email_confirmed_at) {
         setIsVerified(true);
         alert('이메일 인증이 완료되었습니다!');
+
+        const { data: businessCardData, error: fetchError } = await supabase
+          .from('business_cards')
+          .select('business_card_id')
+          .eq('nickname', getValues('nickname'))
+          .single();
+
+        if (fetchError || !businessCardData) {
+          console.error('Business Card Fetch Error:', fetchError?.message);
+          alert('명함 데이터를 가져오는 중 오류가 발생했습니다.');
+          return;
+        }
+        setBusinessCardId(businessCardData.business_card_id);
       } else {
         alert('이메일 인증이 아직 완료되지 않았습니다. 이메일을 확인해주세요.');
       }
@@ -57,7 +71,7 @@ const ThirdStep: React.FC = () => {
       return;
     }
 
-    navigate('/selectcarddesign'); // 카드 디자인 선택 페이지로 이동
+    navigate('/selectcarddesign', { state: { businessCardId } });
   };
 
   return (
