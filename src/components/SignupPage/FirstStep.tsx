@@ -5,6 +5,7 @@ import {
   useLazyCheckEmailDuplicateQuery,
   useLazyCheckNicknameDuplicateQuery,
 } from '@features/SignupPage/api/infoDuplicateCheckApi';
+import { Button } from '@components/commons/Button/Button';
 
 interface FirstStepProps {
   nextStep: () => void;
@@ -135,11 +136,9 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
   };
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg text-white">기본 정보 입력</h2>
-
+    <div className="space-y-[20px] border-2">
       {/* 이름 */}
-      <div className="flex flex-col">
+      <div className="flex flex-col space-y-[6px]">
         <label htmlFor="name" className="text-sm text-gray-400">
           이름
         </label>
@@ -162,7 +161,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
       </div>
 
       {/* 아이디 */}
-      <div className="flex flex-col">
+      <div className="flex flex-col space-y-[6px]">
         <label htmlFor="nickname" className="text-sm text-gray-400">
           아이디
         </label>
@@ -204,7 +203,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
       </div>
 
       {/* 이메일 */}
-      <div className="flex flex-col">
+      <div className="flex flex-col space-y-[6px]">
         <label htmlFor="email" className="text-sm text-gray-400">
           이메일
         </label>
@@ -247,7 +246,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
       </div>
 
       {/* 비밀번호 */}
-      <div className="flex flex-col">
+      <div className="flex flex-col space-y-[6px]">
         <label htmlFor="password" className="text-sm text-gray-400">
           비밀번호
         </label>
@@ -281,7 +280,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
       </div>
 
       {/* 비밀번호 확인 */}
-      <div className="flex flex-col">
+      <div className="flex flex-col space-y-[6px]">
         <label htmlFor="confirmPassword" className="text-sm text-gray-400">
           비밀번호 확인
         </label>
@@ -315,13 +314,9 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
       </div>
 
       {/* 다음 단계 버튼 */}
-      <button
-        onClick={handleNextStep}
-        type="button"
-        className={`w-full py-2 mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md`}
-      >
+      <Button onClick={handleNextStep} type="button" className="w-full py-2 mt-4">
         다음 단계
-      </button>
+      </Button>
     </div>
   );
 };
