@@ -1,46 +1,74 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
 import { useNavigate } from 'react-router-dom';
 
-const QRScannerTabContent: React.FC = () => {
+interface QRScannerTabContentProps {
+  isActive: boolean;
+}
+
+const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) => {
   const scannerRef = useRef<HTMLDivElement>(null);
   const html5QrCodeRef = useRef<Html5Qrcode | null>(null); // QR 코드 스캐너 인스턴스
+  const [isTransitioning, setIsTransitioning] = useState(false); // 상태 전환 중인지 여부
   const navigate = useNavigate();
 
   useEffect(() => {
-    // QR 코드 스캐너 초기화 및 시작
-    if (scannerRef.current) {
-      html5QrCodeRef.current = new Html5Qrcode('qr-scanner');
+    const startScanner = async () => {
+      if (scannerRef.current && !html5QrCodeRef.current) {
+        html5QrCodeRef.current = new Html5Qrcode('qr-scanner');
+      }
 
-      html5QrCodeRef.current
-        .start(
-          { facingMode: 'environment' }, // 후면 카메라 설정
-          {
-            fps: 10,
-            qrbox: { width: 250, height: 250 }, // QR 스캔 영역을 고정된 정사각형으로 설정
-            aspectRatio: 1.0, // 카메라 화면 비율을 1:1로 설정
-          },
-          (decodedText) => {
-            console.log('Decoded text:', decodedText);
-            navigate(`/${decodedText}`);
-          },
-          (errorMessage) => {
-            console.warn('QR Code Scan Error:', errorMessage);
-          },
-        )
-        .catch((err) => {
+      if (html5QrCodeRef.current) {
+        setIsTransitioning(true); // 상태 전환 시작
+        try {
+          await html5QrCodeRef.current.start(
+            { facingMode: 'environment' }, // 후면 카메라 설정
+            {
+              fps: 10,
+              qrbox: { width: 250, height: 250 }, // QR 스캔 영역 설정
+              aspectRatio: 1.0, // 카메라 화면 비율 설정
+            },
+            (decodedText) => {
+              console.log('Decoded text:', decodedText);
+              navigate(`/${decodedText}`);
+            },
+            (errorMessage) => {
+              console.warn('QR Code Scan Error:', errorMessage);
+            },
+          );
+        } catch (err) {
           console.error('QR 코드 스캐너 시작 실패:', err);
-        });
+        } finally {
+          setIsTransitioning(false); // 상태 전환 완료
+        }
+      }
+    };
+
+    const stopScanner = async () => {
+      if (html5QrCodeRef.current) {
+        setIsTransitioning(true); // 상태 전환 시작
+        try {
+          await html5QrCodeRef.current.stop();
+        } catch (err) {
+          console.error('QR 코드 스캐너 중지 실패:', err);
+        } finally {
+          html5QrCodeRef.current = null; // 인스턴스 초기화
+          setIsTransitioning(false); // 상태 전환 완료
+        }
+      }
+    };
+
+    if (isActive && !isTransitioning) {
+      startScanner();
+    } else if (!isActive && !isTransitioning) {
+      stopScanner();
     }
 
     return () => {
-      if (html5QrCodeRef.current) {
-        html5QrCodeRef.current.stop().catch((error) => {
-          console.error('Failed to stop the QR code scanner:', error);
-        });
-      }
+      stopScanner(); // 컴포넌트 언마운트 시 스캐너 중지
     };
-  }, [navigate]);
+    // eslint-disable-next-line
+  }, [isActive, navigate]);
 
   return (
     <div className="relative w-full h-auto bg-white">

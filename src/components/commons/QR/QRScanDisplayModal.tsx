@@ -41,7 +41,7 @@ const QRScanDisplayModal: React.FC<QRScanDisplayModalProps> = ({ isOpen, onClose
           </TabsList>
           <TabsContent value="tab1" className="flex justify-start items-start pt-10 bg-white">
             {/* QR 스캐너 콘텐츠 */}
-            <QRScannerTabContent />
+            <QRScannerTabContent isActive={activeTab === 'tab1'} />
           </TabsContent>
           <TabsContent value="tab2" className="p-6 text-white">
             <QRDisplayTabContent />
