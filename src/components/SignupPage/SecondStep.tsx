@@ -4,6 +4,7 @@ import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 import { schema } from './signupSchema';
 import { Button } from '@components/commons/Button/Button';
+import { formatPhoneNumber } from '@utils/formatPhoneNumber';
 
 type SignupData = z.infer<typeof schema>;
 
@@ -32,6 +33,7 @@ const SecondStep: React.FC<SecondStepProps> = ({
 
   const onSubmit = async (formData: SignupData) => {
     try {
+      const formattedPhoneNumber = formatPhoneNumber(formData.phoneNumber);
       // Supabase Auth로 회원가입
       const { error: authError } = await supabase.auth.signUp({
         email: formData.email,
@@ -40,6 +42,7 @@ const SecondStep: React.FC<SecondStepProps> = ({
           data: {
             name: formData.name,
             nickname: formData.nickname,
+            phone_number: formattedPhoneNumber,
           },
         },
       });
@@ -89,7 +92,7 @@ const SecondStep: React.FC<SecondStepProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-[20px] border-2">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-[20px]">
       {/* 첫 번째 드롭다운 */}
       <div className="flex flex-col space-y-[6px]">
         <label htmlFor="fieldsOfExpertise" className="text-sm text-gray-400">

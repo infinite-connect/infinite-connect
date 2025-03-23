@@ -1,4 +1,5 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import { formatPhoneNumber } from '@utils/formatPhoneNumber';
 import { supabase } from '@utils/supabaseClient';
 
 export const infoDuplicateCheckApi = createApi({
@@ -30,6 +31,23 @@ export const infoDuplicateCheckApi = createApi({
         return { data: data.length > 0 }; // 중복된 닉네임이 있으면 true 반환
       },
     }),
+    checkPhoneNumberDuplicate: builder.query<boolean, string>({
+      queryFn: async (phoneNumber) => {
+        // 전화번호를 변환하여 서버에 전달
+        const formattedPhoneNumber = formatPhoneNumber(phoneNumber);
+
+        const { data, error } = await supabase
+          .from('users')
+          .select('phone_number')
+          .eq('phone_number', formattedPhoneNumber);
+
+        if (error) {
+          return { error };
+        }
+
+        return { data: data.length > 0 }; // 중복된 전화번호가 있으면 true 반환
+      },
+    }),
   }),
 });
 
@@ -38,4 +56,6 @@ export const {
   useLazyCheckEmailDuplicateQuery,
   useCheckNicknameDuplicateQuery,
   useLazyCheckNicknameDuplicateQuery,
+  useCheckPhoneNumberDuplicateQuery,
+  useLazyCheckPhoneNumberDuplicateQuery,
 } = infoDuplicateCheckApi;

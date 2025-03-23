@@ -12,6 +12,7 @@ type SignupData = z.infer<typeof schema>;
 
 const SignupForm = (): React.JSX.Element => {
   const [step, setStep] = useState<number>(1);
+  const [newCardId, setNewCardId] = useState('');
   const methods = useForm<SignupData>({
     resolver: zodResolver(schema),
     mode: 'onBlur',
