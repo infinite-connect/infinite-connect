@@ -13,7 +13,7 @@ export const schema = z
       }),
     phoneNumber: z
       .string({
-        required_error: '핸드폰 번호를 입력해주세요.',
+        required_error: '핸드폰 번호를 입력해주세요',
       })
       .regex(/^01[016789]-?\d{3,4}-?\d{4}$/, {
         message: '유효한 핸드폰 번호를 입력해주세요 ex) 01012345678',
@@ -22,7 +22,17 @@ export const schema = z
         // '-'가 없는 경우 자동으로 추가
         const formatted = value.replace(/-/g, '').replace(/(\d{3})(\d{3,4})(\d{4})/, '$1-$2-$3');
         return formatted;
-      }),
+      })
+      .refine(
+        (value) => {
+          // '-' 제거 후 길이 검사
+          const digitsOnly = value.replace(/-/g, '');
+          return digitsOnly.length === 11 && digitsOnly.startsWith('010');
+        },
+        {
+          message: '핸드폰 번호는 "010"을 제외하고 정확히 8자리여야 합니다',
+        },
+      ),
     nickname: z
       .string({
         required_error: '아이디를 입력해주세요',

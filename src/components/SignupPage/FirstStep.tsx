@@ -46,6 +46,10 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
         'confirmPassword',
       ]);
 
+      if (!isValid) {
+        return;
+      }
+
       // 중복 확인 병렬 실행
       const [isPhoneNumberDuplicate, isNicknameDuplicate, isEmailDuplicate] = await Promise.all([
         phoneNumber ? triggerCheckPhoneNumberDuplicate(phoneNumber).unwrap() : false,
@@ -90,29 +94,32 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
   const handleFieldValidation = async (fieldName: string, index: number) => {
     const isValid = await trigger(fieldName);
 
-    if (isValid) {
-      // 성공 메시지 커스터마이즈
-      const successMessageMap: { [key: string]: string } = {
-        name: '사용하실 수 있는 이름이에요',
-        phoneNumber: '사용하실 수 있는 핸드폰 번호예요',
-        nickname: '사용하실 수 있는 아이디예요',
-        email: '사용하실 수 있는 이메일이에요',
-        password: '안전한 비밀번호예요',
-        confirmPassword: '비밀번호가 일치합니다',
-      };
-
-      setSuccessMessages((prev) => ({
-        ...prev,
-        [fieldName]: successMessageMap[fieldName] || '유효한 값입니다',
-      }));
-      clearErrors(fieldName);
-    } else {
+    if (!isValid) {
+      // 유효성 검사 실패 시 성공 메시지 및 중복 검사 진행하지 않음
       setSuccessMessages((prev) => {
         const updatedMessages = { ...prev };
         delete updatedMessages[fieldName];
         return updatedMessages;
       });
+      return;
     }
+
+    // 성공 메시지 커스터마이즈
+    const successMessageMap: { [key: string]: string } = {
+      name: '사용하실 수 있는 이름이에요',
+      phoneNumber: '사용하실 수 있는 핸드폰 번호예요',
+      nickname: '사용하실 수 있는 아이디예요',
+      email: '사용하실 수 있는 이메일이에요',
+      password: '안전한 비밀번호예요',
+      confirmPassword: '비밀번호가 일치합니다',
+    };
+
+    setSuccessMessages((prev) => ({
+      ...prev,
+      [fieldName]: successMessageMap[fieldName] || '유효한 값입니다',
+    }));
+
+    clearErrors(fieldName);
 
     // 추가적으로 닉네임, 이메일, 핸드폰 번호는 중복 검사를 실행
     if (fieldName === 'phoneNumber') {
@@ -135,7 +142,6 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
       }
     }
 
-    // 추가적으로 닉네임과 이메일은 중복 검사를 실행
     if (fieldName === 'nickname') {
       const nickname = inputRefs.current[index]?.value;
       try {
@@ -220,9 +226,10 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
           <span className="text-xs text-red-500">{errors.phoneNumber.message?.toString()}</span>
         )}
         {!errors.phoneNumber && successMessages.phoneNumber && (
-          <div className="flex items-center space-x-2">
-            <span className="text-xs text-green-500">{successMessages.phoneNumber}</span>
-            <Icon icon="mdi-check" width={20} height={20} className="text-green-500" />
+          <div className="flex items-center">
+            <Icon icon="mdi-check" width={20} height={20} className="text-[#55FCB1]" />
+
+            <span className="text-xs text-[#55FCB1]">{successMessages.phoneNumber}</span>
           </div>
         )}
       </div>
