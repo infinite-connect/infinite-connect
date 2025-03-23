@@ -25,13 +25,18 @@ const QRScanDisplayModal: React.FC<QRScanDisplayModalProps> = ({ isOpen, onClose
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-black opacity-80 hover:opacity-100"
+          className="absolute z-50 top-4 right-4 text-white opacity-80 hover:opacity-100"
         >
           <X size={24} />
         </button>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-grow">
           {/* TabsList 중앙 정렬 */}
-          <TabsList className="flex justify-center self-center items-center mt-10 border-gray-300">
+          <TabsList
+            className="
+              absolute top-15 left-1/2 z-50 transform -translate-x-1/2 -translate-y-1/2 
+              flex justify-center items-center border-gray-300
+            "
+          >
             <TabsTrigger value="tab1" className="px-6 py-2 text-sm font-medium text-black">
               QR 스캔
             </TabsTrigger>
@@ -39,11 +44,11 @@ const QRScanDisplayModal: React.FC<QRScanDisplayModalProps> = ({ isOpen, onClose
               QR 표시
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="tab1" className="flex justify-start items-start pt-10 bg-white">
+          <TabsContent value="tab1" className="flex justify-start items-start bg-white">
             {/* QR 스캐너 콘텐츠 */}
             <QRScannerTabContent isActive={activeTab === 'tab1'} />
           </TabsContent>
-          <TabsContent value="tab2" className="p-6 text-white">
+          <TabsContent value="tab2" className="mt-25 p-6 text-white">
             <QRDisplayTabContent />
           </TabsContent>
         </Tabs>
