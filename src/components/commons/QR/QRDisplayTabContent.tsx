@@ -10,6 +10,7 @@ import { generateQRCodeUrl } from '@utils/generateQRCodeUrl';
 import dawnFront from '@assets/CardDesign/dawnFront.png';
 import dayFront from '@assets/CardDesign/dayFront.png';
 import morningFront from '@assets/CardDesign/morningFront.png';
+import useWindowWidth from '@hooks/useWindowWidth';
 
 // 추후 카드 실제 이미지로 변경
 const cardImages = [
@@ -22,15 +23,35 @@ const QRDisplayTabContent: React.FC = () => {
   const nickname = useSelector((state: RootState) => state.user.userInfo?.nickname);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-  const { data: businessCards, isLoading, isError } = useGetUserBusinessCardsQuery(nickname || '');
+  const {
+    data: businessCards = [],
+    isLoading,
+    isError,
+  } = useGetUserBusinessCardsQuery(nickname || '');
 
   const mainSliderRef = useRef<Slider | null>(null); // 초기값을 null로 설정
   const navSliderRef = useRef<Slider | null>(null); // 초기값을 null로 설정
 
+  const windowWidth = useWindowWidth();
+  const imageWidth = 150;
+
+  const calculateCenterPadding = (screenWidth: number, imageWidth: number): string => {
+    const padding = (screenWidth - imageWidth) / 2; // %로 계산
+    return `${padding}px`;
+  };
+
+  const centerPadding = calculateCenterPadding(windowWidth, imageWidth);
+  console.log(centerPadding);
+
+  const syncedImages =
+    businessCards && businessCards.length > 0
+      ? cardImages.slice(0, businessCards.length) // 명함 개수에 맞게 이미지 자르기
+      : [];
+
   // 메인 슬라이더 설정
   const mainSettings = {
     dots: false,
-    infinite: true,
+    infinite: businessCards.length > 1,
     centerMode: true,
     speed: 500,
     centerPadding: '0px',
@@ -48,12 +69,12 @@ const QRDisplayTabContent: React.FC = () => {
   // 네비게이션 슬라이더 설정
   const navSettings = {
     dots: false,
-    infinite: true,
+    infinite: businessCards.length > 1,
     speed: 500,
     slidesToShow: 1, // 한 개만 보여줌
     slidesToScroll: 1,
     centerMode: true,
-    centerPadding: '10%',
+    centerPadding,
     focusOnSelect: true,
     lazyLoad: 'ondemand' as LazyLoadTypes,
     beforeChange: (_current: number, next: number) => {
@@ -106,18 +127,26 @@ const QRDisplayTabContent: React.FC = () => {
       </div>
 
       {/* 네비게이션 슬라이더 */}
-      <div className="mt-6 slider-container">
-        <Slider
-          {...navSettings}
-          ref={navSliderRef}
-          asNavFor={mainSliderRef.current as Slider | undefined}
-        >
-          {cardImages.map(({ key, src }) => (
-            <div key={key}>
+      <div className="mt-6 slider-container w-full relative">
+        <Slider {...navSettings} ref={navSliderRef}>
+          {syncedImages.map(({ key, src }, index) => (
+            <div
+              key={key}
+              className={`w-[150px] h-[180px] rounded-2xl transition-transform duration-500 relative ${
+                index === currentIndex ? 'scale-100' : 'scale-80'
+              }`}
+            >
+              {/* 검은색 배경 */}
+              <div
+                className={`absolute rounded-2xl inset-0 ${
+                  index === currentIndex ? 'bg-transparent z-10' : 'bg-black z-20 opacity-100'
+                }`}
+              ></div>
+              {/* 이미지 렌더링 */}
               <img
                 src={src}
                 alt={`${key} card`}
-                className="w-[331px] h-[248px] object-contain transform rotate-90"
+                className="w-full h-full rounded-2xl object-contain relative z-10"
               />
             </div>
           ))}
