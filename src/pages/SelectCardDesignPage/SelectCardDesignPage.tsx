@@ -7,7 +7,6 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const myCardId = '08ac9bd2-63bf-4d9f-a49b-a74b54ae7fa2';
 const SelectCardDesignPage = (): React.JSX.Element => {
   const navigate = useNavigate();
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
@@ -18,7 +17,7 @@ const SelectCardDesignPage = (): React.JSX.Element => {
   const { businessCardId } = location.state || {};
 
   const handleCompleteSelection = async () => {
-    const validBusinessCardId = businessCardId || myCardId;
+    const validBusinessCardId = businessCardId;
 
     if (!validBusinessCardId) {
       alert('유효한 명함 ID가 없습니다.');
@@ -36,7 +35,7 @@ const SelectCardDesignPage = (): React.JSX.Element => {
     }
   };
 
-  if (!businessCardId && !myCardId) {
+  if (!businessCardId) {
     return <p>유효한 명함 ID가 없습니다.</p>;
   }
 

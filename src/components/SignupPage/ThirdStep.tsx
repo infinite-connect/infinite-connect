@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { supabase } from '@utils/supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import { loginSuccess } from '@features/User/slice/userSlice';
+import { useDispatch } from 'react-redux';
 
 const ThirdStep: React.FC = () => {
   const { getValues } = useFormContext(); // react-hook-form에서 폼 데이터 가져오기
@@ -9,6 +11,7 @@ const ThirdStep: React.FC = () => {
   const [isVerified, setIsVerified] = useState(false); // 이메일 인증 여부
   const [businessCardId, setBusinessCardId] = useState<string | null>(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const checkEmailVerification = async () => {
     setIsChecking(true);
@@ -42,6 +45,7 @@ const ThirdStep: React.FC = () => {
         setIsVerified(true);
         alert('이메일 인증이 완료되었습니다!');
 
+        // 명함 데이터 가져오기
         const { data: businessCardData, error: fetchError } = await supabase
           .from('business_cards')
           .select('business_card_id')
@@ -53,7 +57,18 @@ const ThirdStep: React.FC = () => {
           alert('명함 데이터를 가져오는 중 오류가 발생했습니다.');
           return;
         }
+
         setBusinessCardId(businessCardData.business_card_id);
+
+        // Redux 상태 업데이트 (loginSuccess 호출)
+        dispatch(
+          loginSuccess({
+            id: authData.user.id,
+            email: authData.user.email ?? '',
+            nickname: getValues('nickname'),
+            name: authData.user.user_metadata?.name || '', // Supabase 사용자 메타데이터 활용
+          }),
+        );
       } else {
         alert('이메일 인증이 아직 완료되지 않았습니다. 이메일을 확인해주세요.');
       }
