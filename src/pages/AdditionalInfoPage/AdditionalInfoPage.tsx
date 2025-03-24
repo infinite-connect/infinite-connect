@@ -20,6 +20,10 @@ import {
 } from '@components/ui/form';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { IconButton } from '@components/commons/Button/IconButton';
+import { SkipForwardIcon } from 'lucide-react';
+import { Header } from '@components/commons/Header/Header';
+import { Logo } from '@components/commons/Header/Logo';
 
 // Zod 스키마 정의
 const schema = z.object({
@@ -120,9 +124,21 @@ const AdditionalInfoPage = (): React.JSX.Element => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      <div className="p-6">
+      <div className="bg-black p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            {/* Header */}
+            <Header>
+              <Header.Left>
+                <Logo />
+                <span className="text-[var(--text-primary)]">hihii</span>
+              </Header.Left>
+
+              <Header.Right>
+                <IconButton icon={<SkipForwardIcon className="stroke-white" />} />
+              </Header.Right>
+            </Header>
+
             {/* 이메일 필드 */}
             <FormField
               control={form.control}
