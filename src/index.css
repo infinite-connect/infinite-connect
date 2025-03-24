@@ -6,12 +6,13 @@
   /* bg */
   --bg-default-black: #121212;
 
-  /* btn */
-  --btn-primary: #7253ff;
-  --btn-secondary: rgba(255, 255, 255, 0.1);
-  --btn-primary-hover: #8971fb;
-  --btn-disabled: #737373;
-  --btn-disabled-hover: #9b9b9b;
+  /* color */
+  --color-primary: #7253ff;
+  --color-secondary: rgba(255, 255, 255, 0.1);
+  --color-primary-hover: #8971fb;
+  --color-disabled: #737373;
+  --color-disabled-hover: #9b9b9b;
+  --color-quaternary: rgba(255, 255, 255, 0.08);
 
   /* text */
   --text-primary: #ffffff;
