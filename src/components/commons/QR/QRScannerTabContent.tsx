@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
 import { useNavigate } from 'react-router-dom';
+import useWindowHeight from '@hooks/useWindowHeight';
+import useWindowWidth from '@hooks/useWindowWidth';
 
 interface QRScannerTabContentProps {
   isActive: boolean;
@@ -11,6 +13,8 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
   const html5QrCodeRef = useRef<Html5Qrcode | null>(null); // QR 코드 스캐너 인스턴스
   const [isTransitioning, setIsTransitioning] = useState(false); // 상태 전환 중인지 여부
   const navigate = useNavigate();
+  const windowWidth = useWindowWidth();
+  const windowHeight = useWindowHeight();
 
   useEffect(() => {
     const startScanner = async () => {
@@ -21,7 +25,7 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
       if (html5QrCodeRef.current) {
         setIsTransitioning(true); // 상태 전환 시작
         try {
-          const aspectRatio = window.innerWidth / window.innerHeight;
+          const aspectRatio = windowWidth / windowHeight;
           await html5QrCodeRef.current.start(
             { facingMode: 'environment' }, // 후면 카메라 설정
             {
