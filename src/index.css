@@ -6,13 +6,13 @@
   /* bg */
   --bg-default-black: #121212;
 
-  /* color */
-  --color-primary: #7253ff;
-  --color-secondary: rgba(255, 255, 255, 0.1);
-  --color-primary-hover: #8971fb;
-  --color-disabled: #737373;
-  --color-disabled-hover: #9b9b9b;
-  --color-quaternary: rgba(255, 255, 255, 0.08);
+  /* fill */
+  --fill-primary: #7253ff;
+  --fill-secondary: rgba(255, 255, 255, 0.1);
+  --fill-primary-hover: #8971fb;
+  --fill-disabled: #737373;
+  --fill-disabled-hover: #9b9b9b;
+  --fill-quaternary: rgba(255, 255, 255, 0.08);
 
   /* text */
   --text-primary: #ffffff;

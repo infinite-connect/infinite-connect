@@ -29,17 +29,17 @@ const buttonVariants = cva(
     compoundVariants: [
       {
         btntype: 'enabled',
-        className: 'bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)]',
+        className: 'bg-[var(--fill-primary)] hover:bg-[var(--fill-primary-hover)]',
       },
 
       {
         btntype: 'secondary',
-        className: 'bg-[var(--color-secondary)]',
+        className: 'bg-[var(--fill-secondary)]',
       },
 
       {
         btntype: 'disabled',
-        className: 'bg-[var(--color-disabled)] hover:bg-[var(--color-disabled-hover)]',
+        className: 'bg-[var(--fill-disabled)] hover:bg-[var(--fill-disabled-hover)]',
       },
     ],
 
