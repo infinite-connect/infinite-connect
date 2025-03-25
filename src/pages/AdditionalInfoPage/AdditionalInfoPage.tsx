@@ -8,7 +8,6 @@ import {
   DrawerTitle,
   DrawerFooter,
 } from '@components/ui/drawer';
-import { Button } from '@components/ui/button';
 import { Input } from '@components/ui/input';
 import {
   Form,
@@ -24,6 +23,8 @@ import { IconButton } from '@components/commons/Button/IconButton';
 import { SkipForwardIcon } from 'lucide-react';
 import { Header } from '@components/commons/Header/Header';
 import { Logo } from '@components/commons/Header/Logo';
+import { Button } from '@components/commons/Button/Button';
+import { UrlDropdown } from '@components/AdditionalInfoPage/UrlDropdown';
 
 // Zod 스키마 정의
 const schema = z.object({
@@ -96,18 +97,23 @@ const AdditionalInfoPage = (): React.JSX.Element => {
     <div>
       {/* Drawer 컴포넌트 */}
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-        <DrawerContent className="bg-white p-6">
+        <DrawerContent className="bg-[var(--bg-default-black)] p-6">
           {/* Header */}
           <DrawerHeader>
-            <DrawerTitle className="text-xl font-bold">추가 정보 입력</DrawerTitle>
+            <DrawerTitle className="text-xl font-bold text-[var(--text-primary)]">
+              추가 정보 입력
+            </DrawerTitle>
+            <div className="text-[var(--text-secondary)]">
+              명함만 완성해도, 자연스럽게 대화가 시작돼요
+            </div>
           </DrawerHeader>
 
           {/* 버튼 그룹 */}
           <div className="flex flex-col gap-4 mt-6">
-            <Button variant="outline" className="w-full" onClick={onClickMovetoRealCardScanPage}>
+            <Button btntype="enabled" className="w-full" onClick={onClickMovetoRealCardScanPage}>
               실제 명함 촬영하기
             </Button>
-            <Button variant="outline" className="w-full" onClick={() => setIsDrawerOpen(false)}>
+            <Button btntype="secondary" className="w-full" onClick={() => setIsDrawerOpen(false)}>
               직접 입력
             </Button>
           </div>
@@ -121,7 +127,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
         </DrawerContent>
       </Drawer>
 
-      <div className="bg-black p-6">
+      <div className="bg-[var(--bg-default-black)] p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             {/* Header */}
@@ -141,9 +147,13 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               name="nickname"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[var(--text-primary)] ">비즈니스명</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)]">비즈니스명</FormLabel>
                   <FormControl>
-                    <Input placeholder="비즈니스명을 입력하세요" {...field} />
+                    <Input
+                      placeholder="비즈니스명을 입력하세요"
+                      className="text-[var(--text-primary)]"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -158,97 +168,11 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 <FormItem>
                   <FormLabel className="text-[var(--text-primary)]">업무용 전화번호</FormLabel>
                   <FormControl>
-                    <Input placeholder="업무용 전화번호를 입력하세요" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* 회사명 필드 */}
-            <FormField
-              control={form.control}
-              name="company"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">회사명</FormLabel>
-                  <FormControl>
-                    <Input placeholder="현재 소속된 회사명을 입력하세요" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* 직책 필드 */}
-            <FormField
-              control={form.control}
-              name="jobTitle"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">직책</FormLabel>
-                  <FormControl>
-                    <Input placeholder="직책을 입력하세요" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* 부서 필드 */}
-            <FormField
-              control={form.control}
-              name="department"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">부서</FormLabel>
-                  <FormControl>
-                    <Input placeholder="부서를 입력하세요" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* 회사 주소 필드 */}
-            <FormField
-              control={form.control}
-              name="address"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">회사 주소</FormLabel>
-                  <FormControl>
-                    <Input placeholder="주소를 입력하세요" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* FAX 필드 */}
-            <FormField
-              control={form.control}
-              name="fax"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">FAX</FormLabel>
-                  <FormControl>
-                    <Input placeholder="FAX 번호를 입력하세요" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* 경력 필드 */}
-            <FormField
-              control={form.control}
-              name="experience_years"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">경력</FormLabel>
-                  <FormControl>
-                    <Input placeholder="경력을 입력하세요" {...field} />
+                    <Input
+                      placeholder="업무용 전화번호를 입력하세요"
+                      className="text-[var(--text-primary)]"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -263,7 +187,121 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 <FormItem>
                   <FormLabel className="text-[var(--text-primary)]">URL</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://example.com" {...field} />
+                    <UrlDropdown value={field.value} onChange={field.onChange} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* 회사명 필드 */}
+            <FormField
+              control={form.control}
+              name="company"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[var(--text-primary)]">회사명</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="현재 소속된 회사명을 입력하세요"
+                      className="text-[var(--text-primary)]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* 직책 필드 */}
+            <FormField
+              control={form.control}
+              name="jobTitle"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[var(--text-primary)]">직책</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="직책을 입력하세요"
+                      className="text-[var(--text-primary)]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* 부서 필드 */}
+            <FormField
+              control={form.control}
+              name="department"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[var(--text-primary)]">부서</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="부서를 입력하세요"
+                      className="text-[var(--text-primary)]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* 회사 주소 필드 */}
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[var(--text-primary)]">회사 주소</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="주소를 입력하세요"
+                      className="text-[var(--text-primary)]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* FAX 필드 */}
+            <FormField
+              control={form.control}
+              name="fax"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[var(--text-primary)]">FAX</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="FAX 번호를 입력하세요"
+                      className="text-[var(--text-primary)]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* 경력 필드 */}
+            <FormField
+              control={form.control}
+              name="experience_years"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[var(--text-primary)]">경력</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="경력을 입력하세요"
+                      className="text-[var(--text-primary)]"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -272,10 +310,9 @@ const AdditionalInfoPage = (): React.JSX.Element => {
 
             {/* 제출 버튼 */}
             <div className="flex flex-col gap-4">
-              <Button type="submit" className="text-[var(--text-primary)]">
+              <Button btntype="enabled" className=" text-[var(--text-primary)]">
                 제출
               </Button>
-              <Button onClick={onClickUserInterestsPage}>건너뛰기</Button>
             </div>
           </form>
         </Form>
