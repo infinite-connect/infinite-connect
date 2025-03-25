@@ -5,18 +5,19 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@store/store';
 import { useGetUserBusinessCardsQuery } from '@features/UserPage/api/userCardListApi';
 import { generateQRCodeUrl } from '@utils/generateQRCodeUrl';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import useWindowWidth from '@hooks/useWindowWidth';
 
 // 이미지 import
-import dawnFront from '@assets/CardDesign/dawnFront.png';
-import dayFront from '@assets/CardDesign/dayFront.png';
-import morningFront from '@assets/CardDesign/morningFront.png';
-import useWindowWidth from '@hooks/useWindowWidth';
+import dawnHorizontal from '@assets/CardDesign/HorizontalCard/dawnHorizontal.png';
+import morningHorizontal from '@assets/CardDesign/HorizontalCard/morningHorizontal.png';
+import dayHorizontal from '@assets/CardDesign/HorizontalCard/dayHorizontal.png';
 
 // 추후 카드 실제 이미지로 변경
 const cardImages = [
-  { key: 'dawn', src: dawnFront },
-  { key: 'day', src: dayFront },
-  { key: 'morning', src: morningFront },
+  { key: 'dawn', src: dawnHorizontal },
+  { key: 'day', src: morningHorizontal },
+  { key: 'morning', src: dayHorizontal },
 ];
 
 const QRDisplayTabContent: React.FC = () => {
@@ -29,9 +30,7 @@ const QRDisplayTabContent: React.FC = () => {
     isError,
   } = useGetUserBusinessCardsQuery(nickname || '');
 
-  const isCardSingle = businessCards.length > 1;
-
-  console.log(businessCards);
+  const isMultiCards = businessCards?.length > 1;
 
   const mainSliderRef = useRef<Slider | null>(null); // 초기값을 null로 설정
   const navSliderRef = useRef<Slider | null>(null); // 초기값을 null로 설정
@@ -55,7 +54,7 @@ const QRDisplayTabContent: React.FC = () => {
   // 메인 슬라이더 설정
   const mainSettings = {
     dots: false,
-    infinite: isCardSingle,
+    infinite: true,
     centerMode: true,
     speed: 500,
     centerPadding: '0px',
@@ -73,12 +72,12 @@ const QRDisplayTabContent: React.FC = () => {
   // 네비게이션 슬라이더 설정
   const navSettings = {
     dots: false,
-    infinite: isCardSingle,
+    infinite: true,
     speed: 500,
     slidesToShow: 1, // 한 개만 보여줌
     slidesToScroll: 1,
+    centerPadding: '0px',
     centerMode: true,
-    centerPadding,
     focusOnSelect: true,
     lazyLoad: 'ondemand' as LazyLoadTypes,
     beforeChange: (_current: number, next: number) => {
@@ -100,29 +99,34 @@ const QRDisplayTabContent: React.FC = () => {
   }
 
   return (
-    <div className="relative w-full h-full">
-      <div className="absolute top-[-20px] z-50 left-1/2 transform -translate-x-1/2 flex items-center justify-center space-x-4">
-        {!isCardSingle && (
+    <div className="relative flex-col justify-center items-center w-[100vw]">
+      <div className="flex items-center justify-center mb-[20px] w-full text-white">
+        {isMultiCards && (
           <button
-            className="bg-gray-200 p-2 rounded-full z-10"
+            className="rounded-none border-none bg-transparent z-10"
             onClick={() => mainSliderRef.current?.slickPrev()}
           >
-            &lt;
+            <ChevronLeft className="w-[26px] h-[26px]" />
           </button>
         )}
-        <span className="text-lg font-bold text-black">card_name</span>
-        {!isCardSingle && (
+        <span
+          className="min-w-[160px] text-center text-[16px] font-extrabold"
+          style={{ width: 'fit-content' }}
+        >
+          carss
+        </span>
+        {isMultiCards && (
           <button
-            className="bg-gray-200 p-2 rounded-full z-10"
+            className="rounded-none border-none bg-transparent z-10"
             onClick={() => mainSliderRef.current?.slickNext()}
           >
-            &gt;
+            <ChevronRight className="w-[26px] h-[26px]" />
           </button>
         )}
       </div>
 
       {/* 메인 슬라이더 */}
-      <div className="slider-container">
+      <div className="slider-container w-full h-[253px] mb-[16px]">
         <Slider
           {...mainSettings}
           ref={mainSliderRef}
@@ -133,11 +137,11 @@ const QRDisplayTabContent: React.FC = () => {
               <div className="flex justify-self-center">
                 <QRCodeCanvas
                   value={generateQRCodeUrl(nickname, businessCardId)}
-                  size={334}
-                  bgColor="#FFFFFF"
-                  fgColor="#000000"
+                  size={253}
+                  bgColor="#000000"
+                  fgColor="#ffffff"
                   level="M"
-                  className="rounded-md self-center scale-75"
+                  className="rounded-md self-center"
                 />
               </div>
             </div>
@@ -146,30 +150,34 @@ const QRDisplayTabContent: React.FC = () => {
       </div>
 
       {/* 네비게이션 슬라이더 */}
-      <div className="mt-6 slider-container w-full relative">
+      <div className="slider-container mb-[28px] w-full h-[155px]">
         <Slider {...navSettings} ref={navSliderRef}>
           {syncedImages.map(({ key, src }, index) => (
             <div
               key={key}
-              className={`w-[150px] h-[180px] rounded-2xl transition-transform duration-500 relative ${
+              className={`w-[253px] h-[155px] m-0 transition-transform duration-500 p-0 ${
                 index === currentIndex ? 'scale-100' : 'scale-80'
               }`}
             >
-              {/* 검은색 배경 */}
-              <div
-                className={`absolute rounded-2xl inset-0 ${
-                  index === currentIndex ? 'bg-transparent z-10' : 'bg-black z-20 opacity-100'
-                }`}
-              ></div>
               {/* 이미지 렌더링 */}
               <img
                 src={src}
                 alt={`${key} card`}
-                className="w-full h-full rounded-2xl object-contain relative z-10"
+                className="flex justify-self-center w-[253px] h-[155px] z-10 object-cover"
               />
             </div>
           ))}
         </Slider>
+      </div>
+      <div className="flex justify-center items-center mt-4 gap-[8px]">
+        {syncedImages.map((_, index) => (
+          <div
+            key={index}
+            className={`w-[8px] h-[8px] rounded-full ${
+              index === currentIndex ? 'bg-white' : 'bg-gray-400'
+            }`}
+          ></div>
+        ))}
       </div>
     </div>
   );

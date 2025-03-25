@@ -28,16 +28,25 @@ const QRScanDisplayModal: React.FC<QRScanDisplayModalProps> = ({ isOpen, onClose
         <Tabs
           value={activeTab}
           onValueChange={setActiveTab}
-          className="flex-grow justify-items-center items-center space-y-[32px] relative z-20"
+          className="flex-grow justify-items-center items-center space-y-[36px] relative z-20 bg-[var(--bg-default-black)]"
         >
           {/* 헤더 */}
-          <div className="relative inset-0 w-full z-50">
+          <div
+            className={`
+              relative inset-0 w-full z-50 text-white 
+              ${
+                activeTab === 'tab1'
+                  ? 'bg-[linear-gradient(0deg,rgba(18,18,18,0.863),rgba(55,88,113,1)),linear-gradient(0deg,rgba(0,0,0,0.7),rgba(0,0,0,0.7)),linear-gradient(180deg,rgba(93,117,250,1),rgba(57,72,153,1))]'
+                  : ''
+              }
+            `}
+          >
             <Header>Networking</Header>
 
             {/* X 버튼 */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 w-6 h-6 flex items-center justify-center text-gray-700 hover:text-black"
+              className="absolute top-4 right-4 w-6 h-6 flex items-center justify-center text-white hover:text-gray-300"
               aria-label="Close Modal"
             >
               <X className="w-6 h-6" />
@@ -73,9 +82,11 @@ const QRScanDisplayModal: React.FC<QRScanDisplayModalProps> = ({ isOpen, onClose
           </TabsList>
 
           {/* QR 표시 콘텐츠 */}
-          <TabsContent value="tab1" className="mt-25 py-6 text-white">
-            <QRDisplayTabContent />
-          </TabsContent>
+          <div>
+            <TabsContent value="tab1" className=" text-white bg-[var(--bg-default-black)]">
+              <QRDisplayTabContent />
+            </TabsContent>
+          </div>
 
           {/* QR 스캔 콘텐츠 */}
           <TabsContent
