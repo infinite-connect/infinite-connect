@@ -6,7 +6,7 @@ interface ListProps {
   networkingList: BusinessCardList[] | undefined;
 }
 
-const List: React.FC<ListProps> = ({ networkingList }) => {
+const List: React.FC<ListProps> = ({ networkingList }): React.JSX.Element => {
   const navigate = useNavigate();
 
   return (

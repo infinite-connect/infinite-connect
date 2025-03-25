@@ -10,6 +10,13 @@ import {
   useUpdateBusinessCardVisibilityMutation,
 } from '@features/Networking/networkingApi';
 import { roles, detailsMap } from '@constants/userRole';
+import { Header } from '@components/commons/Header/Header';
+import { Logo } from '@components/commons/Header/Logo';
+import QrIcon from '@components/NetworkingListPage/UI/QrIcon';
+import { IconButton } from '@components/commons/Button/IconButton';
+import SearchIcon from '@components/NetworkingListPage/UI/SearchIcon';
+import HotBusinessCardSection from '@components/NetworkingListPage/HotBusinessCardSection';
+import AlarmIcon from '@components/NetworkingListPage/UI/AlarmIcon';
 
 const NetworkingList: React.FC = (): React.JSX.Element => {
   const nickname = 'test2Nickname'; // 테스트용 닉네임
@@ -91,36 +98,25 @@ const NetworkingList: React.FC = (): React.JSX.Element => {
     return <div>네트워킹 리스트를 불러오는 중 오류가 발생했습니다.</div>;
   }
 
+  const handleQrClick = () => {
+    console.log('qr클릭');
+  };
+
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <header className="p-4 bg-gray-800 text-center text-lg font-semibold">네트워킹 리스트</header>
+    <div className="min-h-screen bg-gray-900 text-white px-[16px]">
+      <Header>
+        <Header.Left>
+          <Logo />
+          <span>Networking</span>
+        </Header.Left>
+        <Header.Right>
+          <IconButton icon={<QrIcon />} onClick={handleQrClick} />
+          <IconButton icon={<SearchIcon />} onClick={handleQrClick} />
+          <IconButton icon={<AlarmIcon />} onClick={handleQrClick} />
+        </Header.Right>
+      </Header>
 
-      <div className="flex gap-2 p-4">
-        <DropDown
-          options={roles}
-          selected={selectedRole}
-          onSelect={handleRoleSelect}
-          placeholder="분야 선택"
-          className="w-48 bg-blue-700"
-          menuClassName="bg-blue-800 text-white shadow-lg"
-        />
-        <DropDown
-          options={availableDetails}
-          selected={selectedDetail}
-          onSelect={setSelectedDetail}
-          placeholder="세부 분야 선택"
-          className="w-48 bg-green-700"
-          menuClassName="bg-green-800 text-white shadow-lg"
-          disabled={selectedRole === 'All'}
-        />
-      </div>
-
-      {/* 🔹 필터링된 네트워킹 리스트 전달 */}
-      <List networkingList={getFilteredNetworkingList()} />
-
-      <div className="fixed bottom-0 left-0 w-full bg-gray-700 py-3 text-center text-white">
-        네비게이션 바
-      </div>
+      <HotBusinessCardSection />
 
       <FullScreenPopup
         open={showPopup}
