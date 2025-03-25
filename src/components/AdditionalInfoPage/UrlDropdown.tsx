@@ -62,7 +62,7 @@ export const UrlDropdown = ({
       {/* 드롭다운 버튼 */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className="flex items-center gap-2 pl-[12px] pr-[56px] py-[17px] rounded-md">
+          <Button className="flex items-center gap-2 pl-[12px] h-10 pr-[56px] py-[17px] rounded-md">
             {selected.icon} <ChevronDown className="w-4 h-4" />
           </Button>
         </DropdownMenuTrigger>
@@ -89,7 +89,7 @@ export const UrlDropdown = ({
         placeholder={selected.placeholder + '를 입력해 주세요'}
         value={displayValue}
         onChange={handleChange}
-        className="flex-1 h-10 text-[var(--text-primary)]"
+        className="flex-1 h-10 border-0 text-[var(--text-primary)] text-[var(--text-primary)] bg-[var(--fill-quaternary)] "
       />
     </div>
   );
