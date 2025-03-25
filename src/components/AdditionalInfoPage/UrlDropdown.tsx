@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Check, ChevronDown } from 'lucide-react';
 import { SocialIcon, SocialPlatform } from './SocialIcon';
@@ -14,28 +14,48 @@ import { Input } from '@components/ui/input';
 type UrlDropdownProps = {
   value: string | undefined;
   onChange: (value: string) => void;
+  platformId: string | undefined;
+  onPlatformChange: (id: string) => void;
 };
 
-export const UrlDropdown = ({ value, onChange }: UrlDropdownProps) => {
+export const UrlDropdown = ({
+  value,
+  onChange,
+  platformId,
+  onPlatformChange,
+}: UrlDropdownProps) => {
   const [selected, setSelected] = useState(SocialIcon[0]);
 
   const handleSelect = (platform: SocialPlatform) => {
     setSelected(platform);
-    onChange(''); // 선택 시 기존 인풋 초기화
+    onPlatformChange(platform.id); // platformId를 form에 반영
+    onChange(''); // 기존 인풋 초기화
   };
+
+  useEffect(() => {
+    if (!platformId) return;
+    const found = SocialIcon.find((item) => item.id === platformId);
+    if (found) setSelected(found);
+  }, [platformId]);
 
   // 인풋 값 변경 시 선택한 prefix가 있으면 prefix를 붙여줌
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
-    if (selected.prefix) {
+
+    if (selected.type === 'id' && selected.prefix) {
+      // ID 기반은 조립
       const noPrefix = input.replace(selected.prefix, '');
       onChange(selected.prefix + noPrefix);
     } else {
+      // URL 기반은 사용자가 쓴 그대로
       onChange(input);
     }
   };
 
-  const displayValue = selected.prefix ? (value ?? '').replace(selected.prefix, '') : (value ?? '');
+  const displayValue =
+    selected.type === 'id' && selected.prefix
+      ? (value ?? '').replace(selected.prefix, '')
+      : (value ?? '');
 
   return (
     <div className="flex w-full items-center gap-2">
@@ -66,7 +86,7 @@ export const UrlDropdown = ({ value, onChange }: UrlDropdownProps) => {
 
       {/* 인풋 필드 */}
       <Input
-        placeholder={selected.prefix ? `${selected.prefix}your-id` : 'https://example.com'}
+        placeholder={selected.placeholder + '를 입력해 주세요'}
         value={displayValue}
         onChange={handleChange}
         className="flex-1 h-10 text-[var(--text-primary)]"

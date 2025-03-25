@@ -25,19 +25,51 @@ import { Header } from '@components/commons/Header/Header';
 import { Logo } from '@components/commons/Header/Logo';
 import { Button } from '@components/commons/Button/Button';
 import { UrlDropdown } from '@components/AdditionalInfoPage/UrlDropdown';
+import { SocialIcon } from '@components/AdditionalInfoPage/SocialIcon';
 
 // Zod 스키마 정의
-const schema = z.object({
-  company: z.string().optional(),
-  jobTitle: z.string().optional(),
-  department: z.string().optional(),
-  experience_years: z.string().optional(),
-  phone: z.string().optional(),
-  fax: z.string().optional(),
-  address: z.string().optional(),
-  website: z.string().optional(),
-  nickname: z.string().optional(),
-});
+const schema = z
+  .object({
+    company: z.string().optional(),
+    jobTitle: z.string().optional(),
+    department: z.string().optional(),
+    experience_years: z.string().optional(),
+    phone: z.string().optional(),
+    fax: z.string().optional(),
+    address: z.string().optional(),
+    nickname: z.string().optional(),
+    platformId: z.string().optional(),
+    website: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    const { platformId, website } = data;
+
+    if (!website || !platformId) return;
+
+    const platform = SocialIcon.find((p) => p.id === platformId);
+    if (!platform) return;
+
+    if (platform.type === 'url' && platform.prefix && !website.includes(platform.prefix)) {
+      ctx.addIssue({
+        path: ['website'],
+        code: z.ZodIssueCode.custom,
+        message: `${platform.label} 링크가 올바르지 않아요`,
+      });
+    }
+
+    if (platform.type === 'id') {
+      const idRegex = /^[a-zA-Z0-9._-]{1,30}$/;
+      const idOnly = platform.prefix ? website.replace(platform.prefix, '') : website;
+
+      if (!idRegex.test(idOnly)) {
+        ctx.addIssue({
+          path: ['website'],
+          code: z.ZodIssueCode.custom,
+          message: `${platform.label} 아이디 형식이 올바르지 않아요`,
+        });
+      }
+    }
+  });
 
 // 모든 필드를 옵셔널로 정의한 타입
 type FormData = z.infer<typeof schema>;
@@ -140,7 +172,6 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 <IconButton icon={<SkipForwardIcon className="stroke-white" />} />
               </Header.Right>
             </Header>
-
             {/* 비즈니스명 필드 */}
             <FormField
               control={form.control}
@@ -159,7 +190,6 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 </FormItem>
               )}
             />
-
             {/* 업무 폰 필드 */}
             <FormField
               control={form.control}
@@ -183,11 +213,16 @@ const AdditionalInfoPage = (): React.JSX.Element => {
             <FormField
               control={form.control}
               name="website"
-              render={({ field }) => (
+              render={({ field: websiteField }) => (
                 <FormItem>
                   <FormLabel className="text-[var(--text-primary)]">URL</FormLabel>
                   <FormControl>
-                    <UrlDropdown value={field.value} onChange={field.onChange} />
+                    <UrlDropdown
+                      value={websiteField.value}
+                      onChange={websiteField.onChange}
+                      platformId={form.watch('platformId')}
+                      onPlatformChange={(id) => form.setValue('platformId', id)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -212,7 +247,6 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 </FormItem>
               )}
             />
-
             {/* 직책 필드 */}
             <FormField
               control={form.control}
@@ -231,7 +265,6 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 </FormItem>
               )}
             />
-
             {/* 부서 필드 */}
             <FormField
               control={form.control}
@@ -250,7 +283,6 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 </FormItem>
               )}
             />
-
             {/* 회사 주소 필드 */}
             <FormField
               control={form.control}
@@ -269,7 +301,6 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 </FormItem>
               )}
             />
-
             {/* FAX 필드 */}
             <FormField
               control={form.control}
@@ -288,7 +319,6 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 </FormItem>
               )}
             />
-
             {/* 경력 필드 */}
             <FormField
               control={form.control}
@@ -307,7 +337,6 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 </FormItem>
               )}
             />
-
             {/* 제출 버튼 */}
             <div className="flex flex-col gap-4">
               <Button btntype="enabled" className=" text-[var(--text-primary)]">
