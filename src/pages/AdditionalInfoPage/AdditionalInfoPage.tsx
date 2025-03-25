@@ -8,7 +8,6 @@ import {
   DrawerTitle,
   DrawerFooter,
 } from '@components/ui/drawer';
-import { Button } from '@components/ui/button';
 import { Input } from '@components/ui/input';
 import {
   Form,
@@ -24,21 +23,53 @@ import { IconButton } from '@components/commons/Button/IconButton';
 import { SkipForwardIcon } from 'lucide-react';
 import { Header } from '@components/commons/Header/Header';
 import { Logo } from '@components/commons/Header/Logo';
+import { Button } from '@components/commons/Button/Button';
+import { UrlDropdown } from '@components/AdditionalInfoPage/UrlDropdown';
+import { SocialIcon } from '@components/AdditionalInfoPage/SocialIcon';
 
 // Zod 스키마 정의
-const schema = z.object({
-  email: z.string().optional(),
-  company: z.string().optional(),
-  jobTitle: z.string().optional(),
-  department: z.string().optional(),
-  phone: z.string().optional(),
-  fax: z.string().optional(),
-  address: z.string().optional(),
-  website: z.string().optional(),
-  url1: z.string().optional(),
-  url2: z.string().optional(),
-  url3: z.string().optional(),
-});
+const schema = z
+  .object({
+    company: z.string().optional(),
+    jobTitle: z.string().optional(),
+    department: z.string().optional(),
+    experience_years: z.string().optional(),
+    phone: z.string().optional(),
+    fax: z.string().optional(),
+    address: z.string().optional(),
+    nickname: z.string().optional(),
+    platformId: z.string().optional(),
+    website: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    const { platformId, website } = data;
+
+    if (!website || !platformId) return;
+
+    const platform = SocialIcon.find((p) => p.id === platformId);
+    if (!platform) return;
+
+    if (platform.type === 'url' && platform.prefix && !website.includes(platform.prefix)) {
+      ctx.addIssue({
+        path: ['website'],
+        code: z.ZodIssueCode.custom,
+        message: `${platform.label} 링크가 올바르지 않아요`,
+      });
+    }
+
+    if (platform.type === 'id') {
+      const idRegex = /^[a-zA-Z0-9._-]{1,30}$/;
+      const idOnly = platform.prefix ? website.replace(platform.prefix, '') : website;
+
+      if (!idRegex.test(idOnly)) {
+        ctx.addIssue({
+          path: ['website'],
+          code: z.ZodIssueCode.custom,
+          message: `${platform.label} 아이디 형식이 올바르지 않아요`,
+        });
+      }
+    }
+  });
 
 // 모든 필드를 옵셔널로 정의한 타입
 type FormData = z.infer<typeof schema>;
@@ -63,17 +94,15 @@ const AdditionalInfoPage = (): React.JSX.Element => {
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      email: '',
       company: '',
       jobTitle: '',
+      experience_years: '',
       department: '',
       phone: '',
       fax: '',
       address: '',
       website: '',
-      url1: '',
-      url2: '',
-      url3: '',
+      nickname: '',
       ...scannedData, // 스캔된 데이터가 있으면 덮어쓰기
     },
   });
@@ -100,38 +129,46 @@ const AdditionalInfoPage = (): React.JSX.Element => {
     <div>
       {/* Drawer 컴포넌트 */}
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-        <DrawerContent className="bg-white p-6">
+        <DrawerContent className="bg-[var(--bg-default-black)] p-6 pb-5 rounded-lg">
           {/* Header */}
-          <DrawerHeader>
-            <DrawerTitle className="text-xl font-bold">추가 정보 입력</DrawerTitle>
+          <DrawerHeader className="pt-10 pb-5 pr-0 pl-0 gap-2">
+            <DrawerTitle className="text-xl text-center font-bold text-[var(--text-primary)]">
+              추가 정보 입력
+            </DrawerTitle>
+            <div className="text-center text-[var(--text-secondary)]">
+              명함만 완성해도, 자연스럽게 대화가 시작돼요
+            </div>
           </DrawerHeader>
 
           {/* 버튼 그룹 */}
-          <div className="flex flex-col gap-4 mt-6">
-            <Button variant="outline" className="w-full" onClick={onClickMovetoRealCardScanPage}>
+          <div className="flex flex-col gap-1 mt-0">
+            <Button btntype="enabled" className="w-full" onClick={onClickMovetoRealCardScanPage}>
               실제 명함 촬영하기
             </Button>
-            <Button variant="outline" className="w-full" onClick={() => setIsDrawerOpen(false)}>
+            <Button btntype="secondary" className="w-full" onClick={() => setIsDrawerOpen(false)}>
               직접 입력
             </Button>
           </div>
 
           {/* Footer */}
-          <DrawerFooter className="mt-6">
-            <button className="text-sm text-gray-500 underline" onClick={onClickCardPreviewPage}>
+          <DrawerFooter className="mt-3 px-3 py-2">
+            <button
+              className="text-sm text-[var(--text-primary)] underline"
+              onClick={onClickCardPreviewPage}
+            >
               나중에 할래요
             </button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      <div className="bg-black p-6">
+
+      <div className="bg-[var(--bg-default-black)] p-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             {/* Header */}
             <Header>
               <Header.Left>
                 <Logo />
-                <span className="text-[var(--text-primary)]">hihii</span>
               </Header.Left>
 
               <Header.Right>
@@ -139,15 +176,57 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               </Header.Right>
             </Header>
 
-            {/* 이메일 필드 */}
+            {/* 비즈니스명 필드 */}
             <FormField
               control={form.control}
-              name="email"
+              name="nickname"
+              render={({ field }) => (
+                <FormItem className="gap-[6px]">
+                  <FormLabel className="text-[var(--text-primary)]">비즈니스명</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="비즈니스명을 입력하세요"
+                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* 업무 폰 필드 */}
+            <FormField
+              control={form.control}
+              name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>이메일</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)]">업무용 전화번호</FormLabel>
                   <FormControl>
-                    <Input placeholder="example@example.com" {...field} />
+                    <Input
+                      placeholder="업무용 전화번호를 입력하세요"
+                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* url 필드 */}
+            <FormField
+              control={form.control}
+              name="website"
+              render={({ field: websiteField }) => (
+                <FormItem>
+                  <FormLabel className="text-[var(--text-primary)]">URL</FormLabel>
+                  <FormControl>
+                    <UrlDropdown
+                      value={websiteField.value}
+                      onChange={websiteField.onChange}
+                      platformId={form.watch('platformId')}
+                      onPlatformChange={(id) => form.setValue('platformId', id)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -160,159 +239,117 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               name="company"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>회사명</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)]">회사명</FormLabel>
                   <FormControl>
-                    <Input placeholder="현재 소속된 회사명을 입력하세요" {...field} />
+                    <Input
+                      placeholder="현재 소속된 회사명을 입력하세요"
+                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            {/* 직무/직책 필드 */}
+            {/* 직책 필드 */}
             <FormField
               control={form.control}
               name="jobTitle"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>직무/직책</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)]">직책</FormLabel>
                   <FormControl>
-                    <Input placeholder="직무/직책을 입력하세요" {...field} />
+                    <Input
+                      placeholder="직책을 입력하세요"
+                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             {/* 부서 필드 */}
             <FormField
               control={form.control}
               name="department"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>부서</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)]">부서</FormLabel>
                   <FormControl>
-                    <Input placeholder="부서를 입력하세요" {...field} />
+                    <Input
+                      placeholder="부서를 입력하세요"
+                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            {/* 유선전화 필드 */}
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>유선전화</FormLabel>
-                  <FormControl>
-                    <Input placeholder="전화번호를 입력하세요" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* FAX 필드 */}
-            <FormField
-              control={form.control}
-              name="fax"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>FAX</FormLabel>
-                  <FormControl>
-                    <Input placeholder="FAX 번호를 입력하세요" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             {/* 회사 주소 필드 */}
             <FormField
               control={form.control}
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>회사 주소</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)]">회사 주소</FormLabel>
                   <FormControl>
-                    <Input placeholder="주소를 입력하세요" {...field} />
+                    <Input
+                      placeholder="주소를 입력하세요"
+                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            {/* 회사 홈페이지 필드 */}
+            {/* FAX 필드 */}
             <FormField
               control={form.control}
-              name="website"
+              name="fax"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>회사 홈페이지</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)]">FAX</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://example.com" {...field} />
+                    <Input
+                      placeholder="FAX 번호를 입력하세요"
+                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            {/* 회사 홈페이지 필드 */}
+            {/* 경력 필드 */}
             <FormField
               control={form.control}
-              name="url1"
+              name="experience_years"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>url1</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)]">경력</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://example.com" {...field} />
+                    <Input
+                      placeholder="경력을 입력하세요"
+                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            {/* 회사 홈페이지 필드 */}
-            <FormField
-              control={form.control}
-              name="url2"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>url2</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* 회사 홈페이지 필드 */}
-            <FormField
-              control={form.control}
-              name="url3"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>url3</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             {/* 제출 버튼 */}
             <div className="flex flex-col gap-4">
-              <Button type="submit">제출</Button>
-              <Button onClick={onClickUserInterestsPage}>건너뛰기</Button>
+              <Button btntype="enabled" className=" text-[var(--text-primary)]">
+                제출
+              </Button>
             </div>
           </form>
         </Form>
       </div>
-      ;
     </div>
   );
 };
