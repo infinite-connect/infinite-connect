@@ -76,12 +76,12 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
   }, [isActive, navigate]);
 
   return (
-    <div className="relative w-full h-full bg-white">
+    <div className="relative w-full h-full bg-transparent">
       {/* 카메라 화면 */}
-      <div id="qr-scanner" ref={scannerRef} className="absolute inset-0 w-full h-full" />
+      <div id="qr-scanner" ref={scannerRef} className="absolute inset-0 w-full h-full p-0" />
       <div
         className="
-          absolute w-[240px] h-[20px] text-[22px] font-bold bottom-[170px] left-1/2 transform -translate-x-1/2 z-50 
+          absolute w-[240px] h-[20px] text-[22px] font-bold bottom-[140px] left-1/2 transform -translate-x-1/2 z-50 
           text-center text-white
         "
       >
