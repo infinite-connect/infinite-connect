@@ -33,14 +33,28 @@ const QRScanDisplayModal: React.FC<QRScanDisplayModalProps> = ({ isOpen, onClose
           {/* TabsList 중앙 정렬 */}
           <TabsList
             className="
-              absolute top-15 left-1/2 z-50 transform -translate-x-1/2 -translate-y-1/2 
-              flex justify-center items-center border-gray-300
+              absolute w-[342px] h-[46px] top-[132px] left-1/2 z-50 transform -translate-x-1/2 -translate-y-1/2 
+              flex justify-center items-center bg-[#2a2a2a] rounded-[100px] 
             "
           >
-            <TabsTrigger value="tab1" className="px-6 py-2 text-sm font-medium text-black">
+            <TabsTrigger
+              value="tab1"
+              className="
+                px-6 py-2 text-sm font-medium rounded-[100px]
+                bg-[#7253ff] text-[var(--text-secondary)]  data-[state=active]:bg-[#7253ff] data-[state=active]:text-[var(--text-secondary)] 
+                data-[state=inactive]:bg-transparent data-[state=inactive]:text-[var(--text-secondary)]
+              "
+            >
               QR 스캔
             </TabsTrigger>
-            <TabsTrigger value="tab2" className="px-6 py-2 text-sm font-medium text-black">
+            <TabsTrigger
+              value="tab2"
+              className="
+                px-6 py-2 text-sm font-medium rounded-[100px]
+                bg-transparent text-[var(--text-secondary)] data-[state=active]:bg-[#7253ff] data-[state=active]:text-black
+                data-[state=inactive]:bg-transparent data-[state=inactive]:text-[var(--text-secondary)]
+              "
+            >
               QR 표시
             </TabsTrigger>
           </TabsList>
