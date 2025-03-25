@@ -1,15 +1,18 @@
+import { cn } from '@lib/utils';
 import { HeaderLeft } from './HeaderLeft';
 import { HeaderRight } from './HeaderRight';
 
-const Header = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <header className="relative flex items-center justify-between w-full h-14 py-3">
-      {children}
-    </header>
-  );
+type HeaderProps = {
+  children: React.ReactNode;
+  className?: string;
 };
 
-// Slot 구성 연결
+const Header = ({ children, className }: HeaderProps) => {
+  const defaultStyle = 'relative flex items-center justify-between w-full h-14 py-3';
+
+  return <header className={cn(defaultStyle, className)}>{children}</header>;
+};
+
 Header.Left = HeaderLeft;
 Header.Right = HeaderRight;
 
