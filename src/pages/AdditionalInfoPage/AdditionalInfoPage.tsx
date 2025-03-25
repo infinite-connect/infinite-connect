@@ -129,19 +129,19 @@ const AdditionalInfoPage = (): React.JSX.Element => {
     <div>
       {/* Drawer 컴포넌트 */}
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-        <DrawerContent className="bg-[var(--bg-default-black)] p-6">
+        <DrawerContent className="bg-[var(--bg-default-black)] p-6 pb-5 rounded-lg">
           {/* Header */}
-          <DrawerHeader>
-            <DrawerTitle className="text-xl font-bold text-[var(--text-primary)]">
+          <DrawerHeader className="pt-10 pb-5 pr-0 pl-0 gap-2">
+            <DrawerTitle className="text-xl text-center font-bold text-[var(--text-primary)]">
               추가 정보 입력
             </DrawerTitle>
-            <div className="text-[var(--text-secondary)]">
+            <div className="text-center text-[var(--text-secondary)]">
               명함만 완성해도, 자연스럽게 대화가 시작돼요
             </div>
           </DrawerHeader>
 
           {/* 버튼 그룹 */}
-          <div className="flex flex-col gap-4 mt-6">
+          <div className="flex flex-col gap-1 mt-0">
             <Button btntype="enabled" className="w-full" onClick={onClickMovetoRealCardScanPage}>
               실제 명함 촬영하기
             </Button>
@@ -151,8 +151,11 @@ const AdditionalInfoPage = (): React.JSX.Element => {
           </div>
 
           {/* Footer */}
-          <DrawerFooter className="mt-6">
-            <button className="text-sm text-gray-500 underline" onClick={onClickCardPreviewPage}>
+          <DrawerFooter className="mt-3 px-3 py-2">
+            <button
+              className="text-sm text-[var(--text-primary)] underline"
+              onClick={onClickCardPreviewPage}
+            >
               나중에 할래요
             </button>
           </DrawerFooter>
