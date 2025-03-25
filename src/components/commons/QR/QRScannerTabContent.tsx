@@ -30,7 +30,7 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
             { facingMode: 'environment' }, // 후면 카메라 설정
             {
               fps: 10,
-              qrbox: 300, // QR 스캔 영역 설정
+              qrbox: 275, // QR 스캔 영역 설정
               aspectRatio, // �����라 ��면 비�� 설정
             },
             (decodedText) => {
@@ -76,13 +76,13 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
   }, [isActive, navigate]);
 
   return (
-    <div className="relative w-full h-full bg-white">
+    <div className="relative w-full h-full bg-transparent">
       {/* 카메라 화면 */}
-      <div id="qr-scanner" ref={scannerRef} className="absolute inset-0 w-full h-full" />
+      <div id="qr-scanner" ref={scannerRef} className="absolute inset-0 w-full h-full p-0" />
       <div
         className="
-          absolute bottom-30 left-1/2 transform -translate-x-1/2 z-50 
-          text-center text-lg font-medium text-white py-2
+          absolute w-[240px] h-[20px] text-[22px] font-bold bottom-[140px] left-1/2 transform -translate-x-1/2 z-50 
+          text-center text-white
         "
       >
         QR 코드를 스캔하세요
