@@ -67,7 +67,7 @@ const TypeCard = ({ isActive, type }: TypeCardProps): React.JSX.Element => {
     >
       <div
         className={`rounded-3xl relative ${
-          isActive ? 'scale-100' : 'scale-85 opacity-40 pointer-events-none'
+          isActive ? 'scale-100' : 'scale-85 opacity-30 pointer-events-none'
         }`}
         style={{
           width: '248px',

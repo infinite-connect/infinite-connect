@@ -16,6 +16,7 @@ const TypeCardCarousel = ({ onCardTypeChange }: TypeCardCarouselProps): React.JS
 
   const settings = {
     dots: false,
+    arrows: false,
     infinite: true,
     centerMode: true,
     centerPadding: '60px',
@@ -44,11 +45,11 @@ const TypeCardCarousel = ({ onCardTypeChange }: TypeCardCarouselProps): React.JS
 
   return (
     <div>
-      <div className="text-center mb-4">
-        <h1 className="text-xl font-bold text-gray-700">{currentType}</h1>
-        <h2 className="text-xl font-bold text-gray-700">{currentTimeRange}</h2>
+      <div className="text-center gap-[8px] px-3 py-1.5 mb-[26px]">
+        <div className="text-[22px] font-bold text-white">{currentType}</div>
+        <div className="text-[16px] font-bold text-white">{currentTimeRange}</div>
       </div>
-      <div className="w-[375px] py-2 mx-auto overflow-visible">
+      <div className="w-[100vw] mb-[20px] border-2 border-red-500">
         <Slider {...settings}>
           {['dawn', 'morning', 'day', 'evening', 'night'].map((type, index) => (
             <TypeCard
@@ -58,17 +59,17 @@ const TypeCardCarousel = ({ onCardTypeChange }: TypeCardCarouselProps): React.JS
             />
           ))}
         </Slider>
-        <div className="flex justify-center gap-[8px] mt-4">
-          {['dawn', 'morning', 'day', 'evening', 'night'].map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)} // 클릭 시 슬라이드 이동
-              className={`w-[8px] h-[8px] rounded-full ${
-                currentSlide === index ? 'bg-blue-500' : 'bg-gray-400'
-              }`}
-            ></button>
-          ))}
-        </div>
+      </div>
+      <div className="flex justify-center gap-[8px]">
+        {['dawn', 'morning', 'day', 'evening', 'night'].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentSlide(index)} // 클릭 시 슬라이드 이동
+            className={`w-[8px] h-[8px] rounded-full ${
+              currentSlide === index ? 'bg-white' : 'bg-[#6E6B6B]'
+            }`}
+          ></button>
+        ))}
       </div>
     </div>
   );

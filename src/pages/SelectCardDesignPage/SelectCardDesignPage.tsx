@@ -1,6 +1,7 @@
+import { Button } from '@components/commons/Button/Button';
 import TypeCardCarousel from '@components/commons/Card/TypeCardCarousel';
+import { Header } from '@components/commons/Header/Header';
 import { CardType } from '@components/SelectCardDesignPage/types';
-import { Button } from '@components/ui/button';
 import { useUpdateBusinessCardTypeMutation } from '@features/BusinessCard/api/selectCardDesignApi';
 import { RootState } from '@store/store';
 import React, { useState } from 'react';
@@ -37,16 +38,20 @@ const SelectCardDesignPage = (): React.JSX.Element => {
 
   return (
     <div
-      className="flex justify-center items-center h-screen" // 화면 중앙 배치를 위한 스타일 추가
+      className="flex-col justify-center items-center h-screen bg-[var(--bg-default-black)]" // 화면 중앙 배치를 위한 스타일 추가
     >
-      <div className="w-120 flex flex-col items-center gap-4 p-6">
-        <h1>{userInfo?.name}님이 선호하는 네트워킹 시간대를 선택해주세요</h1>
-        <div className="mb-10 items-center">
-          <TypeCardCarousel
-            onCardTypeChange={(newCardType: CardType) => setCardType(newCardType)}
-          />
-        </div>
-        <Button variant="outline" onClick={handleCompleteSelection} disabled={isLoading}>
+      <Header className="text-white border-2">Networking Mood</Header>
+      <h1 className="text-white">{userInfo?.name}님이 선호하는 네트워킹 시간대를 선택해주세요</h1>
+      <div className="mb-10 items-center">
+        <TypeCardCarousel onCardTypeChange={(newCardType: CardType) => setCardType(newCardType)} />
+      </div>
+      <div className="px-[24px] py-[16px]">
+        <Button
+          btntype="enabled"
+          className="w-full py-2"
+          onClick={handleCompleteSelection}
+          disabled={isLoading}
+        >
           {isLoading ? '설정 중...' : '선택 완료'}
         </Button>
       </div>
