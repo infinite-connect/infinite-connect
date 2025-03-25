@@ -12,12 +12,14 @@ import {
   useCreateConnectionMutation,
   useGetConnectionQuery,
 } from '@features/UserCardPage/userCardApi';
+import { useIncrementViewCountMutation } from '@features/User/api/viewCountApi';
+import { useSelector } from 'react-redux';
+import { RootState } from '@store/store';
 
 const UserCardPage: React.FC = (): React.JSX.Element => {
-  // 로그인한 사용자의 닉네임 (실제 프로젝트에서는 Auth/Redux/Context 등에서 가져옴)
-  const loginUserNickname = 'test2Nickname';
+  const userInfo = useSelector((state: RootState) => state.user.userInfo);
   // URL 파라미터: 상대방 명함 ID
-  const { businessCardId } = useParams<{ businessCardId: string }>();
+  const { nickname, businessCardId } = useParams<{ nickname: string; businessCardId: string }>();
   const navigate = useNavigate();
 
   // 모달 상태 및 모달 모드 관리
@@ -35,11 +37,24 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
   // 이미 해당 명함이 추가되었는지 확인하는 Query (로그인 사용자와 명함 ID로)
   const { data: connectionData } = useGetConnectionQuery(
     {
-      scanner_id: loginUserNickname,
+      scanner_id: userInfo ? userInfo.nickname : '',
       business_card_id: businessCard ? businessCard.business_card_id : '',
     },
     { skip: !businessCard },
   );
+
+  const [incrementViewCount] = useIncrementViewCountMutation();
+
+  useEffect(() => {
+    if (nickname && userInfo?.nickname && nickname !== userInfo.nickname) {
+      // URL의 nickname이 현재 로그인한 유저의 nickname과 다를 경우에만 조회수 증가
+      incrementViewCount({
+        nickname: userInfo.nickname, // 조회하는 사람의 닉네임 (현재 로그인한 사용자)
+        businessCardId: businessCardId!, // 대상 명함 ID
+      }).catch((err) => console.error('조회수 증가 실패:', err));
+    }
+    // eslint-disable-next-line
+  }, [nickname, userInfo?.nickname, businessCardId]);
 
   // connectionData가 존재하면 이미 추가된 것으로 판단
   useEffect(() => {
@@ -84,7 +99,7 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
     try {
       await createConnection({
         owner_id: businessCard.nickname, // 상대방 명함 소유자 (닉네임)
-        scanner_id: loginUserNickname, // 현재 로그인 사용자의 닉네임
+        scanner_id: userInfo?.nickname || '', // 현재 로그인 사용자의 닉네임
         business_card_id: businessCard.business_card_id,
         exchange_method: 'online',
         status: 'active', // DB에는 항상 'active'로 저장

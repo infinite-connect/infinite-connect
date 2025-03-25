@@ -6,6 +6,7 @@ import { networkingApi } from '@features/Networking/networkingApi';
 import { userCardApi } from '@features/UserCardPage/userCardApi';
 import userReducer from '@features/User/slice/userSlice';
 import { selectCardDesignApi } from '@features/BusinessCard/api/selectCardDesignApi';
+import { viewCountApi } from '@features/User/api/viewCountApi';
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     [infoDuplicateCheckApi.reducerPath]: infoDuplicateCheckApi.reducer,
     [networkingApi.reducerPath]: networkingApi.reducer,
     [userCardApi.reducerPath]: userCardApi.reducer,
+    [viewCountApi.reducerPath]: viewCountApi.reducer,
     user: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -27,6 +29,7 @@ export const store = configureStore({
       infoDuplicateCheckApi.middleware,
       userCardApi.middleware,
       networkingApi.middleware,
+      viewCountApi.middleware,
     ),
 });
 
