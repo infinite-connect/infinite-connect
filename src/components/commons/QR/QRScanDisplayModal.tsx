@@ -28,7 +28,7 @@ const QRScanDisplayModal: React.FC<QRScanDisplayModalProps> = ({ isOpen, onClose
         <Tabs
           value={activeTab}
           onValueChange={setActiveTab}
-          className="flex-grow justify-items-center items-center space-y-[32px] relative z-20 border-2 border-red-500"
+          className="flex-grow justify-items-center items-center space-y-[32px] relative z-20"
         >
           {/* 헤더 */}
           <div className="relative inset-0 w-full z-50">
@@ -47,45 +47,45 @@ const QRScanDisplayModal: React.FC<QRScanDisplayModalProps> = ({ isOpen, onClose
           {/* TabsList 중앙 정렬 */}
           <TabsList
             className="
-              flex justify-center items-center bg-[#2a2a2a] rounded-[100px] relative z-20
+              flex justify-center items-center w-[324px] h-[46px] bg-[#2a2a2a] rounded-[100px] relative z-20
             "
           >
             <TabsTrigger
               value="tab1"
               className="
-                px-6 py-2 text-sm font-medium rounded-[100px]
+                px-6 py-2 w-[166px] h-[38px] text-sm font-bold rounded-[100px]
                 bg-[#7253ff] text-[var(--text-secondary)] data-[state=active]:bg-[#7253ff] data-[state=active]:text-[var(--text-secondary)] 
                 data-[state=inactive]:bg-transparent data-[state=inactive]:text-[var(--text-secondary)]
               "
             >
-              QR 스캔
+              QR표시
             </TabsTrigger>
             <TabsTrigger
               value="tab2"
               className="
-                px-6 py-2 text-sm font-medium rounded-[100px]
+                px-6 py-2 w-[166px] h-[38px] text-sm font-bold rounded-[100px]
                 bg-transparent text-[var(--text-secondary)] data-[state=active]:bg-[#7253ff] data-[state=active]:text-black
                 data-[state=inactive]:bg-transparent data-[state=inactive]:text-[var(--text-secondary)]
               "
             >
-              QR 표시
+              QR스캔
             </TabsTrigger>
           </TabsList>
 
+          {/* QR 표시 콘텐츠 */}
+          <TabsContent value="tab1" className="mt-25 py-6 text-white">
+            <QRDisplayTabContent />
+          </TabsContent>
+
           {/* QR 스캔 콘텐츠 */}
           <TabsContent
-            value="tab1"
+            value="tab2"
             className={`
-              ${activeTab === 'tab1' ? 'absolute inset-0 w-full h-full z-10' : ''}
+              ${activeTab === 'tab2' ? 'absolute inset-0 w-full h-full z-10' : ''}
               flex justify-start items-start
             `}
           >
-            <QRScannerTabContent isActive={activeTab === 'tab1'} />
-          </TabsContent>
-
-          {/* QR 표시 콘텐츠 */}
-          <TabsContent value="tab2" className="mt-25 py-6 text-white">
-            <QRDisplayTabContent />
+            <QRScannerTabContent isActive={activeTab === 'tab2'} />
           </TabsContent>
         </Tabs>
       </DialogContent>

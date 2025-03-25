@@ -29,6 +29,10 @@ const QRDisplayTabContent: React.FC = () => {
     isError,
   } = useGetUserBusinessCardsQuery(nickname || '');
 
+  const isCardSingle = businessCards.length > 1;
+
+  console.log(businessCards);
+
   const mainSliderRef = useRef<Slider | null>(null); // 초기값을 null로 설정
   const navSliderRef = useRef<Slider | null>(null); // 초기값을 null로 설정
 
@@ -51,7 +55,7 @@ const QRDisplayTabContent: React.FC = () => {
   // 메인 슬라이더 설정
   const mainSettings = {
     dots: false,
-    infinite: businessCards.length > 1,
+    infinite: isCardSingle,
     centerMode: true,
     speed: 500,
     centerPadding: '0px',
@@ -69,7 +73,7 @@ const QRDisplayTabContent: React.FC = () => {
   // 네비게이션 슬라이더 설정
   const navSettings = {
     dots: false,
-    infinite: businessCards.length > 1,
+    infinite: isCardSingle,
     speed: 500,
     slidesToShow: 1, // 한 개만 보여줌
     slidesToScroll: 1,
@@ -97,9 +101,24 @@ const QRDisplayTabContent: React.FC = () => {
 
   return (
     <div className="relative w-full h-full">
-      {/* 현재 슬라이드의 business_card_id 표시 */}
-      <div className="text-center text-lg font-bold mb-4 text-black">
-        현재 QR의 ID: {businessCards[currentIndex]}
+      <div className="absolute top-[-20px] z-50 left-1/2 transform -translate-x-1/2 flex items-center justify-center space-x-4">
+        {!isCardSingle && (
+          <button
+            className="bg-gray-200 p-2 rounded-full z-10"
+            onClick={() => mainSliderRef.current?.slickPrev()}
+          >
+            &lt;
+          </button>
+        )}
+        <span className="text-lg font-bold text-black">card_name</span>
+        {!isCardSingle && (
+          <button
+            className="bg-gray-200 p-2 rounded-full z-10"
+            onClick={() => mainSliderRef.current?.slickNext()}
+          >
+            &gt;
+          </button>
+        )}
       </div>
 
       {/* 메인 슬라이더 */}
@@ -114,11 +133,11 @@ const QRDisplayTabContent: React.FC = () => {
               <div className="flex justify-self-center">
                 <QRCodeCanvas
                   value={generateQRCodeUrl(nickname, businessCardId)}
-                  size={250}
+                  size={334}
                   bgColor="#FFFFFF"
                   fgColor="#000000"
                   level="M"
-                  className="rounded-md self-center"
+                  className="rounded-md self-center scale-75"
                 />
               </div>
             </div>
