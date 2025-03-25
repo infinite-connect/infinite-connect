@@ -71,7 +71,7 @@ const TypeCard = ({ isActive, type }: TypeCardProps): React.JSX.Element => {
         }`}
         style={{
           width: '248px',
-          height: '331px',
+          height: '350px',
           overflow: 'visible', // 카드 요소에도 overflow-visible 추가
           transformStyle: 'preserve-3d', // 3D 회전 유지
           transformOrigin: 'center center', // 회전 중심을 중앙으로 설정
@@ -89,7 +89,7 @@ const TypeCard = ({ isActive, type }: TypeCardProps): React.JSX.Element => {
           <div
             className="absolute inset-0 w-full h-full flex items-center justify-center"
             style={{
-              backgroundImage: `url(${CARD_TYPE_IMAGES[type].front})`,
+              backgroundImage: `url(${CARD_TYPE_IMAGES[type].vertical})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backfaceVisibility: isFrontVisible ? 'visible' : 'hidden',
@@ -97,14 +97,16 @@ const TypeCard = ({ isActive, type }: TypeCardProps): React.JSX.Element => {
               zIndex: isFrontVisible ? 10 : -1, // 앞면이 활성화될 때 z-index를 높게 설정
             }}
           >
-            <h1 className="text-2xl font-bold text-black">{CARD_TYPE_TEXT[type].label}</h1>
+            <h1 className="text-2xl font-bold text-[var(--text-black)]">
+              {CARD_TYPE_TEXT[type].label}
+            </h1>
           </div>
 
           {/* 뒷면 */}
           <div
             className="absolute inset-0 w-full h-full flex flex-col justify-center items-center text-white rounded-3xl"
             style={{
-              backgroundImage: `url(${CARD_TYPE_IMAGES[type].back})`, // 뒷면 배경 이미지 설정
+              backgroundImage: `url(${CARD_TYPE_IMAGES[type].vertical})`, // 뒷면 배경 이미지 설정
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backfaceVisibility: !isFrontVisible ? 'visible' : 'hidden',
@@ -112,7 +114,9 @@ const TypeCard = ({ isActive, type }: TypeCardProps): React.JSX.Element => {
               zIndex: isFrontVisible ? -1 : 10,
             }}
           >
-            <h1 className="text-2xl font-bold">{CARD_TYPE_TEXT[type].label}</h1>
+            <h1 className="text-2xl font-bold text-[var(--text-black)]">
+              {CARD_TYPE_TEXT[type].label}
+            </h1>
           </div>
         </div>
       </div>

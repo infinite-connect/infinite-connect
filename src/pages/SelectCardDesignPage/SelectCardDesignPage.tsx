@@ -35,10 +35,6 @@ const SelectCardDesignPage = (): React.JSX.Element => {
     }
   };
 
-  if (!businessCardId) {
-    return <p>유효한 명함 ID가 없습니다.</p>;
-  }
-
   return (
     <div
       className="flex justify-center items-center h-screen" // 화면 중앙 배치를 위한 스타일 추가

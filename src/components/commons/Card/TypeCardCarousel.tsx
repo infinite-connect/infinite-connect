@@ -34,6 +34,10 @@ const TypeCardCarousel = ({ onCardTypeChange }: TypeCardCarouselProps): React.JS
   };
 
   // 현재 슬라이드에 해당하는 시간 범위 가져오기
+  const currentType =
+    CARD_TYPE_TEXT[['dawn', 'morning', 'day', 'evening', 'night'][currentSlide] as CardType].type;
+
+  // 현재 슬라이드에 해당하는 시간 범위 가져오기
   const currentTimeRange =
     CARD_TYPE_TEXT[['dawn', 'morning', 'day', 'evening', 'night'][currentSlide] as CardType]
       .timeRange;
@@ -41,6 +45,7 @@ const TypeCardCarousel = ({ onCardTypeChange }: TypeCardCarouselProps): React.JS
   return (
     <div>
       <div className="text-center mb-4">
+        <h1 className="text-xl font-bold text-gray-700">{currentType}</h1>
         <h2 className="text-xl font-bold text-gray-700">{currentTimeRange}</h2>
       </div>
       <div className="w-[375px] py-2 mx-auto overflow-visible">
