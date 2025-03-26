@@ -12,7 +12,6 @@ export interface BusinessCard {
   interests?: string[];
   phone?: string;
   email?: string;
-  linkedin?: string;
   businessWebsite?: string;
   website?: string;
   experienceYears?: number;
@@ -20,9 +19,20 @@ export interface BusinessCard {
   isPublic?: boolean;
   isPrimary?: boolean;
   createdAt?: string;
-  qrImageUrl?: string;
   nickname: string;
   cardType: string;
+  businessName?: string;
+  fax?: string;
+  jobTitle?: string;
+  department?: string;
+  businessAddress?: string;
+  horizontalCardImage?: string | null;
+  verticalCardImage?: string | null;
+  networkingMode?: boolean | null;
+  networkingTime?: string | null;
+  primaryUrl?: Record<string, string> | null;
+  subFirstUrl?: Record<string, string> | null;
+  subSecondUrl?: Record<string, string> | null;
 }
 
 interface DbBusinessCard {
@@ -34,17 +44,27 @@ interface DbBusinessCard {
   interests?: string[]; // JSON 배열로 저장된 문자열 배열
   phone?: string;
   email?: string;
-  linkedin?: string;
   business_website?: string;
   website?: string;
-  experience_years?: number | null;
-  view_count?: number | null;
-  is_public?: boolean | null;
-  is_primary?: boolean | null;
-  created_at?: string | null;
-  qr_image_url?: string | null;
+  experience_years?: number;
+  view_count?: number;
+  is_public?: boolean;
+  is_primary?: boolean;
+  created_at?: string;
   nickname: string;
-  card_type: string | null;
+  card_type: 'dawn' | 'morning' | 'day' | 'evening' | 'night';
+  business_name?: string;
+  fax?: string;
+  job_title?: string;
+  department?: string;
+  business_address?: string;
+  horizontal_card_image?: string | null;
+  vertical_card_image?: string | null;
+  networking_mode?: boolean | null;
+  networking_time?: string | null;
+  primary_url?: Record<string, string> | null;
+  sub_url_01?: Record<string, string> | null;
+  sub_url_02?: Record<string, string> | null;
 }
 
 export interface User {
@@ -74,7 +94,6 @@ export const businessCardApi = createApi({
               interests,
               phone,
               email,
-              linkedin,
               business_website,
               website,
               experience_years,
@@ -82,9 +101,20 @@ export const businessCardApi = createApi({
               is_public,
               is_primary,
               created_at,
-              qr_image_url,
               nickname,
-              card_type
+              card_type,
+              business_name,
+              fax,
+              job_title,
+              department,
+              business_address,
+              horizontal_card_image,
+              vertical_card_image,
+              networking_mode,
+              networking_time,
+              primary_url,
+              sub_url_01,
+              sub_url_02
             `,
             )
             .eq('business_card_id', cardId)
@@ -104,7 +134,6 @@ export const businessCardApi = createApi({
             interests: Array.isArray(data.interests) ? data.interests : [],
             phone: data.phone ?? '',
             email: data.email ?? '',
-            linkedin: data.linkedin ?? '',
             businessWebsite: data.business_website ?? '',
             website: data.website ?? '',
             experienceYears: data.experience_years ?? 0,
@@ -112,9 +141,20 @@ export const businessCardApi = createApi({
             isPublic: data.is_public ?? true,
             isPrimary: data.is_primary ?? false,
             createdAt: data.created_at ?? '',
-            qrImageUrl: data.qr_image_url ?? '',
             nickname: data.nickname ?? '',
             cardType: data.card_type ?? 'dawn',
+            businessName: data.business_name ?? '',
+            fax: data.fax ?? '',
+            jobTitle: data.job_title ?? '',
+            department: data.department ?? '',
+            businessAddress: data.business_address ?? '',
+            horizontalCardImage: data.horizontal_card_image ?? '',
+            verticalCardImage: data.vertical_card_image ?? '',
+            networkingMode: data.networking_mode ?? false,
+            networkingTime: data.networking_time ?? '',
+            primaryUrl: data.primary_url ?? null,
+            subFirstUrl: data.sub_url_01 ?? null,
+            subSecondUrl: data.sub_url_02 ?? null,
           };
 
           return { data: transformedData };
@@ -156,10 +196,12 @@ export const businessCardApi = createApi({
       },
       providesTags: (_, __, nickname) => [{ type: 'User', id: nickname }],
     }),
+
+    // 명함 추가 API 수정 필요 추가 카드 타입, 추가 정보 입력 후 가능하도록
     addBusinessCard: builder.mutation<BusinessCard, { nickname: string }>({
       queryFn: async ({ nickname }) => {
         try {
-          const { data, error } = await supabase
+          const { error } = await supabase
             .from('business_cards')
             .insert({
               card_name: '', // 기본값
@@ -175,29 +217,7 @@ export const businessCardApi = createApi({
 
           if (error) throw error;
 
-          const transformedData = {
-            businessCardId: data.business_card_id,
-            cardName: data.card_name,
-            fieldsOfExpertise: data.fields_of_expertise,
-            subExpertise: data.sub_expertise,
-            company: data.company ?? '',
-            interests: Array.isArray(data.interests) ? data.interests : [],
-            phone: data.phone ?? '',
-            email: data.email ?? '',
-            linkedin: data.linkedin ?? '',
-            businessWebsite: data.business_website ?? '',
-            website: data.website ?? '',
-            experienceYears: 0, // 기본값
-            viewCount: 0, // 기본값
-            isPublic: false, // 비공개
-            isPrimary: false, // 대표 명함 아님
-            createdAt: new Date().toISOString(), // 현재 시간
-            qrImageUrl: '',
-            nickname,
-            cardType: 'dawn',
-          };
-
-          return { data: transformedData };
+          return { data: undefined };
         } catch (error) {
           return {
             error:
