@@ -2,14 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import FullScreenPopup from '@components/NetworkingListPage/FullScreenPopup';
 import BusinessCardConsentSheet from '@components/NetworkingListPage/BusinessCardConsentSheet';
-import DropDown from '@components/ui/dropDown';
-import List from '@components/NetworkingListPage/List'; // 🔹 리스트 컴포넌트 분리
 import {
   useCheckUserBusinessCardVisibilityQuery,
   useGetNetworkingListQuery,
   useUpdateBusinessCardVisibilityMutation,
 } from '@features/Networking/networkingApi';
-import { roles, detailsMap } from '@constants/userRole';
 import { Header } from '@components/commons/Header/Header';
 import { Logo } from '@components/commons/Header/Logo';
 import QrIcon from '@components/NetworkingListPage/UI/QrIcon';
@@ -17,21 +14,22 @@ import { IconButton } from '@components/commons/Button/IconButton';
 import SearchIcon from '@components/NetworkingListPage/UI/SearchIcon';
 import HotBusinessCardSection from '@components/NetworkingListPage/HotBusinessCardSection';
 import AlarmIcon from '@components/NetworkingListPage/UI/AlarmIcon';
+import UserSimilarTypeSection from '@components/NetworkingListPage/UserSimilarTypeSection';
+import UserFiterSection from '@components/NetworkingListPage/UserFilterSection';
 
 const NetworkingList: React.FC = (): React.JSX.Element => {
-  const nickname = 'test2Nickname'; // 테스트용 닉네임
+  const nickname = 'test20Nickname'; // 테스트용 닉네임
   const location = useLocation();
-  // UI 상태 관리
-  const [selectedRole, setSelectedRole] = useState('All');
-  const [selectedDetail, setSelectedDetail] = useState('All');
+
   const [showPopup, setShowPopup] = useState(false);
   const [showConsentSheet, setShowConsentSheet] = useState(false);
 
   // 네트워킹 리스트 가져오기
-  const { data: networkingList, error, refetch } = useGetNetworkingListQuery(nickname);
+  const { data: networkingList, refetch } = useGetNetworkingListQuery(nickname);
   console.log('네트워킹 리스트:', networkingList);
   // 명함 공개 여부 확인
   const { data: userBusinessCard, isLoading } = useCheckUserBusinessCardVisibilityQuery(nickname);
+
   //  명함 공개 여부 업데이트
   const [updateBusinessCardVisibility] = useUpdateBusinessCardVisibilityMutation();
 
@@ -79,32 +77,13 @@ const NetworkingList: React.FC = (): React.JSX.Element => {
     }
   };
 
-  const handleRoleSelect = (role: string) => {
-    setSelectedRole(role);
-    setSelectedDetail('All'); // 역할 변경 시 세부 분야 초기화
-  };
-
-  const availableDetails =
-    selectedRole === 'All' ? ['All'] : detailsMap[selectedRole as keyof typeof detailsMap];
-
-  // ✅ 필터링된 네트워킹 리스트 반환
-  const getFilteredNetworkingList = () =>
-    networkingList?.filter((profile) => {
-      const roleMatch = selectedRole === 'All' || profile.fields_of_expertise === selectedRole;
-      const detailMatch = selectedDetail === 'All' || profile.sub_expertise === selectedDetail;
-      return roleMatch && detailMatch;
-    });
-  if (error) {
-    return <div>네트워킹 리스트를 불러오는 중 오류가 발생했습니다.</div>;
-  }
-
   const handleQrClick = () => {
     console.log('qr클릭');
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white px-[16px]">
-      <Header>
+    <div className="min-h-screen bg-[var(--bg-default-black)]  text-white">
+      <Header className="px-[16px] bg-[var(--bg-default-black)] z-12 fixed top-0 left-0 ">
         <Header.Left>
           <Logo />
           <span>Networking</span>
@@ -115,9 +94,15 @@ const NetworkingList: React.FC = (): React.JSX.Element => {
           <IconButton icon={<AlarmIcon />} onClick={handleQrClick} />
         </Header.Right>
       </Header>
+      <div className="pt-14">
+        <HotBusinessCardSection />
 
-      <HotBusinessCardSection />
+        <UserSimilarTypeSection />
 
+        <UserFiterSection />
+      </div>
+
+      {/** 풀팝업창, 공개 확인 바텀시트 등  */}
       <FullScreenPopup
         open={showPopup}
         onClose={handlePopupXClose}

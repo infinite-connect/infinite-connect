@@ -26,6 +26,7 @@ function ScrollArea({
           dark:ring-ring/20
           dark:outline-ring/40
           outline-ring/50
+          scrollbar-hide
         "
       >
         {children}

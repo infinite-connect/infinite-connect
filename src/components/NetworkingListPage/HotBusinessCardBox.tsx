@@ -1,7 +1,7 @@
 import React from 'react';
 import NetworkType from './UI/NetworkType';
 import SeparationLine from './UI/SeparationLine';
-
+import PopularIcon from './UI/PopularIcon';
 const HotBusinessCardBox = (): React.JSX.Element => {
   return (
     <div
@@ -37,8 +37,13 @@ const HotBusinessCardBox = (): React.JSX.Element => {
         <span className="">Jacob.K</span>
       </div>
       <div className="flex flex-row items-center justify-between w-full">
-        <span className="font-[Inter] text-[10px] font-medium ">Infinite Connect</span>
-        <span className=" text-[12px] gap-[2px] rounded-sm p-[4px] bg-amber-700">✨ 인기있는</span>
+        <span className="h-full font-[Inter] text-[10px] font-medium flex items-center ">
+          Infinite Connect
+        </span>
+        <div className="flex items-center bg-[rgba(255,255,255,0.07)] rounded-sm p-[4px]">
+          <PopularIcon />
+          <span className=" text-[12px] gap-[2px] font-normal  rounded-sm p-[4px]">인기있는</span>
+        </div>
       </div>
     </div>
   );

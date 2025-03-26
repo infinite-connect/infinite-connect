@@ -3,7 +3,7 @@ import HotBusinessCardBox from './HotBusinessCardBox';
 import { ScrollArea } from '@components/ui/scroll-area';
 const HotBusinessCardSection = (): React.JSX.Element => {
   return (
-    <div className="flex flex-col gap-[20px] items-start shrink-0">
+    <div className="flex flex-col gap-[20px] items-start shrink-0 pl-[16px] mb-[30px]">
       <h2
         className="  
         text-[var(--text-primary)]   
@@ -29,8 +29,9 @@ const HotBusinessCardSection = (): React.JSX.Element => {
       >
         잠깐 주목할 만한 명함들이에요
       </h3>
-      <ScrollArea className="w-full relative">
-        <div className="flex flex-row gap-[10px] flex-nowrap">
+      <ScrollArea className="w-full relative scrollbar-hide">
+        {/* 가로 스크롤을 위한 래퍼 */}
+        <div className="flex flex-nowrap gap-[10px]">
           <HotBusinessCardBox />
           <HotBusinessCardBox />
           <HotBusinessCardBox />
@@ -38,30 +39,6 @@ const HotBusinessCardSection = (): React.JSX.Element => {
           <HotBusinessCardBox />
         </div>
       </ScrollArea>
-      <h2
-        className="  
-        text-[var(--text-primary)]   
-          font-[NanumGothic]        
-          text-[18px]             
-          font-normal                 
-          leading-[140%]           
-          tracking-[-0.27px]         
-          self-stretch
-          
-          "
-      >
-        <span className="text-[var(--text-accent)]">해담</span>님과 네트워킹 타입이 똑같아요
-      </h2>
-      <ScrollArea className="w-full relative">
-        <div className="flex flex-row gap-[10px] flex-nowrap ">
-          <HotBusinessCardBox />
-          <HotBusinessCardBox />
-          <HotBusinessCardBox />
-          <HotBusinessCardBox />
-          <HotBusinessCardBox />
-        </div>
-      </ScrollArea>
-      <div className="flex flex-row relative gap-[10px] overflow-x-auto flex-nowrap"></div>
     </div>
   );
 };
