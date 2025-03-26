@@ -69,7 +69,6 @@ const TypeCardCarousel = ({ onCardTypeChange }: TypeCardCarouselProps): React.JS
               key={index}
               isActive={animatingSlide === index || currentSlide === index}
               type={type as CardType} // 카드 타입 전달
-              isExample={true}
             />
           ))}
         </Slider>
