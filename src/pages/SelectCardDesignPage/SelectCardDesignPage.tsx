@@ -1,6 +1,8 @@
+import { Button } from '@components/commons/Button/Button';
 import TypeCardCarousel from '@components/commons/Card/TypeCardCarousel';
+import { Header } from '@components/commons/Header/Header';
+import { Logo } from '@components/commons/Header/Logo';
 import { CardType } from '@components/SelectCardDesignPage/types';
-import { Button } from '@components/ui/button';
 import { useUpdateBusinessCardTypeMutation } from '@features/BusinessCard/api/selectCardDesignApi';
 import { RootState } from '@store/store';
 import React, { useState } from 'react';
@@ -41,17 +43,40 @@ const SelectCardDesignPage = (): React.JSX.Element => {
 
   return (
     <div
-      className="flex justify-center items-center h-screen" // 화면 중앙 배치를 위한 스타일 추가
+      className="flex flex-col justify-center items-center h-screen box-border"
+      style={{
+        background: 'linear-gradient(0deg, rgba(18, 18, 18, 1) 86.3%, rgba(96, 97, 113, 1) 100%)',
+      }}
     >
-      <div className="w-120 flex flex-col items-center gap-4 p-6">
-        <h1>{userInfo?.name}님이 선호하는 네트워킹 시간대를 선택해주세요</h1>
-        <div className="mb-10 items-center">
+      {/* 상단 상태바 */}
+      <div className="h-[44px]"></div>
+      <Header className="px-[16px] bg-transparent z-12 fixed top-0 left-0 ">
+        <Header.Left>
+          <Logo />
+          <span className="font-semibold text-[20px] text-white tracking-[-0.33px]">
+            Networking
+          </span>
+        </Header.Left>
+      </Header>
+      {/* 정보 & 캐러셀 영역 */}
+      <div className="flex-1">
+        <div className="text-white text-[20px] font-bold mt-[36px] h-[56px] mb-[22px] mx-[19px] leading-[140%]">
+          {userInfo?.name}님이 선호하는 <br /> 네트워킹 시간대를 선택해주세요
+        </div>
+        <div className="items-center">
           <TypeCardCarousel
             onCardTypeChange={(newCardType: CardType) => setCardType(newCardType)}
           />
         </div>
-        <Button variant="outline" onClick={handleCompleteSelection} disabled={isLoading}>
-          {isLoading ? '설정 중...' : '선택 완료'}
+      </div>
+      <div className="flex w-full h-[104px] mt-[22px] pt-[16px] pb-[24px] px-[16px] ">
+        <Button
+          btntype="enabled"
+          className="w-full py-2"
+          onClick={handleCompleteSelection}
+          disabled={isLoading}
+        >
+          <div className="text-[14px] leading-[24px]">카드 선택</div>
         </Button>
       </div>
     </div>

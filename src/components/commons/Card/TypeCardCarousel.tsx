@@ -5,6 +5,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import TypeCard from './TypeCard';
 import { CardType } from '@components/SelectCardDesignPage/types';
 import { CARD_TYPE_TEXT } from '@constants/cardType';
+import useWindowWidth from '@hooks/useWindowWidth';
 
 interface TypeCardCarouselProps {
   onCardTypeChange: (newCardType: CardType) => void;
@@ -14,11 +15,22 @@ const TypeCardCarousel = ({ onCardTypeChange }: TypeCardCarouselProps): React.JS
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [animatingSlide, setAnimatingSlide] = useState<number | null>(null);
 
+  const windowWidth = useWindowWidth();
+  const imageWidth = 236;
+
+  const calculateCenterPadding = (screenWidth: number, imageWidth: number): string => {
+    const padding = (screenWidth - imageWidth) / 2; // %로 계산
+    return `${padding}px`;
+  };
+
+  const centerPadding = calculateCenterPadding(windowWidth, imageWidth);
+
   const settings = {
     dots: false,
+    arrows: false,
     infinite: true,
     centerMode: true,
-    centerPadding: '60px',
+    centerPadding,
     slidesToShow: 1,
     speed: 500,
     swipeToSlide: true,
@@ -34,32 +46,40 @@ const TypeCardCarousel = ({ onCardTypeChange }: TypeCardCarouselProps): React.JS
   };
 
   // 현재 슬라이드에 해당하는 시간 범위 가져오기
+  const currentType =
+    CARD_TYPE_TEXT[['dawn', 'morning', 'day', 'evening', 'night'][currentSlide] as CardType].type;
+
+  // 현재 슬라이드에 해당하는 시간 범위 가져오기
   const currentTimeRange =
     CARD_TYPE_TEXT[['dawn', 'morning', 'day', 'evening', 'night'][currentSlide] as CardType]
-      .timeRange;
+      .carouselTime;
 
   return (
     <div>
-      <div className="text-center mb-4">
-        <h2 className="text-xl font-bold text-gray-700">{currentTimeRange}</h2>
-      </div>
-      <div className="w-[375px] py-2 mx-auto overflow-visible">
+      <div className="w-[100vw] h-[460px]">
+        <div className="text-center flex justify-center items-center h-[32px] gap-[8px] px-[12px] py-[6px] mb-[26px]">
+          <div className="flex justify-center items-center h-[20px] font-bold text-white gap-[8px]">
+            <span className="text-[20px] leading-[20px]">{currentType}</span>
+            <span className="text-[16px] leading-[20px]"> {currentTimeRange} </span>
+          </div>
+        </div>
         <Slider {...settings}>
           {['dawn', 'morning', 'day', 'evening', 'night'].map((type, index) => (
             <TypeCard
               key={index}
               isActive={animatingSlide === index || currentSlide === index}
               type={type as CardType} // 카드 타입 전달
+              isExample={true}
             />
           ))}
         </Slider>
-        <div className="flex justify-center gap-[8px] mt-4">
+        <div className="flex justify-center gap-[8px]">
           {['dawn', 'morning', 'day', 'evening', 'night'].map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)} // 클릭 시 슬라이드 이동
               className={`w-[8px] h-[8px] rounded-full ${
-                currentSlide === index ? 'bg-blue-500' : 'bg-gray-400'
+                currentSlide === index ? 'bg-white' : 'bg-[#6E6B6B]'
               }`}
             ></button>
           ))}
