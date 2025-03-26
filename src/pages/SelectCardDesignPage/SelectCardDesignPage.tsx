@@ -44,16 +44,19 @@ const SelectCardDesignPage = (): React.JSX.Element => {
         background: 'linear-gradient(0deg, rgba(18, 18, 18, 1) 86.3%, rgba(96, 97, 113, 1) 100%)',
       }}
     >
+      {/* 상단 상태바 */}
       <div className="h-[44px]"></div>
       <Header className="px-[16px] bg-transparent z-12 fixed top-0 left-0 ">
         <Header.Left>
           <Logo />
-          <span className="font-semibold text-[20px] text-white">Networking</span>
+          <span className="font-semibold text-[20px] text-white tracking-[-0.33px]">
+            Networking
+          </span>
         </Header.Left>
       </Header>
       {/* 정보 & 캐러셀 영역 */}
       <div className="flex-1">
-        <div className="text-white text-[20px] font-bold mt-[36px] h-[56px] mb-[22px] mx-[19px]">
+        <div className="text-white text-[20px] font-bold mt-[36px] h-[56px] mb-[22px] mx-[19px] leading-[140%]">
           {userInfo?.name}님이 선호하는 <br /> 네트워킹 시간대를 선택해주세요
         </div>
         <div className="items-center">
@@ -69,7 +72,7 @@ const SelectCardDesignPage = (): React.JSX.Element => {
           onClick={handleCompleteSelection}
           disabled={isLoading}
         >
-          {isLoading ? '설정 중...' : '선택 완료'}
+          <div className="text-[14px] leading-[24px]">카드 선택</div>
         </Button>
       </div>
     </div>

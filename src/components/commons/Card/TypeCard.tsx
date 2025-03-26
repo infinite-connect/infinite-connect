@@ -110,24 +110,24 @@ const TypeCard = ({ isActive, type, isExample }: TypeCardProps): React.JSX.Eleme
                 visibility: isFrontVisible ? 'visible' : 'hidden',
               }}
             ></div>
-            <div className="relative flex flex-col w-full h-[134px] gap-[18px]">
-              <div className="flex flex-col w-full h-[46px] px-[20px] gap-[6px]">
-                <div className="h-[22px] text-[20px] font-bold leading-[108%]">
+            <div className="relative flex flex-col w-full h-[140px] gap-[18px]">
+              <div className="flex flex-col w-full h-[46px] px-[20px] gap-[4vpx]">
+                <div className="h-[23px] text-[20px] text-[var(--text-black)] font-bold leading-[22.8px] tracking-[-0.33px]">
                   Product Designer
                 </div>
-                <div className="h-[18px] flex flex-row text-[14px] gap-[4px] leading-[18px]">
+                <div className="h-[19px] flex flex-row text-[14px] text-[var(--text-black)] gap-[4px] leading-[19px]">
                   <div>Eight.kim</div>
                   <div>김에잇</div>
                 </div>
               </div>
-              <div className="flex flex-col justify-center items-start w-full h-[70px] px-[20px] gap-[4.5px]">
-                <div className="flex flex-row gap-[7.2px]">
+              <div className="flex flex-col justify-center items-start w-full h-[74px] px-[20px] gap-[6px]">
+                <div className="flex flex-row gap-[7.6px]">
                   <Mail className="w-[12px] h-[12px]" />
-                  <div className="text-[10.8px] leading-[12.6px]">eightkim-mail@gmail.com</div>
+                  <div className="text-[12px] leading-[13.3px]">eightkim-mail@gmail.com</div>
                 </div>
-                <div className="flex flex-row gap-[7.2px]">
+                <div className="flex flex-row gap-[7.6hpx]">
                   <IconRenderer type="none" />
-                  <div className="text-[10.8px] leading-[12.6px]">eightkim-portfolio.com</div>
+                  <div className="text-[12px] leading-[13.3px]">eightkim-portfolio.com</div>
                 </div>
               </div>
             </div>
@@ -145,14 +145,19 @@ const TypeCard = ({ isActive, type, isExample }: TypeCardProps): React.JSX.Eleme
               zIndex: isFrontVisible ? -1 : 10,
             }}
           >
-            <div className="text-[14px] text-[var(--text-black)]">
-              {CARD_TYPE_TEXT[type].timeRange}를 선호하는 당신은
-            </div>
-            <div className="text-[20px] font-bold text-[var(--text-black)]">
-              {CARD_TYPE_TEXT[type].label}
-            </div>
-            <div className="w-full h-[78px] justify-center items-center text-[14px] text-[var(--text-black)] border-2 border-red-500">
-              {CARD_TYPE_TEXT[type].tag}
+            <div className="w-full h-[145px] flex flex-col gap-[14px] text-[var(--text-black)]">
+              <div className="flex flex-col h-[53px] pl-[20px] gap-[10px]">
+                <div className="text-[14px] leading-[20px]">
+                  {CARD_TYPE_TEXT[type].timeRange}를 선호하는 당신은
+                </div>
+                <div className="text-[20px] font-bold leading-[114%] tracking-[-0.3px]">
+                  {CARD_TYPE_TEXT[type].label}
+                </div>
+              </div>
+
+              <div className="flex w-full h-[78px] justify-center items-center text-[14px] leading-[150%]">
+                {CARD_TYPE_TEXT[type].tag}
+              </div>
             </div>
           </div>
         </div>
