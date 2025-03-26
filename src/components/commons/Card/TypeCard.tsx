@@ -1,16 +1,21 @@
 import { CardType } from '@components/SelectCardDesignPage/types';
-import { CARD_TYPE_IMAGES, CARD_TYPE_TEXT } from '@constants/cardType'; // 텍스트 매핑 상수
+import { CARD_TYPE_IMAGES, CARD_TYPE_OBJ, CARD_TYPE_TEXT } from '@constants/cardType'; // 텍스트 매핑 상수
 import { useState, useEffect } from 'react';
+import { Mail } from 'lucide-react';
+import IconRenderer from './CardIconRenderer';
 
 type TypeCardProps = {
   isActive: boolean; // 활성화 상태
   type: CardType; // 카드 타입
+  isExample: boolean;
 };
 
-const TypeCard = ({ isActive, type }: TypeCardProps): React.JSX.Element => {
+const TypeCard = ({ isActive, type, isExample }: TypeCardProps): React.JSX.Element => {
   const [isFront, setIsFront] = useState<boolean>(true); // 내부적으로 앞뒷면 상태 관리
   const [isFrontVisible, setIsFrontVisible] = useState<boolean>(isActive); // 화면 표시용 앞뒷면 상태
   const [isAnimating, setIsAnimating] = useState<boolean>(false); // 애니메이션 진행 여부
+
+  console.log(isExample);
 
   const handleFlip = () => {
     if (!isActive || isAnimating) return; // 비활성화된 카드나 애니메이션 중인 카드는 클릭 불가
@@ -57,11 +62,11 @@ const TypeCard = ({ isActive, type }: TypeCardProps): React.JSX.Element => {
   return (
     <div
       onClick={handleFlip}
-      className={`flex justify-center items-center overflow-visible`} // 부모 컨테이너에 overflow-visible 추가
+      className={`flex py-[30px] justify-center items-end overflow-visible`} // 95
       style={{
         perspective: '1000px', // 카드의 3D 효과를 위한 원근감 설정
         boxSizing: 'border-box',
-        width: '248px',
+        width: '236px',
         height: '400px',
       }}
     >
@@ -70,8 +75,8 @@ const TypeCard = ({ isActive, type }: TypeCardProps): React.JSX.Element => {
           isActive ? 'scale-100' : 'scale-85 opacity-30 pointer-events-none'
         }`}
         style={{
-          width: '248px',
-          height: '350px',
+          width: '236px',
+          height: '332px',
           overflow: 'visible', // 카드 요소에도 overflow-visible 추가
           transformStyle: 'preserve-3d', // 3D 회전 유지
           transformOrigin: 'center center', // 회전 중심을 중앙으로 설정
@@ -87,7 +92,7 @@ const TypeCard = ({ isActive, type }: TypeCardProps): React.JSX.Element => {
         >
           {/* 앞면 */}
           <div
-            className="absolute inset-0 w-full h-full flex items-center justify-center"
+            className="absolute inset-0 w-full h-full flex flex-col items-center justify-end"
             style={{
               backgroundImage: `url(${CARD_TYPE_IMAGES[type].vertical})`,
               backgroundSize: 'cover',
@@ -97,16 +102,42 @@ const TypeCard = ({ isActive, type }: TypeCardProps): React.JSX.Element => {
               zIndex: isFrontVisible ? 10 : -1, // 앞면이 활성화될 때 z-index를 높게 설정
             }}
           >
-            <h1 className="text-2xl font-bold text-[var(--text-black)]">
-              {CARD_TYPE_TEXT[type].label}
-            </h1>
+            <div
+              className="absolute inset-0 top-[60px] left-1/2 w-[220px] h-[220px] flex items-center justify-center"
+              style={{
+                backgroundImage: `url(${CARD_TYPE_OBJ[type].obj})`,
+                transform: 'translate(-50%, -50%) rotateY(0deg)',
+                visibility: isFrontVisible ? 'visible' : 'hidden',
+              }}
+            ></div>
+            <div className="relative flex flex-col w-full h-[134px] gap-[18px]">
+              <div className="flex flex-col w-full h-[46px] px-[20px] gap-[6px]">
+                <div className="h-[22px] text-[20px] font-bold leading-[108%]">
+                  Product Designer
+                </div>
+                <div className="h-[18px] flex flex-row text-[14px] gap-[4px] leading-[18px]">
+                  <div>Eight.kim</div>
+                  <div>김에잇</div>
+                </div>
+              </div>
+              <div className="flex flex-col justify-center items-start w-full h-[70px] px-[20px] gap-[4.5px]">
+                <div className="flex flex-row gap-[7.2px]">
+                  <Mail className="w-[12px] h-[12px]" />
+                  <div className="text-[10.8px] leading-[12.6px]">eightkim-mail@gmail.com</div>
+                </div>
+                <div className="flex flex-row gap-[7.2px]">
+                  <IconRenderer type="none" />
+                  <div className="text-[10.8px] leading-[12.6px]">eightkim-portfolio.com</div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* 뒷면 */}
           <div
-            className="absolute inset-0 w-full h-full flex flex-col justify-center items-center text-white rounded-3xl"
+            className="absolute inset-0 w-full h-full flex flex-col justify-end items-center text-white"
             style={{
-              backgroundImage: `url(${CARD_TYPE_IMAGES[type].vertical})`, // 뒷면 배경 이미지 설정
+              backgroundImage: `url(${CARD_TYPE_IMAGES[type].vertical})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backfaceVisibility: !isFrontVisible ? 'visible' : 'hidden',
@@ -114,9 +145,15 @@ const TypeCard = ({ isActive, type }: TypeCardProps): React.JSX.Element => {
               zIndex: isFrontVisible ? -1 : 10,
             }}
           >
-            <h1 className="text-2xl font-bold text-[var(--text-black)]">
+            <div className="text-[14px] text-[var(--text-black)]">
+              {CARD_TYPE_TEXT[type].timeRange}를 선호하는 당신은
+            </div>
+            <div className="text-[20px] font-bold text-[var(--text-black)]">
               {CARD_TYPE_TEXT[type].label}
-            </h1>
+            </div>
+            <div className="w-full h-[78px] justify-center items-center text-[14px] text-[var(--text-black)] border-2 border-red-500">
+              {CARD_TYPE_TEXT[type].tag}
+            </div>
           </div>
         </div>
       </div>

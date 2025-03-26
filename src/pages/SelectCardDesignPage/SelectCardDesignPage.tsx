@@ -1,6 +1,7 @@
 import { Button } from '@components/commons/Button/Button';
 import TypeCardCarousel from '@components/commons/Card/TypeCardCarousel';
 import { Header } from '@components/commons/Header/Header';
+import { Logo } from '@components/commons/Header/Logo';
 import { CardType } from '@components/SelectCardDesignPage/types';
 import { useUpdateBusinessCardTypeMutation } from '@features/BusinessCard/api/selectCardDesignApi';
 import { RootState } from '@store/store';
@@ -38,14 +39,30 @@ const SelectCardDesignPage = (): React.JSX.Element => {
 
   return (
     <div
-      className="flex-col justify-center items-center h-screen bg-[var(--bg-default-black)]" // 화면 중앙 배치를 위한 스타일 추가
+      className="flex flex-col justify-center items-center h-screen box-border"
+      style={{
+        background: 'linear-gradient(0deg, rgba(18, 18, 18, 1) 86.3%, rgba(96, 97, 113, 1) 100%)',
+      }}
     >
-      <Header className="text-white border-2">Networking Mood</Header>
-      <h1 className="text-white">{userInfo?.name}님이 선호하는 네트워킹 시간대를 선택해주세요</h1>
-      <div className="mb-10 items-center">
-        <TypeCardCarousel onCardTypeChange={(newCardType: CardType) => setCardType(newCardType)} />
+      <div className="h-[44px]"></div>
+      <Header className="px-[16px] bg-transparent z-12 fixed top-0 left-0 ">
+        <Header.Left>
+          <Logo />
+          <span className="font-semibold text-[20px] text-white">Networking</span>
+        </Header.Left>
+      </Header>
+      {/* 정보 & 캐러셀 영역 */}
+      <div className="flex-1">
+        <div className="text-white text-[20px] font-bold mt-[36px] h-[56px] mb-[22px] mx-[19px]">
+          {userInfo?.name}님이 선호하는 <br /> 네트워킹 시간대를 선택해주세요
+        </div>
+        <div className="items-center">
+          <TypeCardCarousel
+            onCardTypeChange={(newCardType: CardType) => setCardType(newCardType)}
+          />
+        </div>
       </div>
-      <div className="px-[24px] py-[16px]">
+      <div className="flex w-full h-[104px] mt-[22px] pt-[16px] pb-[24px] px-[16px] ">
         <Button
           btntype="enabled"
           className="w-full py-2"
