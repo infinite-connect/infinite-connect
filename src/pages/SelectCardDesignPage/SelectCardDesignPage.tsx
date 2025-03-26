@@ -37,6 +37,10 @@ const SelectCardDesignPage = (): React.JSX.Element => {
     }
   };
 
+  if (!businessCardId) {
+    return <p>유효한 명함 ID가 없습니다.</p>;
+  }
+
   return (
     <div
       className="flex flex-col justify-center items-center h-screen box-border"
