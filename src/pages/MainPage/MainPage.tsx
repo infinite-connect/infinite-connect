@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@utils/supabaseClient'; // Supabase 클라이언트 import
 import { logoutSuccess } from '@features/User/slice/userSlice';
 import QRScanDisplayModal from '@components/commons/QR/QRScanDisplayModal';
+import HorizontalCard from '@components/commons/Card/HorizontalCard';
+import VerticalCard from '@components/commons/Card/VerticalCard';
 
 const MainPage = (): React.JSX.Element => {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
@@ -38,6 +40,11 @@ const MainPage = (): React.JSX.Element => {
   return (
     <div className="px-20">
       <h1>홈 페이지</h1>
+      <div className="flex flex-col gap-10 my-10">
+        <HorizontalCard cardId="8d6e947e-4378-4b60-96b9-5b2fd59d8fc9" />
+        <VerticalCard cardId="8d6e947e-4378-4b60-96b9-5b2fd59d8fc9" />
+      </div>
+
       {userInfo ? (
         <>
           <div>

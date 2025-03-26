@@ -33,6 +33,7 @@ export interface BusinessCard {
   primaryUrl?: Record<string, string> | null;
   subFirstUrl?: Record<string, string> | null;
   subSecondUrl?: Record<string, string> | null;
+  name: string;
 }
 
 interface DbBusinessCard {
@@ -65,6 +66,7 @@ interface DbBusinessCard {
   primary_url?: Record<string, string> | null;
   sub_url_01?: Record<string, string> | null;
   sub_url_02?: Record<string, string> | null;
+  name: string;
 }
 
 export interface User {
@@ -114,7 +116,8 @@ export const businessCardApi = createApi({
               networking_time,
               primary_url,
               sub_url_01,
-              sub_url_02
+              sub_url_02,
+              name
             `,
             )
             .eq('business_card_id', cardId)
@@ -155,6 +158,7 @@ export const businessCardApi = createApi({
             primaryUrl: data.primary_url ?? null,
             subFirstUrl: data.sub_url_01 ?? null,
             subSecondUrl: data.sub_url_02 ?? null,
+            name: data.name,
           };
 
           return { data: transformedData };

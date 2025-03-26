@@ -1,4 +1,4 @@
-export const JOB_TITLES: { [key: string]: string } = {
+export const subExpertiseMaps: { [key: string]: string } = {
   // Development
   '프론트엔드': 'FE Developer',
   '백엔드': 'BE Developer',
