@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerFooter,
-} from '@components/ui/drawer';
 import { Input } from '@components/ui/input';
 import {
   Form,
@@ -26,6 +19,7 @@ import { Logo } from '@components/commons/Header/Logo';
 import { Button } from '@components/commons/Button/Button';
 import { UrlDropdown } from '@components/AdditionalInfoPage/UrlDropdown';
 import { SocialIcon } from '@components/AdditionalInfoPage/SocialIcon';
+import BottomSheet from '@components/commons/BottomSheet/BottomSheet';
 
 // Zod 스키마 정의
 const schema = z
@@ -126,43 +120,28 @@ const AdditionalInfoPage = (): React.JSX.Element => {
   };
 
   return (
-    <div>
-      {/* Drawer 컴포넌트 */}
-      <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-        <DrawerContent className="bg-[var(--bg-default-black)] p-6 pb-5 rounded-lg">
-          {/* Header */}
-          <DrawerHeader className="pt-10 pb-5 pr-0 pl-0 gap-2">
-            <DrawerTitle className="text-xl text-center font-bold text-[var(--text-primary)]">
-              추가 정보 입력
-            </DrawerTitle>
-            <div className="text-center text-[var(--text-secondary)]">
-              명함만 완성해도, 자연스럽게 대화가 시작돼요
-            </div>
-          </DrawerHeader>
+    <div className="w-full bg-[var(--bg-default-black)]">
+      <BottomSheet
+        open={isDrawerOpen}
+        onOpenChange={setIsDrawerOpen}
+        title="추가 정보 입력"
+        subtitle="명함만 완성해도, 자연스럽게 대화가 시작돼요"
+      >
+        <BottomSheet.Actions>
+          <BottomSheet.Actions.ButtonGroup
+            primaryLabel="실제 명함 촬영하기"
+            secondaryLabel="직접 입력"
+            onPrimary={onClickMovetoRealCardScanPage}
+            onSecondary={() => setIsDrawerOpen(false)}
+          />
 
-          {/* 버튼 그룹 */}
-          <div className="flex flex-col gap-1 mt-0">
-            <Button btntype="enabled" className="w-full" onClick={onClickMovetoRealCardScanPage}>
-              실제 명함 촬영하기
-            </Button>
-            <Button btntype="secondary" className="w-full" onClick={() => setIsDrawerOpen(false)}>
-              직접 입력
-            </Button>
-          </div>
+          <BottomSheet.TextButton onClick={onClickCardPreviewPage}>
+            나중에 할래요
+          </BottomSheet.TextButton>
+        </BottomSheet.Actions>
+      </BottomSheet>
 
-          {/* Footer */}
-          <DrawerFooter className="mt-3 px-3 py-2">
-            <button
-              className="text-sm text-[var(--text-primary)] underline"
-              onClick={onClickCardPreviewPage}
-            >
-              나중에 할래요
-            </button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-
-      <div className="bg-[var(--bg-default-black)] p-6">
+      <div className="p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             {/* Header */}
