@@ -2,12 +2,12 @@ import React from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@components/ui/drawer';
 import QRCodeDisplay from '../QRcodeDisplay';
 
-interface QRDrawerProps {
+interface SelectCardDrawerProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const QRDisplayDrawer: React.FC<QRDrawerProps> = ({ isOpen, onClose }) => {
+const SelectCardDrawer: React.FC<SelectCardDrawerProps> = ({ isOpen, onClose }) => {
   const qrCodeData = 'user/1'; // QR 코드에 넣을 데이터
 
   return (
@@ -31,4 +31,4 @@ const QRDisplayDrawer: React.FC<QRDrawerProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default QRDisplayDrawer;
+export default SelectCardDrawer;

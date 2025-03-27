@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import useWindowHeight from '@hooks/useWindowHeight';
 import useWindowWidth from '@hooks/useWindowWidth';
 import './styles.css';
+import { Button } from '../Button/Button';
 
 interface QRScannerTabContentProps {
   isActive: boolean;
@@ -16,6 +17,8 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
   const navigate = useNavigate();
   const windowWidth = useWindowWidth();
   const windowHeight = useWindowHeight();
+  const qrMessageYLocation = windowHeight / 2 - 172;
+  console.log(qrMessageYLocation);
 
   useEffect(() => {
     const startScanner = async () => {
@@ -81,12 +84,23 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
       {/* 카메라 화면 */}
       <div id="qr-scanner" ref={scannerRef} className="absolute inset-0 w-full h-full p-0" />
       <div
-        className="
-          absolute w-[240px] h-[20px] text-[22px] font-bold bottom-[140px] left-1/2 transform -translate-x-1/2 z-50 
-          text-center text-white
-        "
+        className={`
+          absolute w-[240px] h-[20px] text-[22px] font-bold top-[250px] left-1/2 transform -translate-x-1/2
+          text-center text-white z-50
+        `}
       >
         QR 코드를 스캔하세요
+      </div>
+
+      <div className="absolute flex flex-row w-[335px] h-[82px] px-[16px] py-[22px] bg-[#2a2a2a] bottom-[60px] left-1/2 transform -translate-x-1/2 z-50 rounded-[4px]">
+        <div className="w-full h-full">
+          <Button
+            btntype="enabled"
+            className="absolute top-[22px] right-[16px] w-[58px] h-[38px] py-[7px] rounded-[6px]"
+          >
+            <div className="text-[12px] leading-[24px]">변경</div>
+          </Button>
+        </div>
       </div>
     </div>
   );

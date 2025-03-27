@@ -13,6 +13,7 @@ import logo from '@assets/logo.svg';
 import dawnHorizontal from '@assets/CardDesign/HorizontalCard/dawnHorizontal.png';
 import morningHorizontal from '@assets/CardDesign/HorizontalCard/morningHorizontal.png';
 import dayHorizontal from '@assets/CardDesign/HorizontalCard/dayHorizontal.png';
+import HorizontalCardPreview from '../Card/HorizontalCardPreview';
 
 // 추후 카드 실제 이미지로 변경
 const cardImages = [
@@ -170,7 +171,7 @@ const QRDisplayTabContent: React.FC = () => {
           </button>
         )}
         <span
-          className="min-w-[160px] text-center text-[16px] font-extrabold"
+          className="min-w-[160px] text-center text-[16px] leading-[20px] font-extrabold"
           style={{ width: 'fit-content' }}
         >
           carss
@@ -214,19 +215,11 @@ const QRDisplayTabContent: React.FC = () => {
       {/* 네비게이션 슬라이더 */}
       <div className="slider-container mb-[28px] w-full h-[155px]">
         <Slider {...navSettings} ref={navSliderRef}>
-          {syncedImages.map(({ key, src }, index) => (
-            <div
-              key={key}
-              className={`w-[253px] h-[155px] m-0 transition-transform duration-500 p-0 ${
-                index === currentIndex ? 'scale-100' : 'scale-80'
-              }`}
-            >
-              {/* 이미지 렌더링 */}
-              <img
-                src={src}
-                alt={`${key} card`}
-                className="flex justify-self-center w-[253px] h-[155px] z-10 object-cover"
-              />
+          {businessCards.map((businessCardId) => (
+            <div key={businessCardId} className="w-[253px] h-[155px] m-0 p-0">
+              <div className="flex justify-center items-center">
+                <HorizontalCardPreview cardId={businessCardId} />
+              </div>
             </div>
           ))}
         </Slider>
