@@ -6,7 +6,7 @@ import { networkingApi } from '@features/Networking/networkingApi';
 import userReducer from '@features/User/slice/userSlice';
 import { selectCardDesignApi } from '@features/BusinessCard/api/selectCardDesignApi';
 import { viewCountApi } from '@features/User/api/viewCountApi';
-import { exchangeApi } from '@features/BusinessCard/exChangeApi';
+import { exchangeApi } from '@features/BusinessCard/api/exchangeApi';
 
 export const store = configureStore({
   reducer: {
