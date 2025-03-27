@@ -30,7 +30,7 @@ const AppRouter = () => {
       <Route path={RoutePaths.SELECTCARDDESIGN} element={<SelectCardDesignPage />} />
       <Route path={RoutePaths.ADDITIONALINFO} element={<AdditionalInfoPage />} />
       <Route path={`${RoutePaths.USER}/:userId?`} element={<UserPage />} />
-      <Route path={`${RoutePaths.USER}${RoutePaths.CARD}/:cardId?`} element={<UserCardPage />} />
+      {/* <Route path={`${RoutePaths.USER}${RoutePaths.CARD}/:cardId?`} element={<UserCardPage />} /> */}
       <Route path={`${RoutePaths.USER}${RoutePaths.SETTING}`} element={<UserSettingPage />} />
       <Route path={RoutePaths.INFO} element={<InfoPage />} />
       <Route path={RoutePaths.MEMBERSHIP} element={<MembershipPage />} />
