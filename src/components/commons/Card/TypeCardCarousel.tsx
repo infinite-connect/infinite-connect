@@ -76,7 +76,6 @@ const TypeCardCarousel = ({ onCardTypeChange }: TypeCardCarouselProps): React.JS
           {['dawn', 'morning', 'day', 'evening', 'night'].map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentSlide(index)} // 클릭 시 슬라이드 이동
               className={`w-[8px] h-[8px] rounded-full ${
                 currentSlide === index ? 'bg-white' : 'bg-[#6E6B6B]'
               }`}
