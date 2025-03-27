@@ -88,9 +88,13 @@ const SelectCardDesignPage = (): React.JSX.Element => {
         }}
       ></div>
       {/* 상단 상태바 */}
+<<<<<<< Updated upstream
       <div className=" h-[44px] z-10"></div>
 
       <Header className="px-[16px] bg-transparent z-12">
+=======
+      <Header className="px-[16px] bg-transparent fixed top-0 left-0 z-12">
+>>>>>>> Stashed changes
         <Header.Left>
           <Logo />
           <span className="font-semibold text-[20px] text-white tracking-[-0.33px]">
@@ -99,7 +103,11 @@ const SelectCardDesignPage = (): React.JSX.Element => {
         </Header.Left>
       </Header>
       {/* 정보 & 캐러셀 영역 */}
+<<<<<<< Updated upstream
       <div className="flex-1 z-10">
+=======
+      <div className="flex-1 z-10 pt-14">
+>>>>>>> Stashed changes
         <div className="text-white text-[20px] font-bold mt-[36px] h-[56px] mb-[22px] mx-[19px] leading-[140%]">
           {userInfo?.name}님이 선호하는 <br /> 네트워킹 시간대를 선택해주세요
         </div>
