@@ -10,7 +10,7 @@ type HeaderProps = {
 
 const Header = ({ children, className }: HeaderProps) => {
   const defaultStyle =
-    'font-[NanumGothic] text-[18px] relative flex items-center justify-between w-full h-14 py-3';
+    'font-[NanumGothic]  text-[var(--text-primary)] text-[20px] font-semibold relative flex items-center justify-between w-full h-14 py-3';
 
   return <header className={cn(defaultStyle, className)}>{children}</header>;
 };
