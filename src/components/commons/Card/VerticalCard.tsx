@@ -1,21 +1,29 @@
 import { CardType } from '@components/SelectCardDesignPage/types';
 import { CARD_TYPE_IMAGES, CARD_TYPE_OBJ, CARD_TYPE_TEXT } from '@constants/cardType'; // 텍스트 매핑 상수
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Mail } from 'lucide-react';
 import IconRenderer from './CardIconRenderer';
+import { useGetBusinessCardByIdQuery } from '@features/BusinessCard/api/businessCardApi';
 
-type TypeCardProps = {
-  isActive: boolean; // 활성화 상태
-  type: CardType; // 카드 타입
+type VerticalCardProps = {
+  cardId: string;
 };
 
-const TypeCard = ({ isActive, type }: TypeCardProps): React.JSX.Element => {
+const VerticalCard = ({ cardId }: VerticalCardProps): React.JSX.Element => {
   const [isFront, setIsFront] = useState<boolean>(true); // 내부적으로 앞뒷면 상태 관리
-  const [isFrontVisible, setIsFrontVisible] = useState<boolean>(isActive); // 화면 표시용 앞뒷면 상태
+  const [isFrontVisible, setIsFrontVisible] = useState<boolean>(true); // 화면 표시용 앞뒷면 상태
   const [isAnimating, setIsAnimating] = useState<boolean>(false); // 애니메이션 진행 여부
 
+  const { data: cardData } = useGetBusinessCardByIdQuery(cardId || '', {
+    skip: !cardId,
+  });
+
+  console.log(cardData);
+
+  const type = 'dawn' as CardType;
+
   const handleFlip = () => {
-    if (!isActive || isAnimating) return; // 비활성화된 카드나 애니메이션 중인 카드는 클릭 불가
+    if (isAnimating) return; // 비활성화된 카드나 애니메이션 중인 카드는 클릭 불가
 
     setIsAnimating(true); // 애니메이션 시작
     setIsFront((prev) => !prev); // 내부적으로 앞뒷면 상태 전환
@@ -31,46 +39,19 @@ const TypeCard = ({ isActive, type }: TypeCardProps): React.JSX.Element => {
     }, 1300); // 애니메이션 전체 시간과 동일하게 설정
   };
 
-  useEffect(() => {
-    if (!isActive) {
-      setIsAnimating(true); // 애니메이션 시작 (isActive 변경 시)
-      setIsFront(false); // 비활성화 시 내부적으로 뒷면으로 설정
-      setTimeout(() => {
-        setIsFrontVisible(false); // 화면 표시용 상태도 뒷면으로 설정
-      }, 429);
-      setTimeout(() => {
-        setIsAnimating(false); // 애니메이션 종료 시 클릭 가능 복구
-      }, 1300);
-    } else {
-      setIsAnimating(true); // 애니메이션 시작 (isActive 변경 시)
-      // 활성화된 카드가 뒷면에서 앞면으로 바뀌도록 애니메이션 처리
-      setTimeout(() => {
-        setIsFront(true); // 내부적으로 앞면으로 설정
-        setTimeout(() => {
-          setIsFrontVisible(true); // 화면 표시용 상태도 앞면으로 설정
-        }, 429);
-        setTimeout(() => {
-          setIsAnimating(false); // 애니메이션 종료 시 클릭 가능 복구
-        }, 1300);
-      }, 0);
-    }
-  }, [isActive]);
-
   return (
     <div
       onClick={handleFlip}
-      className={`flex py-[30px] justify-center items-end overflow-visible`} // 95
+      className={`flex justify-center items-center overflow-visible`}
       style={{
         perspective: '1000px', // 카드의 3D 효과를 위한 원근감 설정
         boxSizing: 'border-box',
         width: '236px',
-        height: '400px',
+        height: '420px',
       }}
     >
       <div
-        className={`rounded-3xl relative ${
-          isActive ? 'scale-100' : 'scale-85 opacity-30 pointer-events-none'
-        }`}
+        className="rounded-3xl relative scale-100"
         style={{
           width: '236px',
           height: '332px',
@@ -163,4 +144,4 @@ const TypeCard = ({ isActive, type }: TypeCardProps): React.JSX.Element => {
   );
 };
 
-export default TypeCard;
+export default VerticalCard;
