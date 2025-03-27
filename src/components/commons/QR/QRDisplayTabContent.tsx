@@ -1,12 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Slider, { LazyLoadTypes } from 'react-slick';
-import { QRCodeCanvas } from 'qrcode.react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/store';
 import { useGetUserBusinessCardsQuery } from '@features/UserPage/api/userCardListApi';
 import { generateQRCodeUrl } from '@utils/generateQRCodeUrl';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import useWindowWidth from '@hooks/useWindowWidth';
+// import useWindowWidth from '@hooks/useWindowWidth';
+import QRCodeStyling from 'qr-code-styling';
+import logo from '@assets/logo.svg';
 
 // 이미지 import
 import dawnHorizontal from '@assets/CardDesign/HorizontalCard/dawnHorizontal.png';
@@ -23,33 +24,91 @@ const cardImages = [
 const QRDisplayTabContent: React.FC = () => {
   const nickname = useSelector((state: RootState) => state.user.userInfo?.nickname);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [qrImages, setQrImages] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const {
     data: businessCards = [],
-    isLoading,
+    isLoading: isCardLoading,
     isError,
   } = useGetUserBusinessCardsQuery(nickname || '');
 
   const isMultiCards = businessCards?.length > 1;
 
-  const mainSliderRef = useRef<Slider | null>(null); // 초기값을 null로 설정
-  const navSliderRef = useRef<Slider | null>(null); // 초기값을 null로 설정
+  const mainSliderRef = useRef<Slider | null>(null);
+  const navSliderRef = useRef<Slider | null>(null);
 
-  const windowWidth = useWindowWidth();
-  const imageWidth = 150;
+  // const windowWidth = useWindowWidth();
+  // const imageWidth = 150;
 
-  const calculateCenterPadding = (screenWidth: number, imageWidth: number): string => {
-    const padding = (screenWidth - imageWidth) / 2; // %로 계산
-    return `${padding}px`;
-  };
+  // const calculateCenterPadding = (screenWidth: number, imageWidth: number): string => {
+  //   const padding = (screenWidth - imageWidth) / 2;
+  //   return `${padding}px`;
+  // };
 
-  const centerPadding = calculateCenterPadding(windowWidth, imageWidth);
-  console.log(centerPadding);
+  // const centerPadding = calculateCenterPadding(windowWidth, imageWidth);
 
   const syncedImages =
-    businessCards && businessCards.length > 0
-      ? cardImages.slice(0, businessCards.length) // 명함 개수에 맞게 이미지 자르기
-      : [];
+    businessCards && businessCards.length > 0 ? cardImages.slice(0, businessCards.length) : [];
+
+  // QR 코드를 이미지로 생성
+  useEffect(() => {
+    if (businessCards.length > 0 && nickname) {
+      setIsLoading(true);
+
+      const generateQRImages = async () => {
+        try {
+          const images = await Promise.all(
+            businessCards.map(async (businessCardId) => {
+              const qrCode = new QRCodeStyling({
+                width: 253,
+                height: 253,
+                type: 'svg',
+                data: generateQRCodeUrl(nickname, businessCardId),
+                image: logo,
+                imageOptions: {
+                  crossOrigin: 'anonymous',
+                  margin: 10,
+                  imageSize: 0.3,
+                },
+                dotsOptions: {
+                  color: '#000000',
+                  type: 'rounded',
+                },
+                backgroundOptions: {
+                  color: '#ffffff',
+                },
+                cornersSquareOptions: {
+                  type: 'extra-rounded',
+                },
+                cornersDotOptions: {
+                  type: 'dot',
+                },
+              });
+
+              // QR 코드를 이미지 URL로 변환
+              const dataUrl = await qrCode.getRawData('png');
+              return URL.createObjectURL(dataUrl as Blob);
+            }),
+          );
+
+          setQrImages(images);
+          setIsLoading(false);
+        } catch (error) {
+          console.error('QR 코드 이미지 생성 오류:', error);
+          setIsLoading(false);
+        }
+      };
+
+      generateQRImages();
+
+      // 컴포넌트 언마운트 시 URL 정리
+      return () => {
+        qrImages.forEach((url) => URL.revokeObjectURL(url));
+      };
+    }
+    // eslint-disable-next-line
+  }, [businessCards, nickname]);
 
   // 메인 슬라이더 설정
   const mainSettings = {
@@ -64,8 +123,8 @@ const QRDisplayTabContent: React.FC = () => {
     focusOnSelect: true,
     lazyLoad: 'ondemand' as LazyLoadTypes,
     afterChange: (index: number) => {
-      setCurrentIndex(index); // 현재 슬라이드 인덱스 업데이트
-      navSliderRef.current?.slickGoTo(index); // 네비게이션 슬라이더 이동
+      setCurrentIndex(index);
+      navSliderRef.current?.slickGoTo(index);
     },
   };
 
@@ -74,14 +133,15 @@ const QRDisplayTabContent: React.FC = () => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 1, // 한 개만 보여줌
+    slidesToShow: 1,
     slidesToScroll: 1,
     centerPadding: '0px',
     centerMode: true,
+    arrows: false,
     focusOnSelect: true,
     lazyLoad: 'ondemand' as LazyLoadTypes,
     beforeChange: (_current: number, next: number) => {
-      setCurrentIndex(next); // 네비게이션 변경 시 메인 슬라이더 이동
+      setCurrentIndex(next);
       mainSliderRef.current?.slickGoTo(next);
     },
   };
@@ -90,7 +150,7 @@ const QRDisplayTabContent: React.FC = () => {
     return null;
   }
 
-  if (isLoading) {
+  if (isCardLoading || isLoading) {
     return <p className="text-center text-gray-500">로딩 중...</p>;
   }
 
@@ -132,16 +192,18 @@ const QRDisplayTabContent: React.FC = () => {
           ref={mainSliderRef}
           asNavFor={navSliderRef.current as Slider | undefined}
         >
-          {businessCards.map((businessCardId) => (
-            <div key={businessCardId} className="flex justify-center items-center w-full h-full">
-              <div className="flex justify-self-center">
-                <QRCodeCanvas
-                  value={generateQRCodeUrl(nickname, businessCardId)}
-                  size={253}
-                  bgColor="#000000"
-                  fgColor="#ffffff"
-                  level="M"
+          {qrImages.map((imageUrl, index) => (
+            <div
+              key={`qr-${index}`}
+              className="flex w-[253px] h-[253px] justify-center items-center"
+            >
+              <div className="flex justify-center items-center">
+                <img
+                  src={imageUrl}
+                  alt={`QR Code ${index + 1}`}
                   className="rounded-md self-center"
+                  width={253}
+                  height={253}
                 />
               </div>
             </div>
