@@ -9,10 +9,12 @@
   /* fill */
   --fill-primary: #7253ff;
   --fill-secondary: rgba(255, 255, 255, 0.1);
+  --fill-secondary-hover: rgba(255, 255, 255, 0.2);
   --fill-primary-hover: #8971fb;
   --fill-disabled: #737373;
   --fill-disabled-hover: #9b9b9b;
   --fill-quaternary: rgba(255, 255, 255, 0.08);
+  --fill-white: #ffffff;
 
   /* text */
   --text-primary: #ffffff;
