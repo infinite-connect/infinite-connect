@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '@features/User/slice/userSlice';
 import { Button } from '@components/commons/Button/Button';
-import { Input } from '@components/ui/input';
+import { Input } from '@components/Input/input';
 
 const LoginForm = (): React.JSX.Element => {
   const [userEmail, setUserEmail] = useState<string>('');
@@ -82,63 +82,68 @@ const LoginForm = (): React.JSX.Element => {
 
   return (
     <div className="space-y-6">
-      {/* Email */}
-      <div className="space-y-[6px]">
-        <div className="text-[var(--text-primary)]">Email</div>
-        {/* Email Input */}
-        <Input
-          id="email"
-          type="email"
-          value={userEmail}
-          onChange={(e) => setUserEmail(e.target.value)}
-          className="w-full rounded-md border border-gray-600 bg-transparent px-4 pt-[10px] pb-[8px] text-sm text-white text-left leading-[1.25rem] focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-        />
-      </div>
-
-      {/* password */}
-      <div className="space-y-[6px]">
-        {' '}
-        {/* Password Input */}
-        <div className="text-[var(--text-primary)]">Password</div>
-        <div className="relative">
+      <div className="space-y-5">
+        {/* Email */}
+        <div className="space-y-[6px]">
+          <div className="text-[var(--text-primary)]">Email</div>
+          {/* Email Input */}
           <Input
-            id="password"
-            type={showPassword ? 'text' : 'password'}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-md border border-gray-600 bg-transparent px-4 pt-[10px] pb-[8px] text-sm text-white text-left leading-[1.25rem] focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+            id="email"
+            type="email"
+            placeholder="이메일을 입력하세요"
+            value={userEmail}
+            onChange={(e) => setUserEmail(e.target.value)}
+            className="w-full  text-left leading-[1.25rem] "
           />
-          {/* 비밀번호 보기 아이콘 */}
-          <button
-            type="button"
-            onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute right-3 top-[50%] translate-y-[-50%] text-gray-400 hover:text-gray-200"
-          >
-            <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} width={20} height={20} />
-          </button>
+        </div>
+
+        {/* password */}
+        <div className="space-y-[6px]">
+          {/* Password Input */}
+          <div className="text-[var(--text-primary)]">Password</div>
+          <div className="relative">
+            <Input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              placeholder="비밀번호를 입력하세요"
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full  text-left leading-[1.25rem] "
+            />
+            {/* 비밀번호 보기 아이콘 */}
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-[50%] translate-y-[-50%] text-gray-400 hover:text-gray-200"
+            >
+              <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} width={20} height={20} />
+            </button>
+          </div>
+        </div>
+
+        {/* 아이디 저장 및 자동 로그인 */}
+        <div className="flex items-center justify-between mt-2">
+          <label className="flex items-center text-sm text-gray-400">
+            <Checkbox
+              id="auto-login"
+              checked={autoLogin}
+              onCheckedChange={(checked) => setAutoLogin(checked === true)}
+            />
+            <span className="ml-2">자동 로그인</span>
+          </label>
         </div>
       </div>
 
-      {/* 아이디 저장 및 자동 로그인 */}
-      <div className="flex items-center justify-between mt-2">
-        <label className="flex items-center text-sm text-gray-400">
-          <Checkbox
-            id="auto-login"
-            checked={autoLogin}
-            onCheckedChange={(checked) => setAutoLogin(checked === true)}
-          />
-          <span className="ml-2">자동 로그인</span>
-        </label>
-      </div>
-
       {/* 로그인 버튼 */}
-      <Button btntype="enabled" className="w-full py-2 mt-4" onClick={handleLogin}>
-        로그인
-      </Button>
+      <div>
+        <Button btntype="enabled" className="w-full py-2 mt-4" onClick={handleLogin}>
+          로그인
+        </Button>
 
-      <Button btntype="secondary" className="w-full py-2 mt-4" onClick={handleSignUp}>
-        회원가입
-      </Button>
+        <Button btntype="secondary" className="w-full py-2 mt-4" onClick={handleSignUp}>
+          회원가입
+        </Button>
+      </div>
     </div>
   );
 };
