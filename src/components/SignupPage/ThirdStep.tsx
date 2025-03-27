@@ -62,7 +62,7 @@ const ThirdStep: React.FC = () => {
           }),
         );
 
-        navigate('/인증완료', { state: { businessCardId: businessCardData.business_card_id } });
+        navigate('/success', { state: { businessCardId: businessCardData.business_card_id } });
       } else {
         alert('이메일 인증이 아직 완료되지 않았습니다. 이메일을 확인해주세요.');
       }
