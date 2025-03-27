@@ -1,12 +1,6 @@
 // UserCardPage.tsx
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import AddModal from '@components/NetworkingListPage/AddModal';
-import { Check, ChevronLeft, Plus } from 'lucide-react';
-import {
-  useCreateConnectionMutation,
-  useGetConnectionQuery,
-} from '@features/UserCardPage/userCardApi';
+import { useParams } from 'react-router-dom';
 import { useIncrementViewCountMutation } from '@features/User/api/viewCountApi';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/store';
@@ -22,32 +16,17 @@ import { Button } from '@components/commons/Button/Button';
 import { ICONS } from '@constants/cardIcon';
 import { getUrlName } from '@utils/formatURLName';
 import IconRenderer from '@components/commons/Card/CardIconRenderer';
+import { ChevronLeft } from 'lucide-react';
 
 const UserCardPage: React.FC = (): React.JSX.Element => {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
   // URL 파라미터: 상대방 명함 ID
   const { nickname, businessCardId } = useParams<{ nickname: string; businessCardId: string }>();
 
-  // 모달 상태 및 모달 모드 관리
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  // modalMode: 'confirm' → 아직 추가하지 않음
-  //              'already' → 이미 추가된 상태
-  const [modalMode, setModalMode] = useState<'confirm' | 'already'>('confirm');
-  const [isChecked, setIsChecked] = useState(false);
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
   // 명함 상세 데이터 API 호출
   const { data: businessCard, isLoading, error } = useGetBusinessCardByIdQuery(businessCardId!);
-  // 온라인 명함 추가 Mutation
-  const [createConnection] = useCreateConnectionMutation();
-  // 이미 해당 명함이 추가되었는지 확인하는 Query (로그인 사용자와 명함 ID로)
-  const { data: connectionData } = useGetConnectionQuery(
-    {
-      scanner_id: userInfo ? userInfo.nickname : '',
-      business_card_id: businessCard ? businessCardId! : '',
-    },
-    { skip: !businessCard },
-  );
 
   const [incrementViewCount] = useIncrementViewCountMutation();
 
@@ -64,17 +43,6 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
     // eslint-disable-next-line
   }, [nickname, userInfo?.nickname, businessCardId]);
 
-  // connectionData가 존재하면 이미 추가된 것으로 판단
-  useEffect(() => {
-    if (connectionData) {
-      setIsChecked(true);
-      setModalMode('already');
-    } else {
-      setIsChecked(false);
-      setModalMode('confirm');
-    }
-  }, [connectionData]);
-
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">로딩 중...</div>
@@ -88,33 +56,6 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
     );
   }
 
-  // + 버튼 클릭 시, 아직 추가되지 않은 경우에만 모달 열기
-
-  // 모달 닫기
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
-  // 온라인 명함 추가 로직 (아직 추가되지 않은 경우에만)
-  const handleAddCard = async () => {
-    try {
-      await createConnection({
-        owner_id: businessCard.nickname, // 상대방 명함 소유자 (닉네임)
-        scanner_id: userInfo?.nickname || '', // 현재 로그인 사용자의 닉네임
-        business_card_id: businessCardId!,
-        exchange_method: 'online',
-        status: 'active', // DB에는 항상 'active'로 저장
-      }).unwrap();
-      // 추가 후 바로 모달 닫기
-      setIsModalOpen(false);
-      // 상태 업데이트: 이미 추가된 상태로 표시
-      setIsChecked(true);
-      setModalMode('already');
-    } catch (err) {
-      console.error('명함 추가 중 오류:', err);
-      alert('명함 추가에 실패했습니다.');
-    }
-  };
   const primaryUrlType = Object.keys(businessCard?.primaryUrl || {})[0] as keyof typeof ICONS;
   const subFirstUrlType = Object.keys(businessCard?.subFirstUrl || {})[0] as keyof typeof ICONS;
   const subSecondUrlType = Object.keys(businessCard?.subSecondUrl || {})[0] as keyof typeof ICONS;
@@ -169,7 +110,9 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
         </ScrollArea>
 
         <div className="w-full px-4">
-          <Button className="w-full">명함 추가하기</Button>
+          <Button btntype="enabled" className="w-full py-2 font-medium">
+            <div className="text-[14px] leading-[24px]">카드 선택</div>
+          </Button>
         </div>
       </div>
       <div className="flex flex-col gap-[10px]">
@@ -279,13 +222,6 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
         </div>
       </div>
 
-      {/* AddModal: 모달은 confirm 모드일 때만 보여줌 */}
-      <AddModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        mode={modalMode}
-        onConfirm={modalMode === 'confirm' ? handleAddCard : undefined}
-      />
       <QRScanDisplayModal isOpen={isQRModalOpen} onClose={() => setIsQRModalOpen(false)} />
     </div>
   );
