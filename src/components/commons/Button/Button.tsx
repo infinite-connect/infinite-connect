@@ -64,7 +64,7 @@ const buttonVariants = cva(
       {
         btntype: 'modalError',
         className:
-          'font-normal  text-[16px] text-[var(--error)] bg-[rgba(252,85,85,0.1)] hover:bg-[var(--fill-secondary-hover)] hover:text-[#FC5555E5]',
+          'font-normal  text-[16px] text-[var(--error)] bg-[rgba(252,85,85,0.1)] hover:bg-[#FEA7A733] hover:text-[#FC5555E5]',
       },
     ],
 
