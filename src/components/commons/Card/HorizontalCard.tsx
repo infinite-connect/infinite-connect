@@ -87,7 +87,7 @@ const HorizontalCard = ({ cardId }: HorizontalCardProps): React.JSX.Element => {
                 <div className="h-[31px] text-[24px] text-[var(--text-black)] font-bold leading-[30.9px] tracking-[-0.36px]">
                   {subExpertiseMaps[cardData?.subExpertise || '']}
                 </div>
-                <div className="h-[26px] flex flex-row text-[15.45px] text-[var(--text-black)] gap-[4px] leading-[25.75px]">
+                <div className="h-[26px] flex flex-row text-[16px] text-[var(--text-black)] gap-[4px] leading-[25.75px]">
                   <div>{cardData?.businessName}</div>
                   <div>{cardData?.name}</div>
                 </div>
@@ -97,7 +97,7 @@ const HorizontalCard = ({ cardId }: HorizontalCardProps): React.JSX.Element => {
                   <Mail className="w-[12px] h-[12px]" />
                   <div className="text-[12px] leading-[13.3px]">eightkim-mail@gmail.com</div>
                 </div>
-                <div className="flex flex-row w-full items-center gap-[5.15px]">
+                <div className="flex flex-row w-full items-center gap-[6px]">
                   <IconRenderer type={primaryUrlType} />
                   <div className="text-[12px] leading-[13.3px]">
                     {cardData?.primaryUrl?.[primaryUrlType]}
