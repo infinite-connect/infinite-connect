@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '@features/User/slice/userSlice';
 import { Button } from '@components/commons/Button/Button';
-import { Input } from '@components/ui/input';
+import { Input } from '@components/Input/input';
 
 const LoginForm = (): React.JSX.Element => {
   const [userEmail, setUserEmail] = useState<string>('');
@@ -90,15 +90,15 @@ const LoginForm = (): React.JSX.Element => {
           <Input
             id="email"
             type="email"
+            placeholder="이메일을 입력하세요"
             value={userEmail}
             onChange={(e) => setUserEmail(e.target.value)}
-            className="w-full rounded-md border border-gray-600 bg-transparent px-4 pt-[10px] pb-[8px] text-sm text-white text-left leading-[1.25rem] focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+            className="w-full  text-left leading-[1.25rem] "
           />
         </div>
 
         {/* password */}
         <div className="space-y-[6px]">
-          {' '}
           {/* Password Input */}
           <div className="text-[var(--text-primary)]">Password</div>
           <div className="relative">
@@ -106,8 +106,9 @@ const LoginForm = (): React.JSX.Element => {
               id="password"
               type={showPassword ? 'text' : 'password'}
               value={password}
+              placeholder="비밀번호를 입력하세요"
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md border border-gray-600 bg-transparent px-4 pt-[10px] pb-[8px] text-sm text-white text-left leading-[1.25rem] focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+              className="w-full  text-left leading-[1.25rem] "
             />
             {/* 비밀번호 보기 아이콘 */}
             <button
