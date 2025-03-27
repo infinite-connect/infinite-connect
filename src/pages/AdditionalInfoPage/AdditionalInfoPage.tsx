@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '@components/Input/input';
 import {
   Form,
   FormControl,
@@ -20,6 +19,7 @@ import { Button } from '@components/commons/Button/Button';
 import { UrlDropdown } from '@components/AdditionalInfoPage/UrlDropdown';
 import { SocialIcon } from '@components/AdditionalInfoPage/SocialIcon';
 import BottomSheet from '@components/commons/BottomSheet/BottomSheet';
+import { Input } from '@components/Input/input';
 
 // Zod 스키마 정의
 const schema = z
