@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { cn } from '@lib/utils';
-import { Input } from '@components/ui/input';
+import { Input } from '@components/Input/input';
 import { Label } from '@components/ui/label';
 
 export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
