@@ -161,7 +161,28 @@ export const exchangeApi = createApi({
         return { data: { cards } };
       },
     }),
-    // 7. 관계 삭제 API
+    // 8. 특정 사용자를 팔로우한 모든 카드 리스트 조회 API
+    getCardsFollowedByUserNickname: builder.query<
+      { cards: { cardId: string; nickname: string }[] },
+      { nickname: string }
+    >({
+      queryFn: async ({ nickname }) => {
+        const { data, error } = await supabase
+          .from('business_card_exchanges')
+          .select('follower_card_id, follower_nickname')
+          .eq('following_nickname', nickname);
+
+        if (error) return { error: error.message };
+
+        const cards = data.map((record) => ({
+          cardId: record.follower_card_id,
+          nickname: record.follower_nickname,
+        }));
+
+        return { data: { cards } };
+      },
+    }),
+    // 9. 관계 삭제 API
     deleteExchange: builder.mutation<
       { success: boolean },
       { follower_card_id: string; following_card_id: string }
@@ -187,5 +208,6 @@ export const {
   useGetFollowersByCardIdQuery,
   useGetFollowingByCardIdQuery,
   useGetFollowedCardsByUserNicknameQuery,
+  useGetCardsFollowedByUserNicknameQuery,
   useDeleteExchangeMutation,
 } = exchangeApi;
