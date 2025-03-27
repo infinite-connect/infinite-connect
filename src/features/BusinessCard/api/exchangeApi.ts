@@ -1,4 +1,3 @@
-// userCardApi.ts
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { supabase } from '@utils/supabaseClient';
 
@@ -9,13 +8,24 @@ export const exchangeApi = createApi({
     // 1. 단방향 교환 API
     oneWayExchange: builder.mutation<
       { success: boolean },
-      { follower_nickname: string; follower_card_id: string; following_card_id: string }
+      {
+        follower_nickname: string;
+        follower_card_id: string;
+        following_card_id: string;
+        following_nickname: string;
+      }
     >({
-      queryFn: async ({ follower_nickname, follower_card_id, following_card_id }) => {
+      queryFn: async ({
+        follower_nickname,
+        follower_card_id,
+        following_card_id,
+        following_nickname,
+      }) => {
         const { error } = await supabase.from('business_card_exchanges').insert({
           follower_nickname,
           follower_card_id,
           following_card_id,
+          following_nickname,
         });
         if (error) return { error: error.message };
         return { data: { success: true } };
@@ -60,11 +70,13 @@ export const exchangeApi = createApi({
             follower_nickname,
             follower_card_id,
             following_card_id,
+            following_nickname,
           },
           {
             follower_nickname: following_nickname,
             follower_card_id: following_card_id,
             following_card_id: follower_card_id,
+            following_nickname: follower_nickname,
           },
         ]);
         if (error) return { error: error.message };
@@ -102,7 +114,7 @@ export const exchangeApi = createApi({
       },
     }),
 
-    // 5. 팔로우한 카드 ID 리스트 조회 API
+    // 5. 팔로우한 카드 ID 리스트 조회 API (기존)
     getFollowersByCardId: builder.query<{ cardIds: string[] }, { cardId: string }>({
       queryFn: async ({ cardId }) => {
         const { data, error } = await supabase
@@ -115,7 +127,7 @@ export const exchangeApi = createApi({
       },
     }),
 
-    // 6. 팔로우하는 카드 ID 리스트 조회 API
+    // 6. 팔로우하는 카드 ID 리스트 조회 API (기존)
     getFollowingByCardId: builder.query<{ cardIds: string[] }, { cardId: string }>({
       queryFn: async ({ cardId }) => {
         const { data, error } = await supabase
@@ -125,6 +137,43 @@ export const exchangeApi = createApi({
         if (error) return { error: error.message };
         const cardIds = data.map((record) => record.following_card_id);
         return { data: { cardIds } };
+      },
+    }),
+
+    // 7. 특정 사용자가 팔로우한 모든 카드 리스트 조회 API
+    getFollowedCardsByUserNickname: builder.query<
+      { cards: { cardId: string; nickname: string }[] },
+      { followerNickname: string }
+    >({
+      queryFn: async ({ followerNickname }) => {
+        const { data, error } = await supabase
+          .from('business_card_exchanges')
+          .select('following_card_id, following_nickname')
+          .eq('follower_nickname', followerNickname);
+
+        if (error) return { error: error.message };
+
+        const cards = data.map((record) => ({
+          cardId: record.following_card_id,
+          nickname: record.following_nickname,
+        }));
+
+        return { data: { cards } };
+      },
+    }),
+    // 7. 관계 삭제 API
+    deleteExchange: builder.mutation<
+      { success: boolean },
+      { follower_card_id: string; following_card_id: string }
+    >({
+      queryFn: async ({ follower_card_id, following_card_id }) => {
+        const { error } = await supabase.from('business_card_exchanges').delete().match({
+          follower_card_id,
+          following_card_id,
+        });
+
+        if (error) return { error: error.message };
+        return { data: { success: true } };
       },
     }),
   }),
@@ -137,4 +186,6 @@ export const {
   useCheckTwoWayExchangeQuery,
   useGetFollowersByCardIdQuery,
   useGetFollowingByCardIdQuery,
+  useGetFollowedCardsByUserNicknameQuery,
+  useDeleteExchangeMutation,
 } = exchangeApi;
