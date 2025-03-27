@@ -3,6 +3,7 @@ import { Html5Qrcode } from 'html5-qrcode';
 import { useNavigate } from 'react-router-dom';
 import useWindowHeight from '@hooks/useWindowHeight';
 import useWindowWidth from '@hooks/useWindowWidth';
+import './styles.css';
 
 interface QRScannerTabContentProps {
   isActive: boolean;
