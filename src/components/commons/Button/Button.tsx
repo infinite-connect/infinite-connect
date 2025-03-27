@@ -48,7 +48,7 @@ const buttonVariants = cva(
       {
         btntype: 'delete',
         className:
-          'justify-start gap-1 p-4 text-[var(--error)] bg-[#FFFFFF0D] hover:bg-[var(--fill-secondary-hover)] hover:text-[#FC5555E5]',
+          'rounded-[4px] justify-start gap-1 p-4 text-[var(--error)] bg-[#FFFFFF0D] hover:bg-[var(--fill-secondary-hover)] hover:text-[#FC5555E5]',
       },
       {
         btntype: 'modalDefault',
