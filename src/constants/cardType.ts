@@ -1,31 +1,9 @@
 import { CardType } from '@components/SelectCardDesignPage/types';
-<<<<<<< Updated upstream
-=======
-
 import morningVertical from '@assets/CardDesign/VerticalCard/morningVertical.png';
 import dayVertical from '@assets/CardDesign/VerticalCard/dayVertical.png';
 import eveningVertical from '@assets/CardDesign/VerticalCard/eveningVertical.png';
 import nightVertical from '@assets/CardDesign/VerticalCard/nightVertical.png';
 import dawnVertical from '@assets/CardDesign/VerticalCard/dawnVertical.png';
-
-import morningHorizontal from '@assets/CardDesign/HorizontalCard/morningHorizontal.png';
-import dayHorizontal from '@assets/CardDesign/HorizontalCard/dayHorizontal.png';
-import eveningHorizontal from '@assets/CardDesign/HorizontalCard/eveningHorizontal.png';
-import nightHorizontal from '@assets/CardDesign/HorizontalCard/nightHorizontal.png';
-import dawnHorizontal from '@assets/CardDesign/HorizontalCard/dawnHorizontal.png';
-
-import morningObj from '@assets/CardDesign/CardObj/morningObj.png';
-import dayObj from '@assets/CardDesign/CardObj/dayObj.png';
-import eveningObj from '@assets/CardDesign/CardObj/eveningObj.png';
-import nightObj from '@assets/CardDesign/CardObj/nightObj.png';
-import dawnObj from '@assets/CardDesign/CardObj/dawnObj.png';
->>>>>>> Stashed changes
-
-import morningVertical from '@assets/CardDesign/VerticalCard/morningVertical.png';
-import dayVertical from '@assets/CardDesign/VerticalCard/dayVertical.png';
-import eveningVertical from '@assets/CardDesign/VerticalCard/dayVertical.png';
-import nightVertical from '@assets/CardDesign/VerticalCard/eveningVertical.png';
-import dawnVertical from '@assets/CardDesign/VerticalCard/nightVertical.png';
 
 import morningHorizontal from '@assets/CardDesign/HorizontalCard/morningHorizontal.png';
 import dayHorizontal from '@assets/CardDesign/HorizontalCard/dayHorizontal.png';
