@@ -5,6 +5,7 @@ import { Button } from '../Button/Button';
 interface ModalButtonProps {
   label: string;
   btntype?: 'enabled' | 'secondary' | 'modalDefault' | 'modalSecondary' | 'modalError' | 'delete';
+  onClick?: () => void;
 }
 
 interface ModalProps {
@@ -47,7 +48,10 @@ const Modal: React.FC<ModalProps> = ({
             {primaryButton.label}
           </Button>
           {secondaryButton && (
-            <Button btntype={secondaryButton.btntype || 'modalSecondary'} onClick={onClose}>
+            <Button
+              btntype={secondaryButton.btntype || 'modalSecondary'}
+              onClick={secondaryButton.onClick ?? onClose}
+            >
               {secondaryButton.label}
             </Button>
           )}
