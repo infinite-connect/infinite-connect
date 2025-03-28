@@ -49,14 +49,14 @@ const SecondStep: React.FC<SecondStepProps> = ({
           },
         },
       });
-
+      console.log(formData.userStatus);
       if (authError) {
         console.error('Auth Error:', authError.message);
         alert('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
         return;
       }
 
-      // 명함 생성은 트리거로 자동 처리되므로, 직무 및 세부 직무 추가
+      // 명함 생성은 트리거로 자동 처리 후 직무와 세부직부 추가
       const { data: businessCardData, error: businessCardFetchError } = await supabase
         .from('business_cards')
         .select('business_card_id')
