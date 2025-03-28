@@ -44,7 +44,7 @@ export interface BusinessCardVisibility {
 }
 
 export interface AllPrimaryBusinessCardList {
-  card_id: string;
+  business_card_id: string;
   nickname: string;
   business_name: string;
   name: string;
@@ -197,7 +197,7 @@ export const networkingApi = createApi({
             .from('user_primary_business_cards')
             .select(
               `
-            card_id,
+            business_card_id,
             nickname,
             name,
             business_name,
