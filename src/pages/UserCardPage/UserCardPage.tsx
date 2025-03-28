@@ -11,20 +11,19 @@ import { IconButton } from '@components/commons/Button/IconButton';
 import QrIcon from '@components/NetworkingListPage/UI/QrIcon';
 import AlarmIcon from '@components/NetworkingListPage/UI/AlarmIcon';
 import QRScanDisplayModal from '@components/commons/QR/QRScanDisplayModal';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Button } from '@components/commons/Button/Button';
-import { ICONS } from '@constants/cardIcon';
-import { getUrlName } from '@utils/formatURLName';
-import IconRenderer from '@components/commons/Card/CardIconRenderer';
 import { ChevronLeft } from 'lucide-react';
 import { ScrollArea } from '@components/ui/scroll-area';
+import CareerInfo from '@components/CardInfo/CareerInfo';
+import ContactInfo from '@components/CardInfo/ContactInfo';
 
 const UserCardPage: React.FC = (): React.JSX.Element => {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
   // URL 파라미터: 상대방 명함 ID
   const { nickname, businessCardId } = useParams<{ nickname: string; businessCardId: string }>();
-
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+  const [isHeaderSolid, setIsHeaderSolid] = useState(false);
+  // const [headerOpacity, setHeaderOpacity] = useState(0);
 
   // 명함 상세 데이터 API 호출
   const { data: businessCard, isLoading, error } = useGetBusinessCardByIdQuery(businessCardId!);
@@ -32,6 +31,30 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
   const [incrementViewCount] = useIncrementViewCountMutation();
 
   console.log(businessCard?.interests);
+
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const scrollPosition = window.scrollY;
+  //     const opacity = Math.min(scrollPosition / 56, 1);
+  //     setHeaderOpacity(opacity);
+  //   };
+
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setIsHeaderSolid(scrollPosition > 56);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     if (nickname && userInfo?.nickname && nickname !== userInfo.nickname) {
@@ -57,9 +80,24 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
     );
   }
 
-  const primaryUrlType = Object.keys(businessCard?.primaryUrl || {})[0] as keyof typeof ICONS;
-  const subFirstUrlType = Object.keys(businessCard?.subFirstUrl || {})[0] as keyof typeof ICONS;
-  const subSecondUrlType = Object.keys(businessCard?.subSecondUrl || {})[0] as keyof typeof ICONS;
+  // const bgColorLookup = {
+  //   transparent: 'bg-transparent',
+  //   light: 'bg-opacity-25 bg-[#121212]',
+  //   medium: 'bg-opacity-50 bg-[#121212]',
+  //   dark: 'bg-opacity-75 bg-[#121212]',
+  //   solid: 'bg-[#121212]',
+  // };
+
+  // const opacityClass =
+  //   headerOpacity < 0.25
+  //     ? 'transparent'
+  //     : headerOpacity < 0.5
+  //       ? 'light'
+  //       : headerOpacity < 0.75
+  //         ? 'medium'
+  //         : headerOpacity < 1
+  //           ? 'dark'
+  //           : 'solid';
 
   return (
     <div
@@ -68,9 +106,14 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
         background: 'linear-gradient(0deg, #121212 86.3%, #606171 100%)',
       }}
     >
-      <div className=" h-[44px]"></div>
-      {/* 헤더 */}
-      <Header className="px-[16px] z-12 ">
+      <Header
+        className={`px-[16px] fixed top-0 left-0 z-12 w-full transition-colors duration-500 ${
+          isHeaderSolid ? 'bg-[#121212]' : 'bg-transparent'
+        }`}
+      >
+        {/* <Header
+        className={`px-[16px] fixed top-0 left-0 z-12 w-full ${bgColorLookup[opacityClass]}`}
+      > */}
         <Header.Left>
           <ChevronLeft className="w-7 h-7" />
         </Header.Left>
@@ -79,8 +122,7 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
           <IconButton icon={<AlarmIcon />} />
         </Header.Right>
       </Header>
-
-      <div className="relative flex flex-col pt-8 pb-10 items-center justify-start overflow-x-hidden">
+      <div className="relative flex flex-col mt-14 pt-[30px] pb-10 items-center justify-start overflow-x-hidden">
         {/* 이름 * 명함 이미지 */}
         <div className="w-full px-4 gap-4">
           <div className="h-[48px] text-[32px] text-[var(--text-accent)] font-bold leading-[150%]">
@@ -118,111 +160,23 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
       </div>
       <div className="flex flex-col gap-[10px]">
         <div className="flex flex-col gap-[10px]">
-          <div className="relative flex flex-col px-5 py-4 items-center bg-[#1E1E1E]">
-            <div className="w-full h-[33px] flex items-start justify-start text-[14px] font-bold leading-[150%]">
-              경력 정보
-            </div>
-
-            {/* 회사 */}
-            {businessCard.company && (
-              <div className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:border-b-0">
-                <div className="text-[14px] leading-[150%]">회사</div>
-                <div>{businessCard.company}</div>
-              </div>
-            )}
-
-            {/* 직책 */}
-            {businessCard.jobTitle && (
-              <div className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:border-b-0">
-                <div className="text-[14px] leading-[150%]">직책</div>
-                <div>{businessCard.jobTitle}</div>
-              </div>
-            )}
-
-            {/* 연차 */}
-            {businessCard.experienceYears && (
-              <div className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:border-b-0">
-                <div className="text-[14px] leading-[150%]">연차</div>
-                <div>{businessCard.experienceYears}</div>
-              </div>
-            )}
-
-            {/* 직무 */}
-            {(businessCard.fieldsOfExpertise || businessCard.subExpertise) && (
-              <div className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:border-b-0">
-                <div className="text-[14px] leading-[150%]">직무</div>
-                <div>
-                  {businessCard.fieldsOfExpertise}
-                  {businessCard.fieldsOfExpertise && businessCard.subExpertise && ' | '}
-                  {businessCard.subExpertise}
-                </div>
-              </div>
-            )}
-          </div>
+          <CareerInfo
+            company={businessCard.company}
+            jobTitle={businessCard.jobTitle}
+            experienceYears={businessCard.experienceYears}
+            fieldsOfExpertise={businessCard.fieldsOfExpertise}
+            subExpertise={businessCard.subExpertise}
+          />
         </div>
 
-        <div className="relative flex flex-col px-5 py-4 items-center bg-[#1E1E1E]">
-          <div className="w-full h-[33px] flex items-start justify-start text-[14px] font-bold leading-[150%]">
-            연락처
-          </div>
-
-          {/* PHONE */}
-          {businessCard.phone && (
-            <div className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:border-b-0">
-              <div className="text-[14px] leading-[150%]">PHONE</div>
-              <div>{businessCard.phone}</div>
-            </div>
-          )}
-
-          {/* EMAIL */}
-          {businessCard.email && (
-            <div className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:border-b-0">
-              <div className="text-[14px] leading-[150%]">EMAIL</div>
-              <div>{businessCard.email}</div>
-            </div>
-          )}
-
-          {/* PRIMARY URL */}
-          {businessCard.primaryUrl?.[primaryUrlType] && (
-            <div className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:border-b-0">
-              <div className="text-[14px] leading-[150%]">
-                <div className="flex flex-row w-full items-center gap-[4px]">
-                  <IconRenderer type={primaryUrlType} size="16px" />
-                  {getUrlName(Object.keys(businessCard?.primaryUrl || {})[0])}
-                </div>
-              </div>
-              <div>{businessCard.primaryUrl?.[primaryUrlType]}</div>
-            </div>
-          )}
-
-          {/* SUB FIRST URL */}
-          {businessCard.subFirstUrl?.[subFirstUrlType] && (
-            <div className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:border-b-0">
-              <div className="text-[14px] leading-[150%]">
-                <div className="flex flex-row w-full items-center gap-[4px]">
-                  <IconRenderer type={subFirstUrlType} size="16px" />
-                  {getUrlName(Object.keys(businessCard?.subFirstUrl || {})[0])}
-                </div>
-              </div>
-              <div>{businessCard.subFirstUrl?.[subFirstUrlType]}</div>
-            </div>
-          )}
-
-          {/* SUB SECOND URL */}
-          {businessCard.subSecondUrl?.[subSecondUrlType] && (
-            <div className="w-full h-[57px] flex flex-row items-center justify-between border-[#292929] last:border-b-0">
-              <div className="text-[14px] leading-[150%]">
-                <div className="flex flex-row w-full items-center gap-[4px]">
-                  <IconRenderer type={subSecondUrlType} size="16px" />
-                  {getUrlName(Object.keys(businessCard?.subSecondUrl || {})[0])}
-                </div>
-              </div>
-              <div>{businessCard.subSecondUrl?.[subSecondUrlType]}</div>
-            </div>
-          )}
-        </div>
+        <ContactInfo
+          phone={businessCard.phone || undefined}
+          email={businessCard.email || undefined}
+          primaryUrl={businessCard.primaryUrl ?? undefined}
+          subFirstUrl={businessCard.subFirstUrl ?? undefined}
+          subSecondUrl={businessCard.subSecondUrl ?? undefined}
+        />
       </div>
-
       <QRScanDisplayModal isOpen={isQRModalOpen} onClose={() => setIsQRModalOpen(false)} />
     </div>
   );
