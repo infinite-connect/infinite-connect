@@ -32,7 +32,7 @@ const UserFilterSection: React.FC = () => {
 
   // 리스트 가져오기
   const { data, isLoading } = useGetUserAllPrimaryBusinessListQuery(nickname);
-  console.log(data);
+  console.log('유저데이터', data);
 
   // 필터 & 탭 동시 적용
   useEffect(() => {
@@ -62,16 +62,17 @@ const UserFilterSection: React.FC = () => {
     setActiveTab(tab);
   };
 
+  // 팝업 열기 함수
   const handleFilterClick = () => {
     setFilterPopupOpen(true);
   };
 
-  // 6) 팝업 닫기
+  // 팝업 닫기 함수
   const handleClosePopup = () => {
     setFilterPopupOpen(false);
   };
 
-  // 7) 필터 적용하기
+  // 필터 적용함수
   const handleApplyFilters = (vals: FilterValues) => {
     setFilterValues(vals); // 새 필터 값 저장
 
