@@ -7,7 +7,7 @@ import { userCardApi } from '@features/UserCardPage/userCardApi';
 import userReducer from '@features/User/slice/userSlice';
 import { selectCardDesignApi } from '@features/BusinessCard/api/selectCardDesignApi';
 import { viewCountApi } from '@features/User/api/viewCountApi';
-
+import userPrimaryBusinessCardRedcuer from '@features/Networking/slice/userPrimaryBusinessCardSlice';
 export const store = configureStore({
   reducer: {
     [userCardListApi.reducerPath]: userCardListApi.reducer,
@@ -18,6 +18,7 @@ export const store = configureStore({
     [userCardApi.reducerPath]: userCardApi.reducer,
     [viewCountApi.reducerPath]: viewCountApi.reducer,
     user: userReducer,
+    userBusinessCard: userPrimaryBusinessCardRedcuer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
