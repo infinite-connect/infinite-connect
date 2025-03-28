@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+
 import FullScreenPopup from '@components/NetworkingListPage/FullScreenPopup';
 import BusinessCardConsentSheet from '@components/NetworkingListPage/BusinessCardConsentSheet';
 import {
   useCheckUserBusinessCardVisibilityQuery,
-  useGetNetworkingListQuery,
   useUpdateBusinessCardVisibilityMutation,
 } from '@features/Networking/networkingApi';
 import { Header } from '@components/commons/Header/Header';
@@ -16,27 +15,38 @@ import HotBusinessCardSection from '@components/NetworkingListPage/HotBusinessCa
 import AlarmIcon from '@components/NetworkingListPage/UI/AlarmIcon';
 import UserSimilarTypeSection from '@components/NetworkingListPage/UserSimilarTypeSection';
 import UserFiterSection from '@components/NetworkingListPage/UserFilterSection';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@store/store';
+import { setPrimaryCard } from '@features/Networking/slice/userPrimaryBusinessCardSlice';
 const NetworkingList: React.FC = (): React.JSX.Element => {
-  const nickname = 'test20Nickname'; // 테스트용 닉네임
-  const location = useLocation();
-
+  const { userInfo } = useSelector((state: RootState) => state.user);
+  const nickname = userInfo?.nickname;
+  const dispatch = useDispatch();
   const [showPopup, setShowPopup] = useState(false);
   const [showConsentSheet, setShowConsentSheet] = useState(false);
 
-  // 네트워킹 리스트 가져오기
-  const { data: networkingList, refetch } = useGetNetworkingListQuery(nickname);
-  console.log('네트워킹 리스트:', networkingList);
   // 명함 공개 여부 확인
-  const { data: userBusinessCard, isLoading } = useCheckUserBusinessCardVisibilityQuery(nickname);
+  const { data: userBusinessCard, isLoading } = useCheckUserBusinessCardVisibilityQuery(nickname!, {
+    skip: !nickname,
+  });
+  console.log('명함 공개 여부 확인', userBusinessCard);
+
+  // 대표 명함 데이터가 있으면 Redux 스토어에 저장
+  useEffect(() => {
+    if (userBusinessCard) {
+      dispatch(
+        setPrimaryCard({
+          business_card_id: userBusinessCard.business_card_id,
+          fields_of_expertise: userBusinessCard.fields_of_expertise,
+          sub_expertise: userBusinessCard.sub_expertise,
+          card_type: userBusinessCard.card_type,
+        }),
+      );
+    }
+  }, [userBusinessCard, dispatch]);
 
   //  명함 공개 여부 업데이트
   const [updateBusinessCardVisibility] = useUpdateBusinessCardVisibilityMutation();
-
-  // 상세명함페이지에서 친구 추가 후 리스트 쿼리 재요청
-  useEffect(() => {
-    refetch();
-  }, [location, refetch]);
 
   // 최초 접근 시 풀 팝업 로직 처리
   useEffect(() => {

@@ -20,7 +20,7 @@ export interface BusinessCard {
   isPrimary?: boolean;
   createdAt?: string;
   nickname: string;
-  cardType: string;
+  cardType: 'dawn' | 'morning' | 'day' | 'evening' | 'night';
   businessName?: string;
   fax?: string;
   jobTitle?: string;

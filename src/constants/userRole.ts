@@ -1,10 +1,9 @@
 // src/constants.ts
 
-export const roles = ['All', 'Development', 'Infrastructure', 'Design', 'Business', 'Corporate'];
+export const roles = ['Development', 'Infrastructure', 'Design', 'Business', 'Corporate'];
 
 export const detailsMap = {
   'Development': [
-    'All',
     '프론트엔드',
     '백엔드',
     '풀스택',
@@ -18,7 +17,6 @@ export const detailsMap = {
     '빅데이터 개발자',
   ],
   'Infrastructure': [
-    'All',
     'DevOps 앤지니어',
     '클라우드 엔지니어',
     'SRE',
@@ -31,7 +29,6 @@ export const detailsMap = {
     'IT 운영 관리자',
   ],
   'Design': [
-    'All',
     'UI/UX 디자인',
     '프로덕트 디자이너',
     '플랫폼 디자이너',
@@ -46,7 +43,6 @@ export const detailsMap = {
     '프롬프트 디자이너',
   ],
   'Business': [
-    'All',
     '서비스 기획자',
     'PM/PO',
     '전략 기획자',
@@ -60,7 +56,6 @@ export const detailsMap = {
     '커뮤니티 매니저',
   ],
   'Corporate': [
-    'All',
     '인사 담당자',
     '채용 매니저',
     '조직문화',
