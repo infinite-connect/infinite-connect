@@ -42,7 +42,7 @@ const Success = () => {
         </div>
 
         {/* 하단 버튼 영역 */}
-        <div className="w-full max-w-sm mx-auto pb-10">
+        <div className="w-full mx-auto pb-10">
           <Button className="w-full h-[52px]" onClick={() => navigate('/selectcarddesign')}>
             나의 네트워킹 성향 선택하기
           </Button>
