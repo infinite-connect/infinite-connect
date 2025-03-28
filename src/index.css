@@ -1,6 +1,17 @@
 @import 'tailwindcss';
 @plugin "tailwindcss-animate";
 
+/* dot 크기와 색상 변경 */
+.slick-dots li button:before {
+  font-size: 8px !important; /* 원형 dot의 크기를 8px로 설정 */
+  line-height: 8px !important; /* 높이도 8px로 */
+  color: #fff !important; /* 색상을 #6E6B6B로 지정 */
+}
+
+.slick-dots {
+  bottom: -3rem !important; /* dot들이 슬라이더 영역 아래로 배치 */
+}
+
 /* custom color */
 @theme {
   /* bg */
