@@ -11,6 +11,7 @@ type SignupData = z.infer<typeof schema>;
 interface SecondStepProps {
   fieldsOfExpertise: string[];
   subExpertise: Record<string, string[]>;
+  userStatus: string[];
   prevStep: () => void;
   nextStep: () => void;
 }
@@ -18,6 +19,7 @@ interface SecondStepProps {
 const SecondStep: React.FC<SecondStepProps> = ({
   fieldsOfExpertise,
   subExpertise,
+  userStatus,
   prevStep,
   nextStep,
 }) => {
@@ -43,6 +45,7 @@ const SecondStep: React.FC<SecondStepProps> = ({
             name: formData.name,
             nickname: formData.nickname,
             phone_number: formattedPhoneNumber,
+            status: formData.userStatus,
           },
         },
       });
@@ -95,6 +98,26 @@ const SecondStep: React.FC<SecondStepProps> = ({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-[20px]">
       {/* 첫 번째 드롭다운 */}
       <div className="flex flex-col space-y-[6px]">
+        <label htmlFor="userStatus" className="text-sm text-gray-400">
+          현재 상태
+        </label>
+        <select
+          {...register('userStatus')}
+          id="userStatus"
+          className={`w-full rounded-md border ${
+            errors.fieldsOfExpertise ? 'border-red-500' : 'border-gray-600'
+          } bg-gray-700 px-4 py-2 text-white`}
+        >
+          <option value="">직무를 선택하세요</option>
+          {userStatus.map((status) => (
+            <option key={status} value={status}>
+              {status}
+            </option>
+          ))}
+        </select>
+      </div>
+      {/* 두 번째 드롭다운 */}
+      <div className="flex flex-col space-y-[6px]">
         <label htmlFor="fieldsOfExpertise" className="text-sm text-gray-400">
           직무
         </label>
@@ -113,8 +136,7 @@ const SecondStep: React.FC<SecondStepProps> = ({
           ))}
         </select>
       </div>
-
-      {/* 두 번째 드롭다운 */}
+      {/* 세 번째 드롭다운 */}
       <div className="flex flex-col space-y-[6px]">
         <label htmlFor="subExpertise" className="text-sm text-gray-400">
           세부 직무
