@@ -23,7 +23,6 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
   const { nickname, businessCardId } = useParams<{ nickname: string; businessCardId: string }>();
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [isHeaderSolid, setIsHeaderSolid] = useState(false);
-  // const [headerOpacity, setHeaderOpacity] = useState(0);
 
   // 명함 상세 데이터 API 호출
   const { data: businessCard, isLoading, error } = useGetBusinessCardByIdQuery(businessCardId!);
@@ -31,17 +30,6 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
   const [incrementViewCount] = useIncrementViewCountMutation();
 
   console.log(businessCard?.interests);
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     const scrollPosition = window.scrollY;
-  //     const opacity = Math.min(scrollPosition / 56, 1);
-  //     setHeaderOpacity(opacity);
-  //   };
-
-  //   window.addEventListener('scroll', handleScroll);
-  //   return () => window.removeEventListener('scroll', handleScroll);
-  // }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -80,25 +68,6 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
     );
   }
 
-  // const bgColorLookup = {
-  //   transparent: 'bg-transparent',
-  //   light: 'bg-opacity-25 bg-[#121212]',
-  //   medium: 'bg-opacity-50 bg-[#121212]',
-  //   dark: 'bg-opacity-75 bg-[#121212]',
-  //   solid: 'bg-[#121212]',
-  // };
-
-  // const opacityClass =
-  //   headerOpacity < 0.25
-  //     ? 'transparent'
-  //     : headerOpacity < 0.5
-  //       ? 'light'
-  //       : headerOpacity < 0.75
-  //         ? 'medium'
-  //         : headerOpacity < 1
-  //           ? 'dark'
-  //           : 'solid';
-
   return (
     <div
       className="min-h-screen text-white flex flex-col justify-start flex-grow overflow-y-auto"
@@ -108,12 +77,9 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
     >
       <Header
         className={`px-[16px] fixed top-0 left-0 z-12 w-full transition-colors duration-500 ${
-          isHeaderSolid ? 'bg-[#121212]' : 'bg-transparent'
+          isHeaderSolid ? 'bg-[#121212]/70 backdrop-filter backdrop-blur-md' : 'bg-transparent'
         }`}
       >
-        {/* <Header
-        className={`px-[16px] fixed top-0 left-0 z-12 w-full ${bgColorLookup[opacityClass]}`}
-      > */}
         <Header.Left>
           <ChevronLeft className="w-7 h-7" />
         </Header.Left>
