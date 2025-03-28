@@ -3,10 +3,11 @@ import { userCardListApi } from '@features/UserPage/api/userCardListApi';
 import { businessCardApi } from '@features/BusinessCard/api/businessCardApi';
 import { infoDuplicateCheckApi } from '@features/SignupPage/api/infoDuplicateCheckApi';
 import { networkingApi } from '@features/Networking/networkingApi';
-import { userCardApi } from '@features/UserCardPage/userCardApi';
 import userReducer from '@features/User/slice/userSlice';
 import { selectCardDesignApi } from '@features/BusinessCard/api/selectCardDesignApi';
 import { viewCountApi } from '@features/User/api/viewCountApi';
+import { exchangeApi } from '@features/BusinessCard/api/exchangeApi';
+
 import userPrimaryBusinessCardRedcuer from '@features/Networking/slice/userPrimaryBusinessCardSlice';
 export const store = configureStore({
   reducer: {
@@ -15,8 +16,8 @@ export const store = configureStore({
     [selectCardDesignApi.reducerPath]: selectCardDesignApi.reducer,
     [infoDuplicateCheckApi.reducerPath]: infoDuplicateCheckApi.reducer,
     [networkingApi.reducerPath]: networkingApi.reducer,
-    [userCardApi.reducerPath]: userCardApi.reducer,
     [viewCountApi.reducerPath]: viewCountApi.reducer,
+    [exchangeApi.reducerPath]: exchangeApi.reducer,
     user: userReducer,
     userBusinessCard: userPrimaryBusinessCardRedcuer,
   },
@@ -28,9 +29,9 @@ export const store = configureStore({
       businessCardApi.middleware,
       selectCardDesignApi.middleware,
       infoDuplicateCheckApi.middleware,
-      userCardApi.middleware,
       networkingApi.middleware,
       viewCountApi.middleware,
+      exchangeApi.middleware,
     ),
 });
 

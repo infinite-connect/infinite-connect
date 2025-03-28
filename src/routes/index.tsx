@@ -20,6 +20,7 @@ import UserInterestsPage from '@pages/UserInterestsPage/UserInterestsPage';
 import CardPreviewPage from '@pages/CardPreviewPage/CardPreviewPage';
 import QrScannerPage from '@pages/QrScannerPage/QrScannerPage';
 import BusinessCardBookPage from '@pages/BusinessCardBookPage/BusinessCardBookPage';
+import Success from '@components/SignupPage/Success';
 
 const AppRouter = () => {
   return (
@@ -30,7 +31,7 @@ const AppRouter = () => {
       <Route path={RoutePaths.SELECTCARDDESIGN} element={<SelectCardDesignPage />} />
       <Route path={RoutePaths.ADDITIONALINFO} element={<AdditionalInfoPage />} />
       <Route path={`${RoutePaths.USER}/:userId?`} element={<UserPage />} />
-      <Route path={`${RoutePaths.USER}${RoutePaths.CARD}/:cardId?`} element={<UserCardPage />} />
+      {/* <Route path={`${RoutePaths.USER}${RoutePaths.CARD}/:cardId?`} element={<UserCardPage />} /> */}
       <Route path={`${RoutePaths.USER}${RoutePaths.SETTING}`} element={<UserSettingPage />} />
       <Route path={RoutePaths.INFO} element={<InfoPage />} />
       <Route path={RoutePaths.MEMBERSHIP} element={<MembershipPage />} />
@@ -44,6 +45,8 @@ const AppRouter = () => {
       <Route path={RoutePaths.CARDPREVIEW} element={<CardPreviewPage />} />
       <Route path={RoutePaths.QR_SCANNER} element={<QrScannerPage />} />
       <Route path={RoutePaths.BUSINESSCARDBOOK} element={<BusinessCardBookPage />} />
+      <Route path={RoutePaths.SUCCESS} element={<Success />} />
+
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

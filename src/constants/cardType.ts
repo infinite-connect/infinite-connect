@@ -1,10 +1,9 @@
 import { CardType } from '@components/SelectCardDesignPage/types';
-
 import morningVertical from '@assets/CardDesign/VerticalCard/morningVertical.png';
 import dayVertical from '@assets/CardDesign/VerticalCard/dayVertical.png';
-import eveningVertical from '@assets/CardDesign/VerticalCard/dayVertical.png';
-import nightVertical from '@assets/CardDesign/VerticalCard/eveningVertical.png';
-import dawnVertical from '@assets/CardDesign/VerticalCard/nightVertical.png';
+import eveningVertical from '@assets/CardDesign/VerticalCard/eveningVertical.png';
+import nightVertical from '@assets/CardDesign/VerticalCard/nightVertical.png';
+import dawnVertical from '@assets/CardDesign/VerticalCard/dawnVertical.png';
 
 import morningHorizontal from '@assets/CardDesign/HorizontalCard/morningHorizontal.png';
 import dayHorizontal from '@assets/CardDesign/HorizontalCard/dayHorizontal.png';

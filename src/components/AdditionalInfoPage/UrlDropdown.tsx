@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
 import { Button } from '@components/commons/Button/Button';
-import { Input } from '@components/ui/input';
+import { Input } from '@components/Input/input';
 
 type UrlDropdownProps = {
   value: string | undefined;
