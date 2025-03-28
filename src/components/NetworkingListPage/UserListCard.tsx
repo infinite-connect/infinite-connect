@@ -1,6 +1,7 @@
 import React from 'react';
 import SeparationLine from './UI/SeparationLine';
 import NetworkTypeCard from './UI/NetworkTypeCard';
+import { useNavigate } from 'react-router-dom';
 
 interface UserListCardProps {
   cardId: string;
@@ -35,8 +36,15 @@ const UserListCard: React.FC<UserListCardProps> = ({
 }) => {
   // 비즈니스 네임이 있으면 그것을, 없으면 이름을 마스킹해서 표시
   const displayName = businessName && businessName.trim() !== '' ? businessName : maskName(name);
+  const goToDetailPageNavigate = () => {
+    navigate(`/${nickName}/${cardId}`);
+  };
+  const navigate = useNavigate();
   return (
-    <div className="w-full flex flex-row justify-between rounded-md bg-[rgba(255,255,255,0.07)] px-[18px] py-[14px] text-white">
+    <div
+      onClick={goToDetailPageNavigate}
+      className="w-full flex flex-row justify-between rounded-md bg-[rgba(255,255,255,0.07)] px-[18px] py-[14px] text-white"
+    >
       {/* 이미지 영역 */}
       <div className="flex w-full flex-row gap-[10px]">
         <div className="aspect-[49/66] w-[66px] h-full flex-shrink-0 relative">
