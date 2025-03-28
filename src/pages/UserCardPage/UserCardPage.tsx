@@ -17,6 +17,7 @@ import { ICONS } from '@constants/cardIcon';
 import { getUrlName } from '@utils/formatURLName';
 import IconRenderer from '@components/commons/Card/CardIconRenderer';
 import { ChevronLeft } from 'lucide-react';
+import { ScrollArea } from '@components/ui/scroll-area';
 
 const UserCardPage: React.FC = (): React.JSX.Element => {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
@@ -90,8 +91,8 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
           </div>
           {/* 관심사 스크롤 */}
         </div>
-        <ScrollArea className="w-full pl-4 overflow-x-auto scrollbar-hide mb-4">
-          <div className="flex space-x-[6px]">
+        <ScrollArea className="w-full pl-4 mb-4 relative">
+          <div className="flex flex-row gap-[6px] flex-nowrap overflow-x-auto">
             {businessCard.interests?.map((interest, index) => (
               <div
                 key={index}
