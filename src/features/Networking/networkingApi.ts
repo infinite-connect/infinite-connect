@@ -64,9 +64,9 @@ export const networkingApi = createApi({
     // 하루 상위 5개 조회수 높은거 카드 아이디 값 가져오기.
     getTop5DailyIds: builder.query<
       { business_card_id: string; daily_view_count: number }[],
-      { fields: string; sub: string }
+      { sub: string }
     >({
-      async queryFn({ fields, sub }) {
+      async queryFn({ sub }) {
         try {
           const { data, error } = await supabase
             .from('daily_top_5_by_expertise')
@@ -76,7 +76,6 @@ export const networkingApi = createApi({
           daily_view_count
         `,
             )
-            .eq('fields_of_expertise', fields)
             .eq('sub_expertise', sub)
             .order('daily_view_count', { ascending: false })
             .limit(5);
@@ -210,7 +209,6 @@ export const networkingApi = createApi({
           `,
             )
             .neq('nickname', excludeNickname);
-
           if (error) throw error;
           return { data };
         } catch (error) {
