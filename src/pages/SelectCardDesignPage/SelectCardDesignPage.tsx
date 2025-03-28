@@ -22,6 +22,7 @@ const SelectCardDesignPage = (): React.JSX.Element => {
 
   const location = useLocation();
   const { businessCardId } = location.state || {};
+  console.log(businessCardId);
 
   const gradients: Record<CardType, string> = {
     dawn: 'linear-gradient(0deg, #121212 86.3%, #9A8BC6 100%)', // 새벽

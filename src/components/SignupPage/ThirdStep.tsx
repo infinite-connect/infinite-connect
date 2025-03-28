@@ -9,7 +9,7 @@ import { Button } from '@components/commons/Button/Button';
 const ThirdStep: React.FC = () => {
   const { getValues } = useFormContext();
   const [isChecking, setIsChecking] = useState(false);
-  const [, setBusinessCardId] = useState<string | null>(null);
+  const [businessCardId, setBusinessCardId] = useState<string | null>(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -61,8 +61,8 @@ const ThirdStep: React.FC = () => {
             name: authData.user.user_metadata?.name || '',
           }),
         );
-
-        navigate('/success', { state: { businessCardId: businessCardData.business_card_id } });
+        console.log(businessCardId);
+        navigate('/success', { state: { businessCardId: businessCardId } });
       } else {
         alert('이메일 인증이 아직 완료되지 않았습니다. 이메일을 확인해주세요.');
       }
