@@ -31,7 +31,7 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
   const windowWidth = useWindowWidth();
   const windowHeight = useWindowHeight();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [resetKey, setResetKey] = useState(0);
+  const [tempSelectedCardId, setTempSelectedCardId] = useState<string>('');
 
   // Shadcn UI의 CarouselApi 사용
   const [api, setApi] = useState<CarouselApi>();
@@ -74,24 +74,26 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
     }
   }, [businessCards, selectedCardId]);
 
-  // 선택된 카드 ID 변경 시 로그 출력
-  useEffect(() => {
-    if (selectedCardId) {
-      console.log('현재 선택된 카드:', selectedCardId);
-    }
-  }, [selectedCardId]);
-
   // 카드 이름과 타입 가져오기
   const { data: cardDetails = {} } = useGetBusinessCardNamesAndTypesQuery(businessCards, {
     skip: businessCards.length === 0,
   });
 
-  // 드로어가 열릴 때 캐러셀 재초기화
+  // 드로워가 열릴 때 현재 선택된 카드 ID를 임시 상태에 저장
   useEffect(() => {
     if (isDrawerOpen) {
-      setResetKey((prev) => prev + 1);
+      setTempSelectedCardId(selectedCardId);
+
+      // 현재 선택된 카드의 인덱스 찾기
+      const selectedIndex = businessCards.findIndex((cardId) => cardId === selectedCardId);
+      if (selectedIndex !== -1 && api) {
+        // 약간의 지연 후 이동 (캐러셀이 완전히 초기화된 후)
+        setTimeout(() => {
+          api.scrollTo(selectedIndex, false);
+        }, 100);
+      }
     }
-  }, [isDrawerOpen]);
+  }, [isDrawerOpen, selectedCardId, businessCards, api]);
 
   // CarouselApi 이벤트 핸들러
   useEffect(() => {
@@ -113,13 +115,12 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
     };
   }, [api]);
 
-  // 인덱스가 변경될 때 카드 ID 업데이트
+  // 인덱스가 변경될 때 임시 카드 ID 업데이트
   useEffect(() => {
-    if (businessCards[currentIndex]) {
-      const newCardId = businessCards[currentIndex];
-      setSelectedCardId(newCardId);
+    if (isDrawerOpen && businessCards[currentIndex]) {
+      setTempSelectedCardId(businessCards[currentIndex]);
     }
-  }, [currentIndex, businessCards]);
+  }, [currentIndex, businessCards, isDrawerOpen]);
 
   // QR 스캐너 시작/중지 로직
   useEffect(() => {
@@ -208,6 +209,17 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
     // eslint-disable-next-line
   }, [exchangeStatus, checkExchangeParams]);
 
+  const handleGoBack = () => {
+    setIsDrawerOpen(false);
+    // selectedCardId는 변경하지 않음 (원래 선택된 카드 유지)
+  };
+
+  // 선택 완료 버튼 핸들러 - 임시 선택된 카드를 실제 선택으로 적용
+  const handleConfirmSelection = () => {
+    setSelectedCardId(tempSelectedCardId);
+    setIsDrawerOpen(false);
+  };
+
   // 실제 교환 수행 함수
   const performExchange = async (
     followerNickname: string,
@@ -291,7 +303,7 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
         QR 코드를 스캔하세요
       </div>
 
-      <div className="absolute flex flex-row w-[335px] h-[82px] px-[16px] py-[22px] bg-[#2a2a2a] border-1 border-[#7b61ff] bottom-[60px] left-1/2 transform -translate-x-1/2 z-50 rounded-[4px]">
+      <div className="absolute flex flex-row w-[335px] h-[82px] px-[16px] py-[22px] bg-[#2a2a2a] rounded-[8px] border-1 border-[#7b61ff] bottom-[60px] left-1/2 transform -translate-x-1/2 z-50">
         <div className="w-full h-full flex items-center gap-[10px]">
           <div className="mr-3 h-[38px] w-[62px] flex-shrink-0">
             <img
@@ -301,8 +313,7 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
             />
           </div>
           <div className="flex-1 text-white text-[12px] leading-[150%]">
-            교환할 명함 <br />
-            {selectedCardName}
+            교환할 명함 <br />[{selectedCardName}]
           </div>
           <Button
             btntype="enabled"
@@ -313,24 +324,34 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
           </Button>
         </div>
       </div>
-      <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-        <DrawerContent className="bg-[#1a1a1a] text-white">
-          <div className="p-4">
-            <div className="mt-4">
+      <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} handleOnly={true}>
+        <DrawerContent hideIndicator className="bg-[#1a1a1a] pt-[21px] text-white">
+          <div>
+            <div className="flex flex-col justify-center item-center px-[24px] py-[30px] gap-[8px]">
+              <div></div>
+              <div className="flex justify-center text-[18px] leading-[140%] tracking-[-0.27px] text-[var(--text-primary)]">
+                스캔하면 공유되는 내 명함 확인하세요!
+              </div>
+              <div className="flex justify-center text-[12px] leading-[20px] text-[var(--text-secondary)]">
+                공유하고 싶은 명함을 선택해 주세요
+              </div>
+            </div>
+            <div>
               <Carousel
-                key={`carousel-${resetKey}`}
                 setApi={setApi}
                 opts={{
                   align: 'center',
                   containScroll: 'trimSnaps',
                   duration: 20,
+                  skipSnaps: false, // 스냅 포인트를 건너뛰지 않도록 설정
+                  dragFree: false, // 드래그 후 항상 스냅 포인트에 정렬되도록 설정
                 }}
               >
                 <CarouselContent>
                   {businessCards.map((cardId) => {
                     return (
                       <CarouselItem key={cardId} className=" flex-shrink-0">
-                        <div className="flex justify-center items-center border-1">
+                        <div className="flex justify-center items-center">
                           <HorizontalCardPreview cardId={cardId} />
                         </div>
                       </CarouselItem>
@@ -338,10 +359,23 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
                   })}
                 </CarouselContent>
               </Carousel>
+              <div className="flex justify-center items-center mt-5 gap-[8px]">
+                {businessCards.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`w-[8px] h-[8px] rounded-full ${
+                      index === currentIndex ? 'bg-white' : 'bg-gray-400'
+                    }`}
+                  ></div>
+                ))}
+              </div>
             </div>
-            <div className="mt-4 flex justify-center">
-              <Button btntype="enabled" className="w-full" onClick={() => setIsDrawerOpen(false)}>
+            <div className="flex flex-col justify-center mt-4 px-[25px] pb-[40px] gap-[4px]">
+              <Button btntype="enabled" className="w-full" onClick={handleConfirmSelection}>
                 선택 완료
+              </Button>
+              <Button btntype="secondary" className="w-full" onClick={handleGoBack}>
+                돌아가기
               </Button>
             </div>
           </div>

@@ -54,13 +54,13 @@ const QRDisplayTabContent: React.FC = () => {
                 },
                 dotsOptions: {
                   color: '#000000',
-                  type: 'rounded',
+                  type: 'square',
                 },
                 backgroundOptions: {
                   color: '#ffffff',
                 },
                 cornersSquareOptions: {
-                  type: 'extra-rounded',
+                  type: 'square',
                 },
                 cornersDotOptions: {
                   type: 'dot',
