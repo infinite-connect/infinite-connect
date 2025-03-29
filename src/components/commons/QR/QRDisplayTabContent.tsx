@@ -114,7 +114,7 @@ const QRDisplayTabContent: React.FC = () => {
   // 메인 슬라이더 설정
   const mainSettings = {
     dots: false,
-    infinite: true,
+    infinite: businessCards.length > 1,
     centerMode: true,
     speed: 500,
     centerPadding: '0px',
@@ -132,7 +132,7 @@ const QRDisplayTabContent: React.FC = () => {
   // 네비게이션 슬라이더 설정
   const navSettings = {
     dots: false,
-    infinite: true,
+    infinite: businessCards.length > 1,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
