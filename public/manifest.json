@@ -2,10 +2,10 @@
   "name": "Infinite Connect",
   "short_name": "InfiniteConnect",
   "description": "Networking PWA conference app",
-  "start_url": "/",
+  "start_url": "/login",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "theme_color": "#121212",
   "icons": [
     {
       "src": "/icons/icon-152x152.png",
