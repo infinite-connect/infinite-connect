@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const SelectCardDesignPage = (): React.JSX.Element => {
   const navigate = useNavigate();
+  const location = useLocation();
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
   const [cardType, setCardType] = useState<CardType>('dawn');
   const [updateCardType, { isLoading }] = useUpdateBusinessCardTypeMutation();
@@ -20,10 +21,6 @@ const SelectCardDesignPage = (): React.JSX.Element => {
   const [nextGradient, setNextGradient] = useState<string>('');
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const location = useLocation();
-  const { businessCardId } = location.state || {};
-  console.log(businessCardId);
-
   const gradients: Record<CardType, string> = {
     dawn: 'linear-gradient(0deg, #121212 86.3%, #9A8BC6 100%)', // 새벽
     morning: 'linear-gradient(0deg, #121212 86.3%, #375871 100%)', // 오전
@@ -32,16 +29,15 @@ const SelectCardDesignPage = (): React.JSX.Element => {
     night: 'linear-gradient(0deg, #121212 86.3%, #606171 100%)', // 밤
   };
 
-  const handleCompleteSelection = async () => {
-    const validBusinessCardId = businessCardId;
+  const { businessCardId } = location.state || {};
 
-    if (!validBusinessCardId) {
+  const handleCompleteSelection = async () => {
+    if (!businessCardId) {
       alert('유효한 명함 ID가 없습니다.');
       return;
     }
-
     try {
-      await updateCardType({ cardId: validBusinessCardId, cardType });
+      await updateCardType({ cardId: businessCardId, cardType });
       console.log('선택한 타입:', cardType);
       alert('명함 타입이 성공적으로 업데이트되었습니다!');
       navigate('/additionalinfo');

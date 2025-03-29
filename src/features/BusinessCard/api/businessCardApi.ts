@@ -329,6 +329,44 @@ export const businessCardApi = createApi({
         }
       },
     }),
+    getBusinessCardNamesAndTypes: builder.query<
+      { [key: string]: { cardName: string; cardType: string } },
+      string[]
+    >({
+      queryFn: async (cardIds) => {
+        try {
+          if (!cardIds.length) return { data: {} };
+
+          const { data, error } = await supabase
+            .from('business_cards')
+            .select('business_card_id, card_name, card_type')
+            .in('business_card_id', cardIds);
+
+          if (error) throw error;
+
+          // business_card_id를 키로, cardName과 cardType을 값으로 하는 객체 생성
+          const cardDetails = data.reduce(
+            (acc, card) => {
+              acc[card.business_card_id] = {
+                cardName: card.card_name,
+                cardType: card.card_type,
+              };
+              return acc;
+            },
+            {} as { [key: string]: { cardName: string; cardType: string } },
+          );
+
+          return { data: cardDetails };
+        } catch (error) {
+          return {
+            error: {
+              message: error instanceof Error ? error.message : 'Unknown error',
+              name: error instanceof Error ? error.name : 'Error',
+            },
+          };
+        }
+      },
+    }),
   }),
 });
 
@@ -339,4 +377,5 @@ export const {
   useGetUserByNicknameQuery,
   useSetPrimaryBusinessCardMutation,
   useGetBusinessCardNamesQuery,
+  useGetBusinessCardNamesAndTypesQuery,
 } = businessCardApi;
