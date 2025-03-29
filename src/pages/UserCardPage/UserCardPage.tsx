@@ -16,7 +16,11 @@ import { ChevronLeft } from 'lucide-react';
 import { ScrollArea } from '@components/ui/scroll-area';
 import CareerInfo from '@components/CardInfo/CareerInfo';
 import ContactInfo from '@components/CardInfo/ContactInfo';
-import { useCheckAllOneWayExchangeQuery } from '@features/BusinessCard/api/exchangeApi';
+import {
+  useCheckAllOneWayExchangeQuery,
+  useOneWayExchangeMutation,
+} from '@features/BusinessCard/api/exchangeApi';
+import { useCheckUserBusinessCardVisibilityQuery } from '@features/Networking/networkingApi';
 
 const UserCardPage: React.FC = (): React.JSX.Element => {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
@@ -24,18 +28,28 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
   const { nickname, businessCardId } = useParams<{ nickname: string; businessCardId: string }>();
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [isHeaderSolid, setIsHeaderSolid] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // 명함 상세 데이터 API 호출
   const { data: businessCard, isLoading, error } = useGetBusinessCardByIdQuery(businessCardId!);
 
-  const { data: exchangeStatus } = useCheckAllOneWayExchangeQuery(
+  const {
+    data: exchangeStatus,
+    isLoading: isExchangeLoading,
+    refetch: refetchExchangeStatus,
+  } = useCheckAllOneWayExchangeQuery(
     {
       follower_nickname: userInfo?.nickname || '',
       following_card_id: businessCardId!,
     },
     { skip: !userInfo?.nickname || !businessCardId },
   );
+
+  const { data: primaryCardInfo } = useCheckUserBusinessCardVisibilityQuery(nickname!, {
+    skip: !nickname,
+  });
   const [incrementViewCount] = useIncrementViewCountMutation();
+  const [oneWayExchange] = useOneWayExchangeMutation();
 
   console.log(businessCard?.interests);
 
@@ -62,6 +76,47 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
     }
     // eslint-disable-next-line
   }, [nickname, userInfo?.nickname, businessCardId]);
+
+  const handleCardAction = async () => {
+    if (isProcessing) return;
+
+    if (!userInfo?.nickname) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
+    if (!primaryCardInfo) {
+      alert('대표 명함이 설정되어 있지 않습니다.');
+      return;
+    }
+
+    setIsProcessing(true);
+
+    try {
+      if (!exchangeStatus?.exists && primaryCardInfo) {
+        // 명함 추가하기
+        const result = await oneWayExchange({
+          follower_nickname: userInfo.nickname,
+          follower_card_id: primaryCardInfo?.business_card_id,
+          following_card_id: businessCardId!,
+          following_nickname: nickname || '',
+        }).unwrap();
+
+        if (result.success) {
+          alert('명함이 추가되었습니다.');
+          refetchExchangeStatus();
+        }
+      } else {
+        // 명함첩에서 삭제하기 로직 (아직 구현되지 않음)
+        alert('명함 삭제 기능은 아직 구현되지 않았습니다.');
+      }
+    } catch (error) {
+      console.error('명함 교환 실패:', error);
+      alert('명함 교환에 실패했습니다.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -129,8 +184,15 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
         </ScrollArea>
 
         <div className="w-full px-4">
-          <Button btntype="enabled" className="w-full py-2 font-medium">
-            <div className="text-[14px] leading-[24px]">{buttonText}</div>
+          <Button
+            btntype="enabled"
+            className="w-full py-2 font-medium"
+            onClick={handleCardAction}
+            disabled={isExchangeLoading || isProcessing}
+          >
+            <div className="text-[14px] leading-[24px]">
+              {isExchangeLoading ? '로딩 중...' : isProcessing ? '처리 중...' : buttonText}
+            </div>
           </Button>
         </div>
       </div>
