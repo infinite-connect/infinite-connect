@@ -13,7 +13,9 @@ export const userCardListApi = createApi({
           const { data, error } = await supabase
             .from('business_cards')
             .select('business_card_id')
-            .eq('nickname', userId); // nickname이 userId와 매칭되는 데이터 조회
+            .eq('nickname', userId) // nickname이 userId와 매칭되는 데이터 조회
+            .order('is_primary', { ascending: false })
+            .order('created_at', { ascending: false });
 
           if (error) {
             return { error: error.message };
