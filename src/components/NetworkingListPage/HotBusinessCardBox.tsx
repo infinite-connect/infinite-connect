@@ -1,8 +1,20 @@
 import React from 'react';
-import NetworkType from './UI/NetworkType';
+import NetworkType from './UI/NetworkTypeCircle';
 import SeparationLine from './UI/SeparationLine';
 import PopularIcon from './UI/PopularIcon';
-const HotBusinessCardBox = (): React.JSX.Element => {
+import { useGetBusinessCardByIdQuery } from '@features/BusinessCard/api/businessCardApi';
+
+interface HotBusinessCardBoxProps {
+  cardId: string;
+}
+
+const HotBusinessCardBox: React.FC<HotBusinessCardBoxProps> = ({ cardId }): React.JSX.Element => {
+  const { data, isLoading, error } = useGetBusinessCardByIdQuery(cardId);
+
+  if (isLoading) return <div>로딩 중...</div>;
+  if (error) return <div>오류 발생</div>;
+  if (!data) return <div>데이터 없음</div>;
+
   return (
     <div
       className=" flex
@@ -20,21 +32,27 @@ const HotBusinessCardBox = (): React.JSX.Element => {
     >
       <div className="">
         <div className="flex items-center">
-          <NetworkType />
+          <NetworkType cardType={data.cardType} />
           <span className=" text-[14px] ml-[4px] font-bold font-[Roboto] not-italic uppercase">
-            development
+            {data.fieldsOfExpertise}
           </span>
         </div>
         <div className="flex flex-row mb-[14px] items-center">
           <span className="text-[14px] font-[Inter] not-italic font-medium mr-[6px]">
-            프론트엔드
+            {data.subExpertise}
           </span>
-          <SeparationLine />
-          <span className="text-[14px] font-[Inter] not-italic font-medium ml-[6px]">
-            Engineering팀
-          </span>
+          {data.department && data.department.trim() !== '' && (
+            <>
+              <SeparationLine />
+              <span className="text-[14px] font-[Inter] not-italic font-medium ml-[6px]">
+                {data.department}
+              </span>
+            </>
+          )}
         </div>
-        <span className="">Jacob.K</span>
+        <span className="">
+          {data.businessName && data.businessName.trim() !== '' ? data.businessName : data.name}
+        </span>
       </div>
       <div className="flex flex-row items-center justify-between w-full">
         <span className="h-full font-[Inter] text-[10px] font-medium flex items-center ">

@@ -7,7 +7,7 @@ import { Header } from '@components/commons/Header/Header';
 import { IconButton } from '@components/commons/Button/IconButton';
 import { Logo } from '@components/commons/Header/Logo';
 
-type FilterValues = {
+export type FilterValues = {
   year: string;
   job: string;
   subJob: string;

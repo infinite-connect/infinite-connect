@@ -20,7 +20,7 @@ export interface BusinessCard {
   isPrimary?: boolean;
   createdAt?: string;
   nickname: string;
-  cardType: string;
+  cardType: 'dawn' | 'morning' | 'day' | 'evening' | 'night';
   businessName?: string;
   fax?: string;
   jobTitle?: string;
@@ -202,27 +202,44 @@ export const businessCardApi = createApi({
     }),
 
     // 명함 추가 API 수정 필요 추가 카드 타입, 추가 정보 입력 후 가능하도록
-    addBusinessCard: builder.mutation<BusinessCard, { nickname: string }>({
-      queryFn: async ({ nickname }) => {
+    addBusinessCard: builder.mutation<BusinessCard, { nickname: string; name: string }>({
+      queryFn: async ({ nickname, name }) => {
         try {
-          const { error } = await supabase
+          // 1. 먼저 해당 사용자의 기존 명함 수를 확인
+          const { data: existingCards, error: fetchError } = await supabase
+            .from('business_cards')
+            .select('business_card_id')
+            .eq('nickname', nickname);
+
+          if (fetchError) throw fetchError;
+
+          // 2. 최대 명함 수(3개) 확인
+          if (existingCards && existingCards.length >= 3) {
+            throw new Error('최대 3개의 명함만 생성할 수 있습니다.');
+          }
+
+          // 3. 새 명함 생성
+          const { data, error } = await supabase
             .from('business_cards')
             .insert({
-              card_name: '', // 기본값
-              fields_of_expertise: '', // 기본값
-              sub_expertise: '', // 기본값
-              nickname, // 추가한 사람의 닉네임
-              is_public: false, // 기본값으로 비공개 설정
-              is_primary: false, // 대표 명함 아님
-              card_type: 'dawn', // 기본값으로 'dawn'
+              card_name: `${name}의 명함 ${existingCards.length + 1}`,
+              fields_of_expertise: 'Development', // 기본값 설정
+              sub_expertise: '프론트엔드', // 기본값 설정
+              nickname,
+              name,
+              is_public: false,
+              is_primary: false,
+              card_type: 'dawn',
             })
             .select()
             .single();
 
           if (error) throw error;
 
-          return { data: undefined };
+          console.log('생성된 명함:', data);
+          return { data };
         } catch (error) {
+          console.error('명함 생성 중 오류:', error);
           return {
             error:
               error instanceof Error

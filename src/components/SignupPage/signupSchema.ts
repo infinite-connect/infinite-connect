@@ -59,6 +59,7 @@ export const schema = z
       .min(8, { message: '비밀번호 확인은 최소 8자 이상이어야 합니다' }),
     fieldsOfExpertise: z.string().min(1, { message: '직무를 선택하세요' }),
     subExpertise: z.string().min(1, { message: '세부 직무를 선택하세요' }),
+    userStatus: z.string().min(1, { message: '현재 상태를 선택하세요' }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: '비밀번호가 일치하지 않습니다',

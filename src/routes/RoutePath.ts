@@ -19,6 +19,7 @@ const RoutePaths = {
   CARDPREVIEW: '/cardpreview',
   QR_SCANNER: '/qr-scan',
   BUSINESSCARDBOOK: '/businesscardbook',
+  SUCCESS: '/success',
 };
 
 export default RoutePaths;

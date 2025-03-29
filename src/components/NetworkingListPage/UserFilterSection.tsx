@@ -2,137 +2,59 @@ import React, { useState, useEffect } from 'react';
 import TabList from './TabList';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import UserListCard from './UserListCard';
-
-const ALL_USERS = [
-  {
-    id: 1,
-    imageUrl: 'https://loremflickr.com/400/225',
-    mainLabel: 'DEVELOPMENT',
-    subLabel: 'Frontend | Engineering팀',
-    name: 'Anna',
-    badge: '인기있는',
-  },
-  {
-    id: 2,
-    imageUrl: 'https://loremflickr.com/400/225',
-    mainLabel: 'DESIGN',
-    subLabel: 'UI/UX | Creative팀',
-    name: 'Chris',
-  },
-  {
-    id: 3,
-    imageUrl: 'https://loremflickr.com/400/225',
-    mainLabel: 'INFRASTRUCTURE',
-    subLabel: 'DevOps | Engineering팀',
-    name: 'Daisy',
-  },
-  {
-    id: 4,
-    imageUrl: 'https://loremflickr.com/400/225',
-    mainLabel: 'DEVELOPMENT',
-    subLabel: 'Frontend | Engineering팀',
-    name: 'Anna',
-    badge: '인기있는',
-  },
-  {
-    id: 5,
-    imageUrl: 'https://loremflickr.com/400/225',
-    mainLabel: 'DESIGN',
-    subLabel: 'UI/UX | Creative팀',
-    name: 'Chris',
-  },
-  {
-    id: 6,
-    imageUrl: 'https://loremflickr.com/400/225',
-    mainLabel: 'INFRASTRUCTURE',
-    subLabel: 'DevOps | Engineering팀',
-    name: 'Daisy',
-  },
-  {
-    id: 7,
-    imageUrl: 'https://loremflickr.com/400/225',
-    mainLabel: 'DEVELOPMENT',
-    subLabel: 'Frontend | Engineering팀',
-    name: 'Anna',
-    badge: '인기있는',
-  },
-  {
-    id: 8,
-    imageUrl: 'https://loremflickr.com/400/225',
-    mainLabel: 'DESIGN',
-    subLabel: 'UI/UX | Creative팀',
-    name: 'Chris',
-  },
-  {
-    id: 9,
-    imageUrl: 'https://loremflickr.com/400/225',
-    mainLabel: 'INFRASTRUCTURE',
-    subLabel: 'DevOps | Engineering팀',
-    name: 'Daisy',
-  },
-  {
-    id: 10,
-    imageUrl: 'https://loremflickr.com/400/225',
-    mainLabel: 'DEVELOPMENT',
-    subLabel: 'Frontend | Engineering팀',
-    name: 'Anna',
-    badge: '인기있는',
-  },
-  {
-    id: 11,
-    imageUrl: 'https://loremflickr.com/400/225',
-    mainLabel: 'DESIGN',
-    subLabel: 'UI/UX | Creative팀',
-    name: 'Chris',
-  },
-  {
-    id: 12,
-    imageUrl: 'https://loremflickr.com/400/225',
-    mainLabel: 'INFRASTRUCTURE',
-    subLabel: 'DevOps | Engineering팀',
-    name: 'Daisy',
-  },
-  // ...데이터 더 추가 가능
-];
-
-// 탭에 따른 필터 로직
-function filterUsers(users: typeof ALL_USERS, tab: string) {
-  if (tab === 'ALL') return users;
-  return users.filter((item) => item.mainLabel === tab);
-}
+import { useGetUserAllPrimaryBusinessListQuery } from '@features/Networking/networkingApi';
+import { useSelector } from 'react-redux';
+import { RootState } from '@store/store';
+import { AllPrimaryBusinessCardList } from '@features/Networking/networkingApi';
+import { FullScreenFilter } from './FullScreenFilter';
+import { filterOptions } from './FilterOptions';
+import { FilterValues } from './FullScreenFilter';
+import { applyAllFilters } from '@utils/ApplyFiter';
 
 const PAGE_SIZE = 5; // 한 번에 로드할 개수
 
 const UserFilterSection: React.FC = () => {
+  const nickname = useSelector((state: RootState) => state.user.userInfo?.nickname) || '';
   const [activeTab, setActiveTab] = useState('ALL');
   const [filterPopupOpen, setFilterPopupOpen] = useState(false);
+  // 5) 필터 값 상태
+  const [filterValues, setFilterValues] = useState<FilterValues>({
+    year: '',
+    job: '',
+    subJob: '',
+    interests: [],
+  });
 
+  console.log(filterOptions);
   // 무한 스크롤용 상태
-  const [displayedUsers, setDisplayedUsers] = useState<typeof ALL_USERS>([]);
+  const [displayedUsers, setDisplayedUsers] = useState<AllPrimaryBusinessCardList[]>([]);
   const [hasMore, setHasMore] = useState(true);
 
-  // 탭이 바뀔 때마다 리스트 초기화
-  useEffect(() => {
-    const newFiltered = filterUsers(ALL_USERS, activeTab);
-    // 처음 PAGE_SIZE만큼만 보여주고
-    setDisplayedUsers(newFiltered.slice(0, PAGE_SIZE));
-    // 더 불러올 데이터가 있으면 hasMore = true
-    setHasMore(newFiltered.length > PAGE_SIZE);
-  }, [activeTab]);
+  // 리스트 가져오기
+  const { data, isLoading } = useGetUserAllPrimaryBusinessListQuery(nickname);
+  console.log(data);
 
-  // 무한 스크롤: 다음 데이터 로드
+  // 필터 & 탭 동시 적용
+  useEffect(() => {
+    if (!data) return;
+    const filtered = applyAllFilters(data, activeTab, filterValues);
+    setDisplayedUsers(filtered.slice(0, PAGE_SIZE));
+    setHasMore(filtered.length > PAGE_SIZE);
+  }, [data, activeTab, filterValues]);
+
+  // 무한 스크롤에서 다음 데이터 로드
   const fetchMoreData = () => {
-    const newFiltered = filterUsers(ALL_USERS, activeTab);
+    if (!data) return;
+    const filtered = applyAllFilters(data, activeTab, filterValues);
+
     const currentLength = displayedUsers.length;
     const nextLength = currentLength + PAGE_SIZE;
 
-    if (nextLength >= newFiltered.length) {
-      // 더 이상 불러올 게 없으면 전부 보여주고 종료
-      setDisplayedUsers(newFiltered);
+    if (nextLength >= filtered.length) {
+      setDisplayedUsers(filtered);
       setHasMore(false);
     } else {
-      // 일부만 추가로 보여주기
-      setDisplayedUsers(newFiltered.slice(0, nextLength));
+      setDisplayedUsers(filtered.slice(0, nextLength));
     }
   };
 
@@ -143,6 +65,28 @@ const UserFilterSection: React.FC = () => {
   const handleFilterClick = () => {
     setFilterPopupOpen(true);
   };
+
+  // 6) 팝업 닫기
+  const handleClosePopup = () => {
+    setFilterPopupOpen(false);
+  };
+
+  // 7) 필터 적용하기
+  const handleApplyFilters = (vals: FilterValues) => {
+    setFilterValues(vals); // 새 필터 값 저장
+
+    // 직무(job)가 선택되었다면, 탭도 해당 직무(대문자)로 업데이트
+    if (vals.job && vals.job !== 'ALL') {
+      // 탭 리스트는 ['ALL', 'DEVELOPMENT', ...] 형식이므로 대문자로 변환
+      setActiveTab(vals.job.toUpperCase());
+    } else {
+      setActiveTab('ALL');
+    }
+
+    setFilterPopupOpen(false);
+  };
+
+  if (isLoading) return <div>로딩 중...</div>;
 
   return (
     <div className="flex flex-col gap-[20px]">
@@ -167,32 +111,34 @@ const UserFilterSection: React.FC = () => {
           endMessage={<p className="text-gray-400">No more data</p>}
           height={700}
         >
+          {/** 이미지부분 하드코딩 되어 있음  */}
           {displayedUsers.map((user) => (
-            <div key={user.id} className="mb-4">
+            <div key={user.card_id} className="mb-4">
               <UserListCard
-                imageUrl={user.imageUrl}
-                mainLabel={user.mainLabel}
+                cardId={user.card_id}
+                fieldsOfExpertise={user.fields_of_expertise}
+                subExpertise={user.sub_expertise}
+                businessName={user.business_name}
+                cardType={user.card_type}
+                department={user.department}
+                nickName={user.nickname}
                 name={user.name}
-                badge={user.badge}
+                interests={user.interests || []}
               />
             </div>
           ))}
         </InfiniteScroll>
       </div>
 
-      {/* 필터 팝업 (예시) */}
+      {/* 필터 풀팝업 */}
       {filterPopupOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white text-black p-4 rounded">
-            <h2 className="text-lg font-bold">필터 설정</h2>
-            <button
-              className="mt-4 bg-gray-200 px-4 py-2 rounded"
-              onClick={() => setFilterPopupOpen(false)}
-            >
-              닫기
-            </button>
-          </div>
-        </div>
+        <FullScreenFilter
+          values={filterValues}
+          onChange={setFilterValues}
+          onApply={handleApplyFilters}
+          onClose={handleClosePopup}
+          options={filterOptions}
+        />
       )}
     </div>
   );

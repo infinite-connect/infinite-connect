@@ -1,4 +1,4 @@
-import NetworkType from './UI/NetworkType';
+import NetworkType from './UI/NetworkTypeCircle';
 import PopularIcon from './UI/PopularIcon';
 import SeparationLine from './UI/SeparationLine';
 const SimilarTypeBox = () => {

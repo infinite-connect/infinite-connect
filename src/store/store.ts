@@ -8,6 +8,7 @@ import { selectCardDesignApi } from '@features/BusinessCard/api/selectCardDesign
 import { viewCountApi } from '@features/User/api/viewCountApi';
 import { exchangeApi } from '@features/BusinessCard/api/exchangeApi';
 
+import userPrimaryBusinessCardRedcuer from '@features/Networking/slice/userPrimaryBusinessCardSlice';
 export const store = configureStore({
   reducer: {
     [userCardListApi.reducerPath]: userCardListApi.reducer,
@@ -18,6 +19,7 @@ export const store = configureStore({
     [viewCountApi.reducerPath]: viewCountApi.reducer,
     [exchangeApi.reducerPath]: exchangeApi.reducer,
     user: userReducer,
+    userBusinessCard: userPrimaryBusinessCardRedcuer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
