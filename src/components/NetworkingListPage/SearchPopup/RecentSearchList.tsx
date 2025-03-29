@@ -8,6 +8,7 @@ interface RecentSearchListProps {
   onRemove: (value: string) => void;
   onClear: () => void;
   jobKeyword: string;
+  hideJobSearch?: boolean;
 }
 
 const RecentSearchList: React.FC<RecentSearchListProps> = ({
@@ -16,10 +17,11 @@ const RecentSearchList: React.FC<RecentSearchListProps> = ({
   onRemove,
   onClear,
   jobKeyword,
+  hideJobSearch = false,
 }) => {
   return (
     <>
-      <JobSearchByRole jobKeyword={jobKeyword} onSelect={onSelect} />
+      {!hideJobSearch && <JobSearchByRole jobKeyword={jobKeyword} onSelect={onSelect} />}
 
       {items.length === 0 ? (
         <div className="py-[20px]">
