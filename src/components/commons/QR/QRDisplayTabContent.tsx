@@ -8,19 +8,8 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 // import useWindowWidth from '@hooks/useWindowWidth';
 import QRCodeStyling from 'qr-code-styling';
 import logo from '@assets/logo.svg';
-
-// 이미지 import
-import dawnHorizontal from '@assets/CardDesign/HorizontalCard/dawnHorizontal.png';
-import morningHorizontal from '@assets/CardDesign/HorizontalCard/morningHorizontal.png';
-import dayHorizontal from '@assets/CardDesign/HorizontalCard/dayHorizontal.png';
+import { useGetBusinessCardNamesQuery } from '@features/BusinessCard/api/businessCardApi';
 import HorizontalCardPreview from '../Card/HorizontalCardPreview';
-
-// 추후 카드 실제 이미지로 변경
-const cardImages = [
-  { key: 'dawn', src: dawnHorizontal },
-  { key: 'day', src: morningHorizontal },
-  { key: 'morning', src: dayHorizontal },
-];
 
 const QRDisplayTabContent: React.FC = () => {
   const nickname = useSelector((state: RootState) => state.user.userInfo?.nickname);
@@ -34,23 +23,14 @@ const QRDisplayTabContent: React.FC = () => {
     isError,
   } = useGetUserBusinessCardsQuery(nickname || '');
 
+  const { data: cardNames = {} } = useGetBusinessCardNamesQuery(businessCards, {
+    skip: businessCards.length === 0,
+  });
+
   const isMultiCards = businessCards?.length > 1;
 
   const mainSliderRef = useRef<Slider | null>(null);
   const navSliderRef = useRef<Slider | null>(null);
-
-  // const windowWidth = useWindowWidth();
-  // const imageWidth = 150;
-
-  // const calculateCenterPadding = (screenWidth: number, imageWidth: number): string => {
-  //   const padding = (screenWidth - imageWidth) / 2;
-  //   return `${padding}px`;
-  // };
-
-  // const centerPadding = calculateCenterPadding(windowWidth, imageWidth);
-
-  const syncedImages =
-    businessCards && businessCards.length > 0 ? cardImages.slice(0, businessCards.length) : [];
 
   // QR 코드를 이미지로 생성
   useEffect(() => {
@@ -159,6 +139,9 @@ const QRDisplayTabContent: React.FC = () => {
     return <p className="text-center text-gray-500">등록된 명함이 없습니다.</p>;
   }
 
+  const currentCardId = businessCards[currentIndex];
+  const currentCardName = cardNames[currentCardId] || '명함';
+
   return (
     <div className="relative flex-col justify-center items-center w-[100vw]">
       <div className="flex items-center justify-center mb-[20px] w-full text-white">
@@ -174,7 +157,7 @@ const QRDisplayTabContent: React.FC = () => {
           className="min-w-[160px] text-center text-[16px] leading-[20px] font-extrabold"
           style={{ width: 'fit-content' }}
         >
-          carss
+          {currentCardName}
         </span>
         {isMultiCards && (
           <button
@@ -225,7 +208,7 @@ const QRDisplayTabContent: React.FC = () => {
         </Slider>
       </div>
       <div className="flex justify-center items-center mt-4 gap-[8px]">
-        {syncedImages.map((_, index) => (
+        {businessCards.map((_, index) => (
           <div
             key={index}
             className={`w-[8px] h-[8px] rounded-full ${

@@ -16,7 +16,7 @@ const HorizontalCardPreview = ({ cardId }: HorizontalCardPreviewProps): React.JS
   });
 
   const primaryUrlType = Object.keys(cardData?.primaryUrl || {})[0] as keyof typeof ICONS;
-  const type = 'dawn' as CardType;
+  const type = (cardData?.cardType as CardType) || 'dawn';
 
   return (
     <div

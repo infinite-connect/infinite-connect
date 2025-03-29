@@ -11,6 +11,12 @@ import eveningHorizontal from '@assets/CardDesign/HorizontalCard/eveningHorizont
 import nightHorizontal from '@assets/CardDesign/HorizontalCard/nightHorizontal.png';
 import dawnHorizontal from '@assets/CardDesign/HorizontalCard/dawnHorizontal.png';
 
+import smallMorningHorizontal from '@assets/CardDesign/SmallHorizontalCard/smallMorningHorizontal.png';
+import smallDayHorizontal from '@assets/CardDesign/SmallHorizontalCard/smallDayHorizontal.png';
+import smallEveningHorizontal from '@assets/CardDesign/SmallHorizontalCard/smallEveningHorizontal.png';
+import smallNightHorizontal from '@assets/CardDesign/SmallHorizontalCard/smallNightHorizontal.png';
+import smallDawnHorizontal from '@assets/CardDesign/SmallHorizontalCard/smallDawnHorizontal.png';
+
 import morningObj from '@assets/CardDesign/CardObj/morningObj.png';
 import dayObj from '@assets/CardDesign/CardObj/dayObj.png';
 import eveningObj from '@assets/CardDesign/CardObj/eveningObj.png';
@@ -58,12 +64,27 @@ export const CARD_TYPE_TEXT: Record<
   },
 };
 
-export const CARD_TYPE_IMAGES: Record<CardType, { vertical: string; horizontal: string }> = {
-  morning: { vertical: morningVertical, horizontal: morningHorizontal },
-  day: { vertical: dayVertical, horizontal: dayHorizontal },
-  evening: { vertical: eveningVertical, horizontal: eveningHorizontal },
-  night: { vertical: nightVertical, horizontal: nightHorizontal },
-  dawn: { vertical: dawnVertical, horizontal: dawnHorizontal },
+export const CARD_TYPE_IMAGES: Record<
+  CardType,
+  { vertical: string; horizontal: string; sHorizontal: string }
+> = {
+  morning: {
+    vertical: morningVertical,
+    horizontal: morningHorizontal,
+    sHorizontal: smallMorningHorizontal,
+  },
+  day: { vertical: dayVertical, horizontal: dayHorizontal, sHorizontal: smallDayHorizontal },
+  evening: {
+    vertical: eveningVertical,
+    horizontal: eveningHorizontal,
+    sHorizontal: smallEveningHorizontal,
+  },
+  night: {
+    vertical: nightVertical,
+    horizontal: nightHorizontal,
+    sHorizontal: smallNightHorizontal,
+  },
+  dawn: { vertical: dawnVertical, horizontal: dawnHorizontal, sHorizontal: smallDawnHorizontal },
 };
 
 export const CARD_TYPE_OBJ: Record<CardType, { obj: string }> = {
