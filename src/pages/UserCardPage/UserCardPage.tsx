@@ -258,6 +258,7 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
         </div>
 
         <ContactInfo
+          isTwoWayExchanged={isTwoWayExchanged}
           phone={businessCard.phone || undefined}
           email={businessCard.email || undefined}
           primaryUrl={businessCard.primaryUrl ?? undefined}

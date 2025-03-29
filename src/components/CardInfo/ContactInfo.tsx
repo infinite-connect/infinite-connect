@@ -4,6 +4,7 @@ import { getUrlName } from '@utils/formatURLName';
 import { ICONS } from '@constants/cardIcon';
 
 interface ContactInfoProps {
+  isTwoWayExchanged?: boolean;
   phone?: string;
   email?: string;
   primaryUrl?: Record<string, string>;
@@ -12,6 +13,7 @@ interface ContactInfoProps {
 }
 
 const ContactInfo: React.FC<ContactInfoProps> = ({
+  isTwoWayExchanged = true,
   phone,
   email,
   primaryUrl,
@@ -43,7 +45,7 @@ const ContactInfo: React.FC<ContactInfoProps> = ({
         연락처
       </div>
 
-      {phone && (
+      {phone && isTwoWayExchanged && (
         <div className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:border-b-0">
           <div className="text-[14px] leading-[150%]">PHONE</div>
           <div>{phone}</div>
