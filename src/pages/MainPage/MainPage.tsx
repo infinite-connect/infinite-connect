@@ -13,8 +13,6 @@ import UserSimilarTypeSection from '@components/NetworkingListPage/UserSimilarTy
 import UserFilterSection from '@components/NetworkingListPage/UserFilterSection';
 import { setPrimaryCard } from '@features/Networking/slice/userPrimaryBusinessCardSlice';
 import { useCheckUserBusinessCardVisibilityQuery } from '@features/Networking/networkingApi';
-import { useUpdateBusinessCardVisibilityMutation } from '@features/Networking/networkingApi';
-import BusinessCardConsentSheet from '@components/NetworkingListPage/BusinessCardConsentSheet';
 import SloganSection from '@components/MainPage/SloganSection';
 import MyCardSection from '@components/MainPage/MyCardSection';
 const MainPage = (): React.JSX.Element => {
@@ -22,11 +20,9 @@ const MainPage = (): React.JSX.Element => {
   const nickname = userInfo?.nickname;
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [showPopup, setShowPopup] = useState(false);
-  const [showConsentSheet, setShowConsentSheet] = useState(false);
 
   // 명함 공개 여부 확인
-  const { data: userBusinessCard, isLoading } = useCheckUserBusinessCardVisibilityQuery(nickname!, {
+  const { data: userBusinessCard } = useCheckUserBusinessCardVisibilityQuery(nickname!, {
     skip: !nickname,
   });
   console.log('명함 공개 여부 확인', userBusinessCard);
@@ -40,43 +36,11 @@ const MainPage = (): React.JSX.Element => {
           fields_of_expertise: userBusinessCard.fields_of_expertise,
           sub_expertise: userBusinessCard.sub_expertise,
           card_type: userBusinessCard.card_type,
+          is_public: userBusinessCard.is_public,
         }),
       );
     }
   }, [userBusinessCard, dispatch]);
-
-  //  명함 공개 여부 업데이트
-  const [updateBusinessCardVisibility] = useUpdateBusinessCardVisibilityMutation();
-
-  // 최초 접근 시 풀 팝업 로직 처리
-  useEffect(() => {
-    if (!localStorage.getItem('seenNetworkingPopup')) {
-      setShowPopup(true);
-    }
-  }, []);
-
-  // 명함 공개 여부 확인 후 바텀 시트 노출
-  useEffect(() => {
-    if (!isLoading && userBusinessCard?.is_primary && !userBusinessCard.is_public) {
-      setShowConsentSheet(true);
-    }
-  }, [userBusinessCard, isLoading]);
-
-  // 명함 공개 처리
-  const handleConsentAgree = async () => {
-    if (userBusinessCard?.is_primary) {
-      try {
-        await updateBusinessCardVisibility({
-          business_card_id: userBusinessCard.business_card_id,
-          is_public: true, // 공개 처리
-        }).unwrap();
-
-        setShowConsentSheet(false);
-      } catch (error) {
-        console.error('명함 공개 실패:', error);
-      }
-    }
-  };
 
   const handleQrClick = () => {
     console.log('qr클릭');
@@ -96,6 +60,9 @@ const MainPage = (): React.JSX.Element => {
     );
   }
 
+  // 명함이 비공개라면 블러 + 밝기↓ 적용
+  const isBlurred = !userBusinessCard?.is_public;
+
   return (
     <div className="min-h-screen bg-[var(--bg-default-black)]  text-white">
       <Header className="px-[16px] bg-[var(--bg-default-black)] z-12 fixed top-0 left-0 ">
@@ -113,18 +80,32 @@ const MainPage = (): React.JSX.Element => {
       <div className="pt-14">
         <SloganSection />
         <MyCardSection />
-        <HotBusinessCardSection />
-        <UserSimilarTypeSection />
-        <UserFilterSection />
-      </div>
 
-      {!showPopup && (
-        <BusinessCardConsentSheet
-          open={showConsentSheet}
-          onClose={() => setShowConsentSheet(false)}
-          onAgree={handleConsentAgree}
-        />
-      )}
+        <div className="relative">
+          {/* 실제 컨텐츠: 블러처리 여부는 filter로 제어 */}
+          <div
+            className={
+              isBlurred ? 'filter blur-sm brightness-75 pointer-events-none' : 'pointer-events-auto'
+            }
+          >
+            <HotBusinessCardSection />
+            <UserSimilarTypeSection />
+            <UserFilterSection />
+          </div>
+
+          {/* 오버레이 (명함 비공개 시에만 표시) */}
+          {isBlurred && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+              {/* 안내 텍스트 (배경 없이, 흰색 텍스트만) */}
+              <div className="text-white text-center text-base px-4 drop-shadow-md">
+                명함을 공개하면
+                <br />
+                네트워킹 서비스를 모두 이용하실 수 있어요!
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

@@ -5,6 +5,7 @@ interface PrimaryCard {
   fields_of_expertise: string;
   sub_expertise: string;
   card_type: string;
+  is_public?: boolean;
 }
 
 interface userPrimaryBusinessCardSliceState {

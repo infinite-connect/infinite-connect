@@ -114,9 +114,9 @@ const UserFilterSection: React.FC = () => {
         >
           {/** 이미지부분 하드코딩 되어 있음  */}
           {displayedUsers.map((user) => (
-            <div key={user.card_id} className="mb-4">
+            <div key={user.business_card_id} className="mb-4">
               <UserListCard
-                cardId={user.card_id}
+                cardId={user.business_card_id}
                 fieldsOfExpertise={user.fields_of_expertise}
                 subExpertise={user.sub_expertise}
                 businessName={user.business_name}

@@ -4,9 +4,32 @@ import VerticalCardPreview from '@components/commons/Card/VerticalCardPreview';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/store';
 import CircleProgress from './CircleProgres';
+import { Button } from '@components/commons/Button/Button';
+import { useUpdateBusinessCardVisibilityMutation } from '@features/Networking/networkingApi';
 
 const MyCardSection = (): React.JSX.Element => {
   const primaryCard = useSelector((state: RootState) => state.userBusinessCard.primaryCard);
+
+  //  명함 공개 여부 업데이트
+  const [updateBusinessCardVisibility] = useUpdateBusinessCardVisibilityMutation();
+
+  if (!primaryCard) {
+    return <div>로딩 중...</div>;
+  }
+
+  // 명함 공개 처리
+  const handleConsentAgree = async () => {
+    if (!primaryCard?.is_public) {
+      try {
+        await updateBusinessCardVisibility({
+          business_card_id: primaryCard.business_card_id,
+          is_public: true, // 공개 처리
+        }).unwrap();
+      } catch (error) {
+        console.error('명함 공개 실패:', error);
+      }
+    }
+  };
 
   const settings = {
     dots: true,
@@ -32,21 +55,26 @@ const MyCardSection = (): React.JSX.Element => {
               <div className="w-full flex flex-col justify-between ali">
                 <CircleProgress />
                 <div className="bg-[rgba(255,255,255,0.05)] px-2 py-3 gap-2 flex flex-col">
-                  <div className="flex justify-between">
-                    <p className="text-[12px] text-[var(--text-secondary)] ">저장된 내 명함</p>
-                    <p>568</p>
+                  <div className="flex justify-between text-[12px] font-normal font-[NanumGothicOTF]">
+                    <p className="text-[var(--text-secondary)] ">저장된 내 명함</p>
+                    <p className="">568</p>
                   </div>
-                  <div className="flex justify-between">
-                    <p>받은 명함</p>
-                    <p>568</p>
+                  <div className="flex justify-between text-[12px] font-normal font-[NanumGothicOTF]">
+                    <p className="text-[var(--text-secondary)] ">받은 명함</p>
+                    <p className="">568</p>
                   </div>
-                  <div className="flex justify-between">
-                    <p>조회수</p>
-                    <p>568</p>
+                  <div className="flex justify-between text-[12px] font-normal font-[NanumGothicOTF]">
+                    <p className="text-[var(--text-secondary)] ">조회수</p>
+                    <p className="">568</p>
                   </div>
                 </div>
               </div>
             </div>
+            {!primaryCard.is_public && (
+              <Button onClick={handleConsentAgree} className="w-full mt-5">
+                명함 공개하기
+              </Button>
+            )}
           </div>
           <div>
             <h3>2</h3>
