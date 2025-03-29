@@ -1,11 +1,14 @@
 import { Button } from '@components/commons/Button/Button';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import SuccessBg from '@assets/Signup/Success.png';
 import { Header } from '@components/commons/Header/Header';
 import { Logo } from '@components/commons/Header/Logo';
 
 const Success = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { businessCardId } = location.state || {};
+  console.log(businessCardId);
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0C0C0D] font-[NanumGothic]  ">
@@ -43,7 +46,14 @@ const Success = () => {
 
         {/* 하단 버튼 영역 */}
         <div className="w-full mx-auto pb-10">
-          <Button className="w-full h-[52px]" onClick={() => navigate('/selectcarddesign')}>
+          <Button
+            className="w-full h-[52px]"
+            onClick={() =>
+              navigate('/selectcarddesign', {
+                state: { businessCardId: businessCardId },
+              })
+            }
+          >
             나의 네트워킹 성향 선택하기
           </Button>
         </div>

@@ -23,6 +23,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
   const {
     register,
     trigger,
+    setFocus,
     setError,
     clearErrors,
     formState: { errors },
@@ -173,6 +174,78 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
     }
   };
 
+  const handleKeyDown = async (
+    event: React.KeyboardEvent<HTMLInputElement>,
+    fieldName: string,
+    nextFieldIndex: number,
+  ) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+
+      const isValid = await trigger(fieldName);
+
+      if (!isValid) {
+        setFocus(fieldName);
+        return;
+      }
+
+      if (fieldName === 'phoneNumber') {
+        const phoneNumber = inputRefs.current[nextFieldIndex - 1]?.value;
+        try {
+          const isPhoneNumberDuplicate = await triggerCheckPhoneNumberDuplicate(
+            phoneNumber!,
+          ).unwrap();
+          if (isPhoneNumberDuplicate) {
+            setError('phoneNumber', { type: 'manual', message: '이미 존재하는 핸드폰 번호예요' });
+            setFocus('phoneNumber');
+            return;
+          } else {
+            clearErrors('phoneNumber');
+          }
+        } catch (error) {
+          console.error('휴대폰 번호 중복 확인 중 오류 발생:', error);
+          return;
+        }
+      }
+
+      if (fieldName === 'nickname') {
+        const nickname = inputRefs.current[nextFieldIndex - 1]?.value;
+        try {
+          const isNicknameDuplicate = await triggerCheckNicknameDuplicate(nickname!).unwrap();
+          if (isNicknameDuplicate) {
+            setError('nickname', { type: 'manual', message: '이미 존재하는 아이디예요' });
+            setFocus('nickname');
+            return;
+          } else {
+            clearErrors('nickname');
+          }
+        } catch (error) {
+          console.error('닉네임 중복 확인 중 오류 발생:', error);
+          return;
+        }
+      }
+
+      if (fieldName === 'email') {
+        const email = inputRefs.current[nextFieldIndex - 1]?.value;
+        try {
+          const isEmailDuplicate = await triggerCheckEmailDuplicate(email!).unwrap();
+          if (isEmailDuplicate) {
+            setError('email', { type: 'manual', message: '이미 사용 중인 이메일입니다.' });
+            setFocus('email');
+            return;
+          } else {
+            clearErrors('email');
+          }
+        } catch (error) {
+          console.error('이메일 중복 확인 중 오류 발생:', error);
+          return;
+        }
+      }
+
+      inputRefs.current[nextFieldIndex]?.focus();
+    }
+  };
+
   return (
     <div className="space-y-[20px]">
       {/* 이름 */}
@@ -188,6 +261,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
             inputRefs.current[0] = el;
           }}
           onBlur={() => handleFieldValidation('name', 0)}
+          onKeyDown={(e) => handleKeyDown(e, 'name', 1)}
           placeholder="이름"
           className={`rounded-md border ${
             errors.name ? 'border-red-500' : 'border-gray-600'
@@ -218,6 +292,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
           }}
           onBlur={() => handleFieldValidation('phoneNumber', 1)}
           placeholder="01012345678"
+          onKeyDown={(e) => handleKeyDown(e, 'phoneNumber', 2)}
           className={`rounded-md border ${
             errors.phoneNumber ? 'border-red-500' : 'border-gray-600'
           } bg-gray-700 px-4 py-2 text-white`}
@@ -248,6 +323,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
           }}
           onBlur={() => handleFieldValidation('nickname', 2)}
           placeholder="아이디"
+          onKeyDown={(e) => handleKeyDown(e, 'nickname', 3)}
           className={`rounded-md border ${
             errors.nickname ? 'border-red-500' : 'border-gray-600'
           } bg-gray-700 px-4 py-2 text-white`}
@@ -278,6 +354,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
           onBlur={() => handleFieldValidation('email', 3)}
           type="email"
           placeholder="이메일"
+          onKeyDown={(e) => handleKeyDown(e, 'email', 4)}
           className={`rounded-md border ${
             errors.email ? 'border-red-500' : 'border-gray-600'
           } bg-gray-700 px-4 py-2 text-white`}
@@ -309,6 +386,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
             onBlur={() => handleFieldValidation('password', 4)}
             type={showPassword ? 'text' : 'password'}
             placeholder="비밀번호"
+            onKeyDown={(e) => handleKeyDown(e, 'password', 5)}
             className={`w-full rounded-md border ${
               errors.password ? 'border-red-500' : 'border-gray-600'
             } bg-gray-700 px-4 py-2 text-white`}
@@ -349,6 +427,7 @@ const FirstStep: React.FC<FirstStepProps> = ({ nextStep }) => {
             onBlur={() => handleFieldValidation('confirmPassword', 5)}
             type={showConfirmPassword ? 'text' : 'password'}
             placeholder="비밀번호 확인"
+            onKeyDown={(e) => handleKeyDown(e, 'confirmPassword', 5)}
             className={`w-full rounded-md border ${
               errors.confirmPassword ? 'border-red-500' : 'border-gray-600'
             } bg-gray-700 px-4 py-2 text-white`}
