@@ -9,6 +9,7 @@ import ThirdStep from './ThirdStep';
 import { fieldsOfExpertise, subExpertise } from '@constants/expertiseConstants';
 import { Header } from '@components/commons/Header/Header';
 import { Logo } from '@components/commons/Header/Logo';
+import { userStatus } from '@constants/statusConstants';
 
 type SignupData = z.infer<typeof schema>;
 
@@ -26,6 +27,7 @@ const SignupForm = (): React.JSX.Element => {
       confirmPassword: '',
       fieldsOfExpertise: '',
       subExpertise: '',
+      userStatus: '',
     },
   });
 
@@ -48,6 +50,7 @@ const SignupForm = (): React.JSX.Element => {
               <SecondStep
                 fieldsOfExpertise={fieldsOfExpertise}
                 subExpertise={subExpertise}
+                userStatus={userStatus}
                 prevStep={prevStep}
                 nextStep={nextStep}
               />
