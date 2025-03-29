@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@components/ui/tabs';
-import { LayoutGrid, Menu } from 'lucide-react';
+import { LayoutGrid, Menu, SlidersHorizontal } from 'lucide-react';
 import { FilterValues, FullScreenFilter } from '@components/NetworkingListPage/FullScreenFilter';
 import { filterOptions } from '@components/NetworkingListPage/FilterOptions';
 import { Button } from '@components/commons/Button/Button';
@@ -168,22 +168,43 @@ const BusinessCardBookPage = (): React.JSX.Element => {
           ) : (
             <>
               <div className="flex items-center justify-between px-4 py-3">
+                {/* 왼쪽 텍스트 */}
                 <div className="text-lg font-semibold">교환한 명함 257</div>
-                <div className="flex items-center gap-2 border border-[var(--fill-secondary)] p-[5px] rounded-md">
+
+                {/* 오른쪽: 슬라이더 + 보기 전환 버튼 */}
+                <div className="flex items-center gap-2">
+                  {/* 슬라이더 아이콘 */}
                   <Button
-                    size="icon"
-                    className={`w-8 h-8 rounded-md ${!isGridView ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--color-hover)]' : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'}`}
-                    onClick={() => setIsGridView(false)}
+                    className="icon w-8 h-8 bg-transparent text-[var(--fill-white)] hover:bg-[var(--icon-hover)]"
+                    onClick={() => setFilterPopupOpen(true)}
                   >
-                    <Menu className="w-4 h-4" />
+                    <SlidersHorizontal />
                   </Button>
-                  <Button
-                    size="icon"
-                    className={`w-8 h-8 rounded-md ${isGridView ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--color-hover)]' : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'}`}
-                    onClick={() => setIsGridView(true)}
-                  >
-                    <LayoutGrid className="w-4 h-4" />
-                  </Button>
+                  {/* 그리드, 컬럼*/}
+                  <div className="flex items-center gap-2 border border-[var(--fill-secondary)] p-[5px] rounded-md">
+                    <Button
+                      size="icon"
+                      className={`w-8 h-8 p-1 rounded-md ${
+                        !isGridView
+                          ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]'
+                          : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'
+                      }`}
+                      onClick={() => setIsGridView(false)}
+                    >
+                      <Menu className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      className={`w-8 h-8 p-1 rounded-md ${
+                        isGridView
+                          ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]'
+                          : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'
+                      }`}
+                      onClick={() => setIsGridView(true)}
+                    >
+                      <LayoutGrid className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
               <div
