@@ -64,6 +64,22 @@ export const exchangeApi = createApi({
         return { data: { exists: data.length > 0 } };
       },
     }),
+    // 2-2. 유저 단방향 교환 삭제 API (특정 유저가 가지고 있는 대상자의 명함 삭제)
+    deleteOneWayExchange: builder.mutation<
+      { success: boolean },
+      { follower_nickname: string; following_card_id: string }
+    >({
+      queryFn: async ({ follower_nickname, following_card_id }) => {
+        const { error } = await supabase
+          .from('business_card_exchanges')
+          .delete()
+          .eq('follower_nickname', follower_nickname)
+          .eq('following_card_id', following_card_id);
+
+        if (error) return { error: error.message };
+        return { data: { success: true } };
+      },
+    }),
 
     // 3. 쌍방향 교환 API
     twoWayExchange: builder.mutation<
@@ -292,4 +308,5 @@ export const {
   useGetCardsFollowedByUserNicknameQuery,
   useDeleteExchangeMutation,
   useCheckAllOneWayExchangeQuery,
+  useDeleteOneWayExchangeMutation,
 } = exchangeApi;

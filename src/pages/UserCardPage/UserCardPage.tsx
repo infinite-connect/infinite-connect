@@ -18,6 +18,7 @@ import CareerInfo from '@components/CardInfo/CareerInfo';
 import ContactInfo from '@components/CardInfo/ContactInfo';
 import {
   useCheckAllOneWayExchangeQuery,
+  useDeleteOneWayExchangeMutation,
   useOneWayExchangeMutation,
 } from '@features/BusinessCard/api/exchangeApi';
 import { useCheckUserBusinessCardVisibilityQuery } from '@features/Networking/networkingApi';
@@ -50,6 +51,7 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
   });
   const [incrementViewCount] = useIncrementViewCountMutation();
   const [oneWayExchange] = useOneWayExchangeMutation();
+  const [deleteOneWayExchange] = useDeleteOneWayExchangeMutation();
 
   console.log(businessCard?.interests);
 
@@ -107,8 +109,16 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
           refetchExchangeStatus();
         }
       } else {
-        // 명함첩에서 삭제하기 로직 (아직 구현되지 않음)
-        alert('명함 삭제 기능은 아직 구현되지 않았습니다.');
+        // 명함첩에서 삭제하기
+        const result = await deleteOneWayExchange({
+          follower_nickname: userInfo.nickname,
+          following_card_id: businessCardId!,
+        }).unwrap();
+
+        if (result.success) {
+          alert('명함이 삭제되었습니다.');
+          refetchExchangeStatus();
+        }
       }
     } catch (error) {
       console.error('명함 교환 실패:', error);
