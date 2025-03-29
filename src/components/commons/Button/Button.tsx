@@ -17,7 +17,7 @@ const buttonVariants = cva(
         default: 'h-12 p-3 has-[>svg]:px-3',
         // sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
         // lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
-        icon: 'pl-3 pr-3 size-9 [&_svg]:size-5',
+        icon: 'pl-3 pr-3 size-9 h-11 w-11 [&_svg]:size-5',
       },
       btntype: {
         enabled: '',

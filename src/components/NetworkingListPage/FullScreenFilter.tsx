@@ -189,12 +189,14 @@ export const FullScreenFilter: React.FC<FullScreenFilterProps> = ({
       {/* Footer (fixed) */}
       <div className="fixed bottom-0 left-0 w-full z-50 px-6 pb-10 pt-4 bg-[var(--bg-default-black)]">
         <div className="flex items-center gap-[10px] ">
-          <Button btntype="secondary" className="px-3">
+          <Button
+            size="icon"
+            className="bg-[var(--fill-secondary)] hover:bg-[var(--fill-secondary-hover)] "
+          >
             <RefreshCcw onClick={handleReset}></RefreshCcw>
           </Button>
           <Button
-            bg-color="var(--fill-secondary"
-            className="flex-1  text-white text-base font-semibold py-4 rounded-[6px]"
+            className="flex-1 text-base font-semibold py-4 rounded-[6px]"
             onClick={() => onApply(values)}
           >
             적용하기
