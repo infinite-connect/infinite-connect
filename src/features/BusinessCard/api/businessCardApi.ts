@@ -297,6 +297,76 @@ export const businessCardApi = createApi({
         { type: 'BusinessCard' }, // 모든 카드 목록 무효화
       ],
     }),
+    getBusinessCardNames: builder.query<{ [key: string]: string }, string[]>({
+      queryFn: async (cardIds) => {
+        try {
+          if (!cardIds.length) return { data: {} };
+
+          const { data, error } = await supabase
+            .from('business_cards')
+            .select('business_card_id, card_name')
+            .in('business_card_id', cardIds);
+
+          if (error) throw error;
+
+          // business_card_id를 키로, card_name을 값으로 하는 객체 생성
+          const cardNames = data.reduce(
+            (acc, card) => {
+              acc[card.business_card_id] = card.card_name;
+              return acc;
+            },
+            {} as { [key: string]: string },
+          );
+
+          return { data: cardNames };
+        } catch (error) {
+          return {
+            error: {
+              message: error instanceof Error ? error.message : 'Unknown error',
+              name: error instanceof Error ? error.name : 'Error',
+            },
+          };
+        }
+      },
+    }),
+    getBusinessCardNamesAndTypes: builder.query<
+      { [key: string]: { cardName: string; cardType: string } },
+      string[]
+    >({
+      queryFn: async (cardIds) => {
+        try {
+          if (!cardIds.length) return { data: {} };
+
+          const { data, error } = await supabase
+            .from('business_cards')
+            .select('business_card_id, card_name, card_type')
+            .in('business_card_id', cardIds);
+
+          if (error) throw error;
+
+          // business_card_id를 키로, cardName과 cardType을 값으로 하는 객체 생성
+          const cardDetails = data.reduce(
+            (acc, card) => {
+              acc[card.business_card_id] = {
+                cardName: card.card_name,
+                cardType: card.card_type,
+              };
+              return acc;
+            },
+            {} as { [key: string]: { cardName: string; cardType: string } },
+          );
+
+          return { data: cardDetails };
+        } catch (error) {
+          return {
+            error: {
+              message: error instanceof Error ? error.message : 'Unknown error',
+              name: error instanceof Error ? error.name : 'Error',
+            },
+          };
+        }
+      },
+    }),
   }),
 });
 
@@ -306,4 +376,6 @@ export const {
   useDeleteBusinessCardMutation,
   useGetUserByNicknameQuery,
   useSetPrimaryBusinessCardMutation,
+  useGetBusinessCardNamesQuery,
+  useGetBusinessCardNamesAndTypesQuery,
 } = businessCardApi;
