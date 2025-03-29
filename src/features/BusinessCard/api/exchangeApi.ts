@@ -48,6 +48,22 @@ export const exchangeApi = createApi({
         return { data: { exists: data.length > 0 } };
       },
     }),
+    // 2-1. 유저 단방향 교환 조회 API (특정 유저가 대상자의 명함을 가지고 있는지 조회)
+    checkAllOneWayExchange: builder.query<
+      { exists: boolean },
+      { follower_nickname: string; following_card_id: string }
+    >({
+      queryFn: async ({ follower_nickname, following_card_id }) => {
+        const { data, error } = await supabase
+          .from('business_card_exchanges')
+          .select('*')
+          .eq('follower_nickname', follower_nickname)
+          .eq('following_card_id', following_card_id);
+
+        if (error) return { error: error.message };
+        return { data: { exists: data.length > 0 } };
+      },
+    }),
 
     // 3. 쌍방향 교환 API
     twoWayExchange: builder.mutation<
@@ -275,4 +291,5 @@ export const {
   useGetFollowedCardsByUserNicknameQuery,
   useGetCardsFollowedByUserNicknameQuery,
   useDeleteExchangeMutation,
+  useCheckAllOneWayExchangeQuery,
 } = exchangeApi;

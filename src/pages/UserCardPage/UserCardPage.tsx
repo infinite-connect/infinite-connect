@@ -16,6 +16,7 @@ import { ChevronLeft } from 'lucide-react';
 import { ScrollArea } from '@components/ui/scroll-area';
 import CareerInfo from '@components/CardInfo/CareerInfo';
 import ContactInfo from '@components/CardInfo/ContactInfo';
+import { useCheckAllOneWayExchangeQuery } from '@features/BusinessCard/api/exchangeApi';
 
 const UserCardPage: React.FC = (): React.JSX.Element => {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
@@ -27,6 +28,13 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
   // 명함 상세 데이터 API 호출
   const { data: businessCard, isLoading, error } = useGetBusinessCardByIdQuery(businessCardId!);
 
+  const { data: exchangeStatus } = useCheckAllOneWayExchangeQuery(
+    {
+      follower_nickname: userInfo?.nickname || '',
+      following_card_id: businessCardId!,
+    },
+    { skip: !userInfo?.nickname || !businessCardId },
+  );
   const [incrementViewCount] = useIncrementViewCountMutation();
 
   console.log(businessCard?.interests);
@@ -67,6 +75,8 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
       </div>
     );
   }
+
+  const buttonText = exchangeStatus?.exists ? '명함첩에서 삭제하기' : '명함 추가하기';
 
   return (
     <div
@@ -120,7 +130,7 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
 
         <div className="w-full px-4">
           <Button btntype="enabled" className="w-full py-2 font-medium">
-            <div className="text-[14px] leading-[24px]">카드 선택</div>
+            <div className="text-[14px] leading-[24px]">{buttonText}</div>
           </Button>
         </div>
       </div>
