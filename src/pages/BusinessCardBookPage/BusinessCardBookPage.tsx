@@ -35,6 +35,7 @@ const BusinessCardBookPage = (): React.JSX.Element => {
   const [isGridView, setIsGridView] = useState(true);
   const [filterPopupOpen, setFilterPopupOpen] = useState(false);
   const [query, setQuery] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearchMode, setIsSearchMode] = useState(false);
 
   const [filterValues, setFilterValues] = useState<FilterValues>({
@@ -47,7 +48,7 @@ const BusinessCardBookPage = (): React.JSX.Element => {
   const { recentSearches, addSearch, removeSearch, clearSearches } = useRecentSearches();
 
   const filteredProfiles = profiles.filter((profile) => {
-    const matchesSearch = profile.name.toLowerCase().includes(query.toLowerCase());
+    const matchesSearch = profile.name.toLowerCase().includes(searchKeyword.toLowerCase());
     const matchesJob = !filterValues.job || profile.role === filterValues.job;
     const matchesSub = !filterValues.subJob || profile.detail === filterValues.subJob;
     return matchesSearch && matchesJob && matchesSub;
@@ -55,12 +56,14 @@ const BusinessCardBookPage = (): React.JSX.Element => {
 
   const handleSearch = () => {
     if (query.trim()) {
+      setSearchKeyword(query);
       addSearch(query);
     }
   };
 
   const handleCloseSearch = () => {
     setQuery('');
+    setSearchKeyword('');
     setIsSearchMode(false);
   };
 
@@ -97,7 +100,10 @@ const BusinessCardBookPage = (): React.JSX.Element => {
                 setQuery(val);
               }}
               onSearch={handleSearch}
-              onReset={() => setQuery('')}
+              onReset={() => {
+                setQuery('');
+                setSearchKeyword('');
+              }}
               onClose={handleCloseSearch}
             />
           </div>
@@ -123,7 +129,7 @@ const BusinessCardBookPage = (): React.JSX.Element => {
           </div>
 
           {isSearchMode ? (
-            query === '' ? (
+            searchKeyword === '' ? (
               <div className="px-4 min-h-[40vh]">
                 <RecentSearchList
                   items={recentSearches}
@@ -137,7 +143,7 @@ const BusinessCardBookPage = (): React.JSX.Element => {
             ) : filteredProfiles.length > 0 ? (
               <>
                 <div className="px-4 py-2 text-sm text-[var(--text-secondary)]">
-                  ‘{query}’로 검색된 명함 {filteredProfiles.length}건
+                  ‘{searchKeyword}’로 검색된 명함 {filteredProfiles.length}건
                 </div>
                 <div
                   className={`grid ${isGridView ? 'grid-cols-2' : 'grid-cols-1'} gap-4 px-4 pb-24`}
@@ -155,7 +161,7 @@ const BusinessCardBookPage = (): React.JSX.Element => {
                 </div>
               </>
             ) : (
-              <div className="flex  justify-center items-center min-h-[40vh]">
+              <div className="flex justify-center items-center min-h-[40vh]">
                 <EmptyState />
               </div>
             )
