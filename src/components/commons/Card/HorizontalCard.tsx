@@ -54,7 +54,7 @@ const HorizontalCard = ({
         perspective: '1000px', // 카드의 3D 효과를 위한 원근감 설정
         boxSizing: 'border-box',
         width: '334px',
-        height: '206px',
+        height: '246px',
       }}
     >
       <div
@@ -94,13 +94,13 @@ const HorizontalCard = ({
                 </div>
                 <div className="h-[26px] flex flex-row text-[16px] text-[var(--text-black)] gap-[4px] leading-[25.75px]">
                   <div>{cardData?.businessName}</div>
-                  {isTwoWayExchanged && cardData ? cardData.name : maskName(cardData!.name)}
+                  {cardData && (isTwoWayExchanged ? cardData.name : maskName(cardData.name))}
                 </div>
               </div>
               <div className="flex flex-col justify-center items-center w-full h-[64px] px-[20px] pt-[8px] pb-[16px] gap-[4px] text-[var(--text-black)]">
                 <div className="flex flex-row w-full justify-start items-center gap-[5.15px]">
                   <Mail className="w-[12px] h-[12px]" />
-                  <div className="text-[12px] leading-[13.3px]">eightkim-mail@gmail.com</div>
+                  <div className="text-[12px] leading-[13.3px]">{cardData?.email}</div>
                 </div>
                 {cardData?.primaryUrl && (
                   <div className="flex flex-row w-full items-center gap-[6px]">

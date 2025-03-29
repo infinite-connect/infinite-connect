@@ -46,14 +46,14 @@ const ContactInfo: React.FC<ContactInfoProps> = ({
       </div>
 
       {phone && isTwoWayExchanged && (
-        <div className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:border-b-0">
+        <div className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:not:only:border-b-0">
           <div className="text-[14px] leading-[150%]">PHONE</div>
           <div>{phone}</div>
         </div>
       )}
 
       {email && (
-        <div className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:border-b-0">
+        <div className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:not:only:border-b-0">
           <div className="text-[14px] leading-[150%]">EMAIL</div>
           <div>{email}</div>
         </div>
