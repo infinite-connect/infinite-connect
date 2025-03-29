@@ -58,12 +58,14 @@ const HorizontalCardPreview = ({ cardId }: HorizontalCardPreviewProps): React.JS
                 {cardData?.email || 'eightkim-mail@gmail.com'}
               </div>
             </div>
-            <div className="flex flex-row w-full items-center gap-[4px]">
-              <IconRenderer type={primaryUrlType} size="9px" />
-              <div className="text-[9px] leading-[10px] truncate">
-                {cardData?.primaryUrl?.[primaryUrlType]}
+            {cardData?.primaryUrl && (
+              <div className="flex flex-row w-full items-center gap-[4px]">
+                <IconRenderer type={primaryUrlType} size="9px" />
+                <div className="text-[9px] leading-[10px] truncate">
+                  {cardData?.primaryUrl?.[primaryUrlType]}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
