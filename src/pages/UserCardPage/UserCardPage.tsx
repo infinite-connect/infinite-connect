@@ -18,11 +18,13 @@ import CareerInfo from '@components/CardInfo/CareerInfo';
 import ContactInfo from '@components/CardInfo/ContactInfo';
 import {
   useCheckAllOneWayExchangeQuery,
+  useCheckSpecificTwoWayExchangeQuery,
   useDeleteOneWayExchangeMutation,
   useOneWayExchangeMutation,
 } from '@features/BusinessCard/api/exchangeApi';
 import { useCheckUserBusinessCardVisibilityQuery } from '@features/Networking/networkingApi';
 import { CARD_TYPE_TEXT } from '@constants/cardType';
+import { maskName } from '@utils/maskName';
 
 const UserCardPage: React.FC = (): React.JSX.Element => {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
@@ -31,6 +33,8 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [isHeaderSolid, setIsHeaderSolid] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isTwoWayExchanged, setIsTwoWayExchanged] = useState(false);
+  const isMyCard = userInfo?.nickname === nickname;
 
   // 명함 상세 데이터 API 호출
   const { data: businessCard, isLoading, error } = useGetBusinessCardByIdQuery(businessCardId!);
@@ -48,6 +52,15 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
     { skip: !userInfo?.nickname || !businessCardId },
   );
 
+  const { data: twoWayExchangeStatus, refetch: refetchTwoWayExchangeStatus } =
+    useCheckSpecificTwoWayExchangeQuery(
+      {
+        user_nickname: userInfo?.nickname || '',
+        other_card_id: businessCardId!,
+      },
+      { skip: !userInfo?.nickname || !businessCardId },
+    );
+
   // 대표명함 정보 가져오기
   const { data: primaryCardInfo } = useCheckUserBusinessCardVisibilityQuery(nickname!, {
     skip: !nickname,
@@ -56,7 +69,11 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
   const [oneWayExchange] = useOneWayExchangeMutation();
   const [deleteOneWayExchange] = useDeleteOneWayExchangeMutation();
 
-  console.log(businessCard?.interests);
+  useEffect(() => {
+    if (twoWayExchangeStatus?.exists !== undefined) {
+      setIsTwoWayExchanged(twoWayExchangeStatus.exists);
+    }
+  }, [twoWayExchangeStatus]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -109,7 +126,8 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
 
         if (result.success) {
           alert('명함이 추가되었습니다.');
-          refetchExchangeStatus();
+          await refetchExchangeStatus();
+          await refetchTwoWayExchangeStatus();
         }
       } else {
         // 명함첩에서 삭제하기
@@ -120,7 +138,8 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
 
         if (result.success) {
           alert('명함이 삭제되었습니다.');
-          refetchExchangeStatus();
+          await refetchExchangeStatus();
+          await refetchTwoWayExchangeStatus();
         }
       }
     } catch (error) {
@@ -166,55 +185,66 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
           <IconButton icon={<AlarmIcon />} />
         </Header.Right>
       </Header>
-      <div className="relative flex flex-col mt-14 pt-[30px] pb-10 items-center justify-start overflow-x-hidden">
-        {/* 이름 * 명함 이미지 */}
-        <div className="w-full px-4 gap-4">
+      <div className="relative flex flex-col mt-14 pt-[30px] pb-10 items-center gap-4 justify-start overflow-x-hidden">
+        <div className="w-full h px-4 space-y-4">
+          {/* 이름*/}
           <div className="h-[48px] text-[32px] text-[var(--text-accent)] font-bold leading-[150%]">
-            {businessCard.businessName || businessCard.name}
+            {businessCard.businessName ||
+              (isTwoWayExchanged ? businessCard.name : maskName(businessCard.name))}
           </div>
-          <div className="flex py-0 justify-center">
-            <HorizontalCard cardId={businessCardId!} />
-          </div>
-          <div className="flex flex-col p-4 text-white text-[14px] leading-[150%] bg-[#1E1E1E]">
+          {/* 타입 설명 */}
+          <div className="flex flex-col p-4 rounded-[8px] text-white text-[14px] leading-[150%] bg-[#1E1E1E]">
             <div className="flex flex-row">
-              <span>{CARD_TYPE_TEXT[businessCard.cardType].label}</span>
-              <span>인 {businessCard.businessName || businessCard.name}님은</span>
+              <span className="text-[var(--text-accent)]">
+                {CARD_TYPE_TEXT[businessCard.cardType].label}
+              </span>
+              <span>
+                인{' '}
+                {businessCard.businessName ||
+                  (isTwoWayExchanged ? businessCard.name : maskName(businessCard.name))}
+                님은
+              </span>
             </div>
             <div>{CARD_TYPE_TEXT[businessCard.cardType].phrase}</div>
           </div>
-          {/* 관심사 스크롤 */}
+          {/* 명함 이미지 */}
+          <div className="flex py-0 justify-center">
+            <HorizontalCard cardId={businessCardId!} isTwoWayExchanged={isTwoWayExchanged} />
+          </div>
         </div>
-        <ScrollArea className="w-full pl-4 my-4 relative">
+        {/* 관심사 스크롤 */}
+        <ScrollArea className="w-full pl-4 relative">
           <div className="flex flex-row gap-[6px] flex-nowrap overflow-x-auto">
             {businessCard.interests?.map((interest, index) => (
               <div
                 key={index}
-                className="px-[10px] py-[8px] bg-gray-800 rounded-[4px] text-[12px] leading-[150%] text-white text-center whitespace-nowrap"
+                className="px-[10px] py-[8px] bg-gray-800 rounded-[20px] text-[12px] leading-[150%] text-white text-center whitespace-nowrap"
               >
                 {interest}
               </div>
             ))}
-            <div className="px-[10px] py-[8px] bg-gray-800 rounded-[4px] text-[12px] leading-[150%] text-white text-center whitespace-nowrap">
+            <div className="px-[10px] py-[8px] bg-gray-800 rounded-[20px] text-[12px] leading-[150%] text-white text-center whitespace-nowrap">
               관심사12222
             </div>
-            <div className="px-[10px] py-[8px] bg-gray-800 rounded-[4px] text-[12px] leading-[150%] text-white text-center whitespace-nowrap">
+            <div className="px-[10px] py-[8px] bg-gray-800 rounded-[20px] text-[12px] leading-[150%] text-white text-center whitespace-nowrap">
               관심사2
             </div>
           </div>
         </ScrollArea>
-
-        <div className="w-full px-4">
-          <Button
-            btntype="enabled"
-            className="w-full py-2 font-medium"
-            onClick={handleCardAction}
-            disabled={isExchangeLoading || isProcessing}
-          >
-            <div className="text-[14px] leading-[24px]">
-              {isExchangeLoading ? '로딩 중...' : isProcessing ? '처리 중...' : buttonText}
-            </div>
-          </Button>
-        </div>
+        {!isMyCard && (
+          <div className="w-full px-4 mt-3 gap-6 ">
+            <Button
+              btntype="enabled"
+              className="w-full py-2 font-medium"
+              onClick={handleCardAction}
+              disabled={isExchangeLoading || isProcessing}
+            >
+              <div className="text-[14px] leading-[24px]">
+                {isExchangeLoading ? '로딩 중...' : isProcessing ? '처리 중...' : buttonText}{' '}
+              </div>
+            </Button>
+          </div>
+        )}
       </div>
       <div className="flex flex-col gap-[10px]">
         <div className="flex flex-col gap-[10px]">

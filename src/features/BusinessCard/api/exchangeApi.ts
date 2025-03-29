@@ -211,6 +211,38 @@ export const exchangeApi = createApi({
         return { data: { exists } };
       },
     }),
+    // 4-1. 특정 카드에 대한 맞교환 확인 API
+    checkSpecificTwoWayExchange: builder.query<
+      { exists: boolean },
+      {
+        user_nickname: string;
+        other_card_id: string;
+      }
+    >({
+      queryFn: async ({ user_nickname, other_card_id }) => {
+        // 첫 번째 방향 (user -> other)
+        const { data: data1, error: error1 } = await supabase
+          .from('business_card_exchanges')
+          .select('*')
+          .eq('follower_nickname', user_nickname)
+          .eq('following_card_id', other_card_id);
+
+        if (error1) return { error: error1.message };
+
+        // 두 번째 방향 (other -> user)
+        const { data: data2, error: error2 } = await supabase
+          .from('business_card_exchanges')
+          .select('*')
+          .eq('following_nickname', user_nickname)
+          .eq('follower_card_id', other_card_id);
+
+        if (error2) return { error: error2.message };
+
+        // 양방향 교환이 존재하는지 확인
+        const exists = data1?.length > 0 && data2?.length > 0;
+        return { data: { exists } };
+      },
+    }),
     // 5. 팔로우한 카드 ID 리스트 조회 API (기존)
     getFollowersByCardId: builder.query<{ cardIds: string[] }, { cardId: string }>({
       queryFn: async ({ cardId }) => {
@@ -309,4 +341,5 @@ export const {
   useDeleteExchangeMutation,
   useCheckAllOneWayExchangeQuery,
   useDeleteOneWayExchangeMutation,
+  useCheckSpecificTwoWayExchangeQuery,
 } = exchangeApi;

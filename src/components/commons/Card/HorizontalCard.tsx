@@ -6,12 +6,17 @@ import IconRenderer from './CardIconRenderer';
 import { useGetBusinessCardByIdQuery } from '@features/BusinessCard/api/businessCardApi';
 import { subExpertiseMaps } from '@constants/subExpertiseMap';
 import { ICONS } from '@constants/cardIcon';
+import { maskName } from '@utils/maskName';
 
 type HorizontalCardProps = {
   cardId: string;
+  isTwoWayExchanged?: boolean;
 };
 
-const HorizontalCard = ({ cardId }: HorizontalCardProps): React.JSX.Element => {
+const HorizontalCard = ({
+  cardId,
+  isTwoWayExchanged = true,
+}: HorizontalCardProps): React.JSX.Element => {
   const [isFront, setIsFront] = useState<boolean>(true); // 내부적으로 앞뒷면 상태 관리
   const [isFrontVisible, setIsFrontVisible] = useState<boolean>(true); // 화면 표시용 앞뒷면 상태
   const [isAnimating, setIsAnimating] = useState<boolean>(false); // 애니메이션 진행 여부
@@ -49,7 +54,7 @@ const HorizontalCard = ({ cardId }: HorizontalCardProps): React.JSX.Element => {
         perspective: '1000px', // 카드의 3D 효과를 위한 원근감 설정
         boxSizing: 'border-box',
         width: '334px',
-        height: '250px',
+        height: '206px',
       }}
     >
       <div
@@ -89,7 +94,7 @@ const HorizontalCard = ({ cardId }: HorizontalCardProps): React.JSX.Element => {
                 </div>
                 <div className="h-[26px] flex flex-row text-[16px] text-[var(--text-black)] gap-[4px] leading-[25.75px]">
                   <div>{cardData?.businessName}</div>
-                  <div>{cardData?.name}</div>
+                  {isTwoWayExchanged && cardData ? cardData.name : maskName(cardData!.name)}
                 </div>
               </div>
               <div className="flex flex-col justify-center items-center w-full h-[64px] px-[20px] pt-[8px] pb-[16px] gap-[4px] text-[var(--text-black)]">
