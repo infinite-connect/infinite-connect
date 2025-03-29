@@ -1,6 +1,13 @@
 @import 'tailwindcss';
 @plugin "tailwindcss-animate";
 
+html {
+  padding-top: env(safe-area-inset-top) !important;
+}
+
+body {
+  padding-bottom: env(safe-area-inset-bottom) !important;
+}
 /* custom color */
 @theme {
   /* bg */
