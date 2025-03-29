@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Nanum+Gothic&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Roboto&display=swap');
+
 @import 'tailwindcss';
 @plugin "tailwindcss-animate";
 
@@ -10,6 +13,9 @@ body {
 }
 /* custom color */
 @theme {
+  /* font */
+  --font-sans: 'Roboto', 'Nanum Gothic', sans-serif;
+
   /* bg */
   --bg-default-black: #121212;
 
