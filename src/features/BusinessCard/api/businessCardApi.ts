@@ -14,7 +14,7 @@ export interface BusinessCard {
   email?: string;
   businessWebsite?: string;
   website?: string;
-  experienceYears?: number;
+  experienceYears?: string;
   viewCount?: number;
   isPublic?: boolean;
   isPrimary?: boolean;
@@ -47,7 +47,7 @@ interface DbBusinessCard {
   email?: string;
   business_website?: string;
   website?: string;
-  experience_years?: number;
+  experience_years?: string;
   view_count?: number;
   is_public?: boolean;
   is_primary?: boolean;
@@ -139,7 +139,7 @@ export const businessCardApi = createApi({
             email: data.email ?? '',
             businessWebsite: data.business_website ?? '',
             website: data.website ?? '',
-            experienceYears: data.experience_years ?? 0,
+            experienceYears: data.experience_years ?? '',
             viewCount: data.view_count ?? 0,
             isPublic: data.is_public ?? true,
             isPrimary: data.is_primary ?? false,

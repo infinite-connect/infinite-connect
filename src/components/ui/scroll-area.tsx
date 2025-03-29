@@ -24,9 +24,10 @@ function ScrollArea({
           transition-[color,box-shadow]
           ring-ring/10
           dark:ring-ring/20
-          dark:outline-ring/40
+          dark:outline-ring/40a
           outline-ring/50
           scrollbar-hide
+          [&::-webkit-scrollbar]:hidden
         "
       >
         {children}
@@ -59,7 +60,7 @@ function ScrollBar({
     >
       <ScrollAreaPrimitive.ScrollAreaThumb
         data-slot="scroll-area-thumb"
-        className="relative flex-1 rounded-full bg-border"
+        className="relative flex-1 rounded-full bg-transparent"
       />
     </ScrollAreaPrimitive.ScrollAreaScrollbar>
   );
