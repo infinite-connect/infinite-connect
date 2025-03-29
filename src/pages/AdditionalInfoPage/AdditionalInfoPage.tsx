@@ -165,7 +165,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormControl>
                     <Input
                       placeholder="비즈니스명을 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
                       {...field}
                     />
                   </FormControl>
@@ -183,7 +183,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormControl>
                     <Input
                       placeholder="업무용 전화번호를 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
                       {...field}
                     />
                   </FormControl>
@@ -198,7 +198,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               name="website"
               render={({ field: websiteField }) => (
                 <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">URL</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)]">대표 URL</FormLabel>
                   <FormControl>
                     <UrlDropdown
                       value={websiteField.value}
@@ -222,7 +222,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormControl>
                     <Input
                       placeholder="현재 소속된 회사명을 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
                       {...field}
                     />
                   </FormControl>
@@ -240,7 +240,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormControl>
                     <Input
                       placeholder="직책을 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
                       {...field}
                     />
                   </FormControl>
@@ -258,7 +258,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormControl>
                     <Input
                       placeholder="부서를 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
                       {...field}
                     />
                   </FormControl>
@@ -276,7 +276,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormControl>
                     <Input
                       placeholder="주소를 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
                       {...field}
                     />
                   </FormControl>
@@ -294,7 +294,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormControl>
                     <Input
                       placeholder="FAX 번호를 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
                       {...field}
                     />
                   </FormControl>
@@ -311,8 +311,8 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormLabel className="text-[var(--text-primary)]">경력</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="경력을 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      placeholder="자유롭게 경험 기반으로 선택해 주세요."
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
                       {...field}
                     />
                   </FormControl>
