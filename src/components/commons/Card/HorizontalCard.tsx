@@ -92,17 +92,19 @@ const HorizontalCard = ({ cardId }: HorizontalCardProps): React.JSX.Element => {
                   <div>{cardData?.name}</div>
                 </div>
               </div>
-              <div className="flex flex-col justify-center items-center w-full h-[64px] px-[20px] pt-[8px] pb-[16px] gap-[4px]">
+              <div className="flex flex-col justify-center items-center w-full h-[64px] px-[20px] pt-[8px] pb-[16px] gap-[4px] text-[var(--text-black)]">
                 <div className="flex flex-row w-full justify-start items-center gap-[5.15px]">
                   <Mail className="w-[12px] h-[12px]" />
                   <div className="text-[12px] leading-[13.3px]">eightkim-mail@gmail.com</div>
                 </div>
-                <div className="flex flex-row w-full items-center gap-[6px]">
-                  <IconRenderer type={primaryUrlType} />
-                  <div className="text-[12px] leading-[13.3px]">
-                    {cardData?.primaryUrl?.[primaryUrlType]}
+                {cardData?.primaryUrl && (
+                  <div className="flex flex-row w-full items-center gap-[6px]">
+                    <IconRenderer type={primaryUrlType} />
+                    <div className="text-[12px] leading-[13.3px]">
+                      {cardData.primaryUrl[primaryUrlType]}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

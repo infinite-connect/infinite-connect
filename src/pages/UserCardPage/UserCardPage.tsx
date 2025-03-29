@@ -22,6 +22,7 @@ import {
   useOneWayExchangeMutation,
 } from '@features/BusinessCard/api/exchangeApi';
 import { useCheckUserBusinessCardVisibilityQuery } from '@features/Networking/networkingApi';
+import { CARD_TYPE_TEXT } from '@constants/cardType';
 
 const UserCardPage: React.FC = (): React.JSX.Element => {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
@@ -34,6 +35,7 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
   // 명함 상세 데이터 API 호출
   const { data: businessCard, isLoading, error } = useGetBusinessCardByIdQuery(businessCardId!);
 
+  // 단방향 확인
   const {
     data: exchangeStatus,
     isLoading: isExchangeLoading,
@@ -46,6 +48,7 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
     { skip: !userInfo?.nickname || !businessCardId },
   );
 
+  // 대표명함 정보 가져오기
   const { data: primaryCardInfo } = useCheckUserBusinessCardVisibilityQuery(nickname!, {
     skip: !nickname,
   });
@@ -167,14 +170,21 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
         {/* 이름 * 명함 이미지 */}
         <div className="w-full px-4 gap-4">
           <div className="h-[48px] text-[32px] text-[var(--text-accent)] font-bold leading-[150%]">
-            {businessCard?.businessName ? businessCard?.businessName : businessCard.name}
+            {businessCard.businessName || businessCard.name}
           </div>
           <div className="flex py-0 justify-center">
             <HorizontalCard cardId={businessCardId!} />
           </div>
+          <div className="flex flex-col p-4 text-white text-[14px] leading-[150%] bg-[#1E1E1E]">
+            <div className="flex flex-row">
+              <span>{CARD_TYPE_TEXT[businessCard.cardType].label}</span>
+              <span>인 {businessCard.businessName || businessCard.name}님은</span>
+            </div>
+            <div>{CARD_TYPE_TEXT[businessCard.cardType].phrase}</div>
+          </div>
           {/* 관심사 스크롤 */}
         </div>
-        <ScrollArea className="w-full pl-4 mb-4 relative">
+        <ScrollArea className="w-full pl-4 my-4 relative">
           <div className="flex flex-row gap-[6px] flex-nowrap overflow-x-auto">
             {businessCard.interests?.map((interest, index) => (
               <div
