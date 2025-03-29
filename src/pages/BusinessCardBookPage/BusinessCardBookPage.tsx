@@ -16,6 +16,8 @@ import EmptyState from '@components/NetworkingListPage/SearchPopup/EmptyState';
 import RecentSearchList from '@components/NetworkingListPage/SearchPopup/RecentSearchList';
 import SearchHeader from '@components/NetworkingListPage/SearchPopup/SearchHeader';
 import { useRecentSearches } from '@components/NetworkingListPage/SearchPopup/useRecentSearches';
+import UserListCard from '@components/NetworkingListPage/UserListCard';
+import GridCardBox from '@components/BusinessCardBook/GridCardBox';
 
 const profiles = [
   { id: '1', userId: '101', name: '유현상', role: 'Development', detail: '프론트엔드' },
@@ -148,16 +150,32 @@ const BusinessCardBookPage = (): React.JSX.Element => {
                 <div
                   className={`grid ${isGridView ? 'grid-cols-2' : 'grid-cols-1'} gap-4 px-4 pb-24`}
                 >
-                  {filteredProfiles.map((profile) => (
-                    <div
-                      key={profile.id}
-                      className="bg-gray-800 p-4 rounded-xl flex flex-col gap-1"
-                    >
-                      <p className="text-sm font-bold text-blue-300">{profile.role}</p>
-                      <p className="text-sm">{profile.detail}</p>
-                      <p className="font-semibold text-white">{profile.name}</p>
-                    </div>
-                  ))}
+                  {filteredProfiles.map((profile) =>
+                    isGridView ? (
+                      <GridCardBox
+                        key={profile.id}
+                        fieldsOfExpertise={profile.role}
+                        subExpertise={profile.detail}
+                        department=""
+                        cardType="morning"
+                        businessName=""
+                        name={profile.name}
+                      />
+                    ) : (
+                      <UserListCard
+                        key={profile.id}
+                        cardId={profile.id}
+                        name={profile.name}
+                        nickName="닉네임"
+                        fieldsOfExpertise={profile.role}
+                        subExpertise={profile.detail}
+                        businessName=""
+                        cardType="morning"
+                        interests={[]}
+                        department=""
+                      />
+                    ),
+                  )}
                 </div>
               </>
             ) : (
@@ -168,38 +186,25 @@ const BusinessCardBookPage = (): React.JSX.Element => {
           ) : (
             <>
               <div className="flex items-center justify-between px-4 py-3">
-                {/* 왼쪽 텍스트 */}
                 <div className="text-lg font-semibold">교환한 명함 257</div>
-
-                {/* 오른쪽: 슬라이더 + 보기 전환 버튼 */}
                 <div className="flex items-center gap-2">
-                  {/* 슬라이더 아이콘 */}
                   <Button
                     className="icon w-8 h-8 bg-transparent text-[var(--fill-white)] hover:bg-[var(--icon-hover)]"
                     onClick={() => setFilterPopupOpen(true)}
                   >
                     <SlidersHorizontal />
                   </Button>
-                  {/* 그리드, 컬럼*/}
                   <div className="flex items-center gap-2 border border-[var(--fill-secondary)] p-[5px] rounded-md">
                     <Button
                       size="icon"
-                      className={`w-8 h-8 p-1 rounded-md ${
-                        !isGridView
-                          ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]'
-                          : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'
-                      }`}
+                      className={`w-8 h-8 p-1 rounded-md ${!isGridView ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]' : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'}`}
                       onClick={() => setIsGridView(false)}
                     >
                       <Menu className="w-4 h-4" />
                     </Button>
                     <Button
                       size="icon"
-                      className={`w-8 h-8 p-1 rounded-md ${
-                        isGridView
-                          ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]'
-                          : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'
-                      }`}
+                      className={`w-8 h-8 p-1 rounded-md ${isGridView ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]' : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'}`}
                       onClick={() => setIsGridView(true)}
                     >
                       <LayoutGrid className="w-4 h-4" />
@@ -210,13 +215,32 @@ const BusinessCardBookPage = (): React.JSX.Element => {
               <div
                 className={`grid ${isGridView ? 'grid-cols-2' : 'grid-cols-1'} gap-4 px-4 pb-24`}
               >
-                {filteredProfiles.map((profile) => (
-                  <div key={profile.id} className="bg-gray-800 p-4 rounded-xl flex flex-col gap-1">
-                    <p className="text-sm font-bold text-blue-300">{profile.role}</p>
-                    <p className="text-sm">{profile.detail}</p>
-                    <p className="font-semibold text-white">{profile.name}</p>
-                  </div>
-                ))}
+                {filteredProfiles.map((profile) =>
+                  isGridView ? (
+                    <GridCardBox
+                      key={profile.id}
+                      fieldsOfExpertise={profile.role}
+                      subExpertise={profile.detail}
+                      department=""
+                      cardType="morning"
+                      businessName=""
+                      name={profile.name}
+                    />
+                  ) : (
+                    <UserListCard
+                      key={profile.id}
+                      cardId={profile.id}
+                      name={profile.name}
+                      nickName="닉네임"
+                      fieldsOfExpertise={profile.role}
+                      subExpertise={profile.detail}
+                      businessName=""
+                      cardType="morning"
+                      interests={[]}
+                      department=""
+                    />
+                  ),
+                )}
               </div>
             </>
           )}
