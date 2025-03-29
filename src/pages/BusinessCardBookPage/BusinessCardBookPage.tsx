@@ -68,7 +68,7 @@ const BusinessCardBookPage = (): React.JSX.Element => {
   };
 
   return (
-    <div className="bg-black max-w-screen text-white">
+    <div className="bg-[var(--bg-default-black)] max-w-screen text-white">
       <Header className="px-[16px] bg-[var(--bg-default-black)] top-0 left-0 ">
         <Header.Left>
           <Logo />
@@ -169,17 +169,17 @@ const BusinessCardBookPage = (): React.JSX.Element => {
             <>
               <div className="flex items-center justify-between px-4 py-3">
                 <div className="text-lg font-semibold">교환한 명함 257</div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 border border-[var(--fill-secondary)] p-[5px] rounded-md">
                   <Button
                     size="icon"
-                    className={`w-8 h-8 rounded-md ${!isGridView ? 'bg-white text-black' : 'text-white/50'}`}
+                    className={`w-8 h-8 rounded-md ${!isGridView ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--color-hover)]' : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'}`}
                     onClick={() => setIsGridView(false)}
                   >
                     <Menu className="w-4 h-4" />
                   </Button>
                   <Button
                     size="icon"
-                    className={`w-8 h-8 rounded-md ${isGridView ? 'bg-white text-black' : 'text-white/50'}`}
+                    className={`w-8 h-8 rounded-md ${isGridView ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--color-hover)]' : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'}`}
                     onClick={() => setIsGridView(true)}
                   >
                     <LayoutGrid className="w-4 h-4" />
