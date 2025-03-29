@@ -51,13 +51,10 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
   });
 
   // 교환 상태 확인 쿼리
-  const { data: exchangeStatus, refetch: refetchExchangeCheck } = useCheckTwoWayExchangeQuery(
-    checkExchangeParams,
-    {
-      skip: !checkExchangeParams.follower_nickname_1,
-      refetchOnMountOrArgChange: true,
-    },
-  );
+  const { data: exchangeStatus } = useCheckTwoWayExchangeQuery(checkExchangeParams, {
+    skip: !checkExchangeParams.follower_nickname_1,
+    refetchOnMountOrArgChange: true,
+  });
 
   const businessCardsRef = useRef(businessCards);
   useEffect(() => {
@@ -208,6 +205,7 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
       }
       // 그 외의 경우 (undefined 등) 아무 작업도 수행하지 않음
     }
+    // eslint-disable-next-line
   }, [exchangeStatus, checkExchangeParams]);
 
   // 실제 교환 수행 함수
