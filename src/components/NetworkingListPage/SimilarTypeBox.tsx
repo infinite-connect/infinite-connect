@@ -12,7 +12,7 @@ export interface UserCardItem {
   sub_expertise: string;
   card_type: 'dawn' | 'morning' | 'day' | 'evening' | 'night';
   department?: string;
-  name: string;
+  name?: string;
 }
 
 interface SimilarTypeBoxProps {
@@ -32,7 +32,7 @@ const SimilarTypeBox: React.FC<SimilarTypeBoxProps> = ({ items }) => {
         const displayName =
           user.business_name && user.business_name.trim() !== ''
             ? user.business_name
-            : maskName(user.name);
+            : maskName(user.name || '');
         return (
           <React.Fragment key={user.business_card_id}>
             <div
