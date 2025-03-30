@@ -11,8 +11,6 @@ import {
 } from '@components/ui/form';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { IconButton } from '@components/commons/Button/IconButton';
-import { SkipForwardIcon } from 'lucide-react';
 import { Header } from '@components/commons/Header/Header';
 import { Logo } from '@components/commons/Header/Logo';
 import { Button } from '@components/commons/Button/Button';
@@ -22,6 +20,7 @@ import BottomSheet from '@components/commons/BottomSheet/BottomSheet';
 import { Input } from '@components/Input/input';
 import { Dropdown } from '@components/AdditionalInfoPage/DropDown';
 import { phoneNumSchema } from '@components/SignupPage/signupSchema';
+import SkipButton from '@components/commons/Button/SkipButton';
 
 // Zod 스키마 정의
 const schema = z
@@ -149,7 +148,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
         </BottomSheet.Actions>
       </BottomSheet>
 
-      <div className="p-6">
+      <div className="px-5">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             {/* Header */}
@@ -159,7 +158,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               </Header.Left>
 
               <Header.Right>
-                <IconButton icon={<SkipForwardIcon className="stroke-white" />} />
+                <SkipButton to="/userinterests" />
               </Header.Right>
             </Header>
 
