@@ -3,6 +3,7 @@ import NetworkType from './UI/NetworkTypeCircle';
 import SeparationLine from './UI/SeparationLine';
 import PopularIcon from './UI/PopularIcon';
 import { useGetBusinessCardByIdQuery } from '@features/BusinessCard/api/businessCardApi';
+import { maskName } from '@utils/formatName';
 
 interface HotBusinessCardBoxProps {
   cardId: string;
@@ -14,6 +15,11 @@ const HotBusinessCardBox: React.FC<HotBusinessCardBoxProps> = ({ cardId }): Reac
   if (isLoading) return <div>로딩 중...</div>;
   if (error) return <div>오류 발생</div>;
   if (!data) return <div>데이터 없음</div>;
+
+  const displayName =
+    data.businessName && data.businessName.trim() !== ''
+      ? data.businessName
+      : maskName(data.name || '');
 
   return (
     <div
@@ -50,9 +56,7 @@ const HotBusinessCardBox: React.FC<HotBusinessCardBoxProps> = ({ cardId }): Reac
             </>
           )}
         </div>
-        <span className="">
-          {data.businessName && data.businessName.trim() !== '' ? data.businessName : data.name}
-        </span>
+        <span className="">{displayName}</span>
       </div>
       <div className="flex flex-row items-center justify-between w-full">
         <span className="h-full font-[Inter] text-[10px] font-medium flex items-center ">

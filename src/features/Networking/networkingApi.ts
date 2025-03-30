@@ -41,10 +41,11 @@ export interface BusinessCardVisibility {
   fields_of_expertise: string;
   sub_expertise: string;
   card_type: 'dawn' | 'morning' | 'day' | 'evening' | 'night';
+  interests?: string[];
 }
 
 export interface AllPrimaryBusinessCardList {
-  card_id: string;
+  business_card_id: string;
   nickname: string;
   business_name: string;
   name: string;
@@ -64,9 +65,9 @@ export const networkingApi = createApi({
     // 하루 상위 5개 조회수 높은거 카드 아이디 값 가져오기.
     getTop5DailyIds: builder.query<
       { business_card_id: string; daily_view_count: number }[],
-      { fields: string; sub: string }
+      { sub: string }
     >({
-      async queryFn({ fields, sub }) {
+      async queryFn({ sub }) {
         try {
           const { data, error } = await supabase
             .from('daily_top_5_by_expertise')
@@ -76,7 +77,6 @@ export const networkingApi = createApi({
           daily_view_count
         `,
             )
-            .eq('fields_of_expertise', fields)
             .eq('sub_expertise', sub)
             .order('daily_view_count', { ascending: false })
             .limit(5);
@@ -118,7 +118,7 @@ export const networkingApi = createApi({
           const { data, error } = await supabase
             .from('business_cards')
             .select(
-              'business_card_id, fields_of_expertise, sub_expertise, is_public, is_primary, card_type',
+              'business_card_id, fields_of_expertise, sub_expertise, is_public, is_primary, card_type, interests',
             )
             .eq('nickname', nickname)
             .eq('is_primary', true)
@@ -173,14 +173,17 @@ export const networkingApi = createApi({
             business_card_id,
             nickname,
             business_name,
+            name,
             fields_of_expertise,
             sub_expertise,
+            department,
             card_type
           `,
             )
             .eq('card_type', cardType)
             .neq('nickname', excludeNickname)
             .eq('is_public', true) // 공개된 명함만 보고 싶다면
+            .eq('is_primary', true)
             .limit(15); // 원하는 만큼 제한
           if (error) throw error;
           return { data };
@@ -198,7 +201,7 @@ export const networkingApi = createApi({
             .from('user_primary_business_cards')
             .select(
               `
-            card_id,
+            business_card_id,
             nickname,
             name,
             business_name,
@@ -210,11 +213,45 @@ export const networkingApi = createApi({
           `,
             )
             .neq('nickname', excludeNickname);
-
           if (error) throw error;
           return { data };
         } catch (error) {
           return { error };
+        }
+      },
+    }),
+    // 로그인한 사용자 모든 명함의 조회수 가져오기 API
+    getUserCardsViewCounts: builder.query<
+      { business_card_id: string; view_count: number }[],
+      string
+    >({
+      async queryFn(nickname: string) {
+        try {
+          const { data, error } = await supabase
+            .from('business_cards')
+            .select('business_card_id, view_count')
+            .eq('nickname', nickname);
+          if (error) throw error;
+          return { data: data || [] };
+        } catch (error) {
+          return { error: error instanceof Error ? error.message : 'Unknown error' };
+        }
+      },
+    }),
+    // businessCardId로 interests 값을 가져오는 API
+    getCardInterests: builder.query<string[], string>({
+      async queryFn(businessCardId) {
+        try {
+          const { data, error } = await supabase
+            .from('business_cards')
+            .select('interests')
+            .eq('business_card_id', businessCardId)
+            .single();
+          if (error) throw error;
+          // data.interests가 null이면 빈 배열로 반환
+          return { data: data?.interests || [] };
+        } catch (error) {
+          return { error: error instanceof Error ? error.message : 'Unknown error' };
         }
       },
     }),
@@ -228,4 +265,6 @@ export const {
   useUpdateBusinessCardVisibilityMutation,
   useGetSameCardTypeUsersQuery,
   useGetUserAllPrimaryBusinessListQuery,
+  useGetUserCardsViewCountsQuery,
+  useGetCardInterestsQuery,
 } = networkingApi;

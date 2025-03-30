@@ -1,52 +1,73 @@
 import React from 'react';
-import SimilarTypeBox from './SimilarTypeBox';
 import { ScrollArea } from '@components/ui/scroll-area';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/store';
 import { useGetSameCardTypeUsersQuery } from '@features/Networking/networkingApi';
+import SimilarTypeBox from './SimilarTypeBox';
+
+/** 최대 박스 개수 */
+const MAX_BOX_COUNT = 5;
+/** 박스 하나당 최대 아이템(사용자) 개수 */
+const ITEMS_PER_BOX = 3;
 
 const UserSimilarTypeSection = (): React.JSX.Element => {
   const { userInfo } = useSelector((state: RootState) => state.user);
-  const nickname = useSelector((state: RootState) => state.user.userInfo?.nickname) || '';
+  const nickname = userInfo?.nickname ?? '';
   const primaryCard = useSelector((state: RootState) => state.userBusinessCard.primaryCard);
-  // 혹은 Redux에 저장한 대표 명함 정보
 
-  console.log(primaryCard);
-  // 카드타입과 닉네임이 있으면 동일한 사용자 목록 조회
+  // 카드 타입이 있고, 닉네임이 있을 때만 호출
   const { data, isLoading } = useGetSameCardTypeUsersQuery(
     primaryCard
       ? { cardType: primaryCard.card_type, excludeNickname: nickname }
       : { cardType: '', excludeNickname: '' },
     {
-      skip: !primaryCard, // userBusinessCard가 없으면 API 호출 skip
+      skip: !primaryCard, // primaryCard 없으면 호출하지 않음
     },
   );
 
-  console.log('로그인한 유저와 비슷한 타입:', data);
-
   if (isLoading) return <div>로딩 중...</div>;
+  if (!data || data.length === 0) {
+    return (
+      <div className="pl-[16px] text-white">
+        <h2 className="text-[18px]">유사한 네트워킹 타입 사용자가 없습니다.</h2>
+      </div>
+    );
+  }
+
+  // 1) 최대 15개까지만 사용
+  const slicedData = data.slice(0, MAX_BOX_COUNT * ITEMS_PER_BOX);
+
+  // 2) 3개씩 묶어서 박스 단위로 만들기
+  const chunked: (typeof data)[] = [];
+  for (let i = 0; i < slicedData.length; i += ITEMS_PER_BOX) {
+    chunked.push(slicedData.slice(i, i + ITEMS_PER_BOX));
+  }
+
+  // 3) 박스도 최대 5개까지만
+  const finalBoxes = chunked.slice(0, MAX_BOX_COUNT);
 
   return (
     <div className="flex flex-col pl-[16px] gap-[20px]">
       <h2
-        className="  
-              text-[var(--text-primary)]   
-                font-[NanumGothic]        
-                text-[18px]             
-                font-normal                 
-                leading-[140%]           
-                tracking-[-0.27px]         
-                self-stretch
-                "
+        className="
+          text-[var(--text-primary)]   
+          font-[NanumGothic]        
+          text-[18px]             
+          font-normal                 
+          leading-[140%]           
+          tracking-[-0.27px]         
+          self-stretch
+        "
       >
         <span className="text-[var(--text-accent)]">{userInfo?.name}</span>님과 네트워킹 타입이
         똑같아요
       </h2>
+
       <ScrollArea className="w-full relative">
-        <div className="flex flex-row gap-[10px] flex-nowrap ">
-          <SimilarTypeBox />
-          <SimilarTypeBox />
-          <SimilarTypeBox />
+        <div className="flex flex-row gap-[10px] flex-nowrap">
+          {finalBoxes.map((boxItems, index) => (
+            <SimilarTypeBox key={index} items={boxItems} />
+          ))}
         </div>
       </ScrollArea>
     </div>

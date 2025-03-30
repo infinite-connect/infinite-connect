@@ -19,22 +19,21 @@ const VerticalCardPreview = ({ cardId }: VerticalCardPreviewProps): React.JSX.El
 
   const type = 'dawn' as CardType;
   const primaryUrlType = Object.keys(cardData?.primaryUrl || {})[0] as keyof typeof ICONS;
-  const hasPrimaryUrl = primaryUrlType && cardData?.primaryUrl?.[primaryUrlType];
 
   return (
     <div
-      className={`flex justify-center items-end overflow-visible scale-52`}
+      className={`flex justify-center items-end overflow-visible`}
       style={{
         boxSizing: 'border-box',
-        width: '236px',
-        height: '370px',
+        width: '124px',
+        height: '200px',
       }}
     >
       <div
         className="rounded-3xl relative scale-100"
         style={{
-          width: '236px',
-          height: '332px',
+          width: '124px',
+          height: '175px',
           overflow: 'visible',
           borderRadius: '20px',
         }}
@@ -49,37 +48,45 @@ const VerticalCardPreview = ({ cardId }: VerticalCardPreviewProps): React.JSX.El
           }}
         >
           <div
-            className="absolute inset-0 top-[60px] left-1/2 w-[220px] h-[220px] flex items-center justify-center"
+            className="absolute inset-0 flex items-center justify-center"
             style={{
+              top: '31.09px',
+              left: '50%',
+              width: '114px',
+              height: '114px',
               backgroundImage: `url(${CARD_TYPE_OBJ[type].obj})`,
+              backgroundSize: 'contain',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
               transform: 'translate(-50%, -50%)',
+              transformOrigin: 'center',
             }}
           ></div>
-          <div className="relative flex flex-col w-full h-[140px] gap-[18px]">
-            <div className="flex flex-col w-full h-[46px] px-[20px] gap-[4px]">
-              <div className="h-[23px] text-[20px] text-[var(--text-black)] font-bold leading-[22.8px] tracking-[-0.33px]">
+          <div className="relative flex flex-col w-full h-[80px] gap-[13px]">
+            <div className="flex flex-col w-full h-[25px] px-[12px] gap-[4px]">
+              <div className="text-[12px] text-[var(--text-black)] font-bold leading-[12px] tracking-[-0.18px]">
                 {subExpertiseMaps[cardData?.subExpertise || '']}
               </div>
-              <div className="h-[19px] flex flex-row text-[14px] text-[var(--text-black)] gap-[4px] leading-[19px]">
+              <div className="flex flex-row text-[7px] text-[var(--text-black)] gap-[2px] leading-[10px]">
                 <div>{cardData?.businessName}</div>
                 <div>{cardData?.name}</div>
               </div>
             </div>
-            <div className="flex flex-col justify-center items-start w-full h-[74px] px-[20px] gap-[6px]">
-              <div className="flex flex-row gap-[7.6px]">
-                <Mail className="w-[12px] h-[12px]" />
-                <div className="text-[12px] leading-[13.3px]">
-                  {cardData?.email || 'eightkim-mail@gmail.com'}
-                </div>
-              </div>
-              {hasPrimaryUrl && (
-                <div className="flex flex-row gap-[7.6px]">
-                  <IconRenderer type={primaryUrlType} size="12px" />
-                  <div className="text-[12px] leading-[13.3px]">
-                    {cardData?.primaryUrl?.[primaryUrlType]}
+            <div className="flex flex-col justify-center items-start w-full h-[42px] p-[12px] gap-[4px]">
+              <div>
+                <div className="h-[7px] flex flex-row items-center justify-start gap-[4px]">
+                  <Mail className="w-[6px] h-[6px]" />
+                  <div className="text-[6px] leading-[7px] text-[var(--text-black)]">
+                    {cardData?.email || ''}
                   </div>
                 </div>
-              )}
+                <div className="h-[7px] flex flex-row items-center justify-start gap-[4px]">
+                  <IconRenderer type={primaryUrlType} size="6px" />
+                  <div className="text-[6px] leading-[7px] text-[var(--text-black)]">
+                    {cardData?.primaryUrl?.[primaryUrlType] || ''}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
