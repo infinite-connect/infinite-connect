@@ -27,13 +27,12 @@ import { useGetUserBusinessCardsWithTypeQuery } from '@features/UserPage/api/use
 import AlarmIcon from '@components/NetworkingListPage/UI/AlarmIcon';
 import QrIcon from '@components/NetworkingListPage/UI/QrIcon';
 import { Logo } from '@components/commons/Header/Logo';
-import { Plus } from 'lucide-react';
 import { gradients } from '@constants/cardType';
 import { CardType } from '@components/SelectCardDesignPage/types';
 import CardManagementDrawer from '@components/UserPage/UserCardDrawer';
 import BottomNavbar from '@components/commons/BottomNavbar/BottomNavbar';
 import PlusBTN from '@assets/CardDesign/PlusBTN.png';
-const UserEditPage: React.FC = (): React.JSX.Element => {
+const UserEditCardPage: React.FC = (): React.JSX.Element => {
   // const navigate = useNavigate();
   const { nickname } = useParams<{ nickname: string }>();
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
@@ -336,4 +335,4 @@ const UserEditPage: React.FC = (): React.JSX.Element => {
   );
 };
 
-export default UserEditPage;
+export default UserEditCardPage;

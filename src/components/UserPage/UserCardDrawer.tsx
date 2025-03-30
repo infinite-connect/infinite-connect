@@ -1,6 +1,13 @@
 import React from 'react';
-import { Drawer, DrawerContent } from '@components/ui/drawer';
+import { Drawer, DrawerContent, DrawerFooter, DrawerHeader } from '@components/ui/drawer';
 import { Button } from '@components/commons/Button/Button';
+import {
+  Pencil1Icon,
+  ListBulletIcon,
+  BookmarkIcon,
+  GearIcon,
+  TrashIcon,
+} from '@radix-ui/react-icons';
 
 interface CardManagementDrawerProps {
   isOpen: boolean;
@@ -10,27 +17,38 @@ interface CardManagementDrawerProps {
 const CardManagementDrawer: React.FC<CardManagementDrawerProps> = ({ isOpen, onOpenChange }) => {
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange}>
-      <DrawerContent hideIndicator className="bg-[#1a1a1a] pt-[21px] text-white">
-        <div>
-          <div className="flex flex-col justify-center item-center px-[24px] py-[30px] gap-[8px]">
-            <div></div>
-            <div className="flex justify-center text-[18px] leading-[140%] tracking-[-0.27px] text-[var(--text-primary)]">
-              스캔하면 공유되는 내 명함 확인하세요!
-            </div>
-            <div className="flex justify-center text-[12px] leading-[20px] text-[var(--text-secondary)]">
-              공유하고 싶은 명함을 선택해 주세요
-            </div>
-          </div>
+      <DrawerContent hideIndicator className="bg-[#1a1a1a] text-white rounded-t-3xl">
+        <DrawerHeader className="flex justify-center items-center pt-[40px] pb-[24px] px-[24px]">
+          <span className="text-[18px] font-bold text-[var(--text-primary)] leading-[140%] tracking-[-0.27px]">
+            더보기
+          </span>
+        </DrawerHeader>
 
-          <div className="flex flex-col justify-center mt-4 px-[25px] pb-[40px] gap-[4px]">
-            <Button btntype="enabled" className="w-full">
-              선택 완료
-            </Button>
-            <Button btntype="secondary" className="w-full">
-              돌아가기
-            </Button>
-          </div>
+        <div className="flex flex-col justify-center item-center px-[24px] gap-[9px]">
+          <Button btntype="secondary" className="w-full gap-[6px]">
+            <Pencil1Icon />내 명함 수정하기
+          </Button>
+          <Button btntype="secondary" className="w-full gap-[6px]">
+            <ListBulletIcon />
+            교환 목록 바로가기
+          </Button>
+          <Button btntype="secondary" className="w-full gap-[6px]">
+            <BookmarkIcon />
+            대표명함으로 설정하기
+          </Button>
+          <Button btntype="secondary" className="w-full gap-[6px]">
+            <GearIcon />
+            항목별 정보 공개 설정하기
+          </Button>
+          <Button btntype="modalError" className="w-full gap-[6px]">
+            <TrashIcon />내 명함 삭제하기
+          </Button>
         </div>
+        <DrawerFooter className="flex justify-center items-center pt-[40px] pb-[24px] px-[24px]">
+          <Button btntype="enabled" className="w-full">
+            닫기
+          </Button>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );
