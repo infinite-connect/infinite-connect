@@ -78,7 +78,7 @@ export const UrlDropdown = ({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className="p-2 rounded-md shadow-md bg-popover border border-border z-50 text-[var(--text-primary)]"
+          className="p-2 rounded-md shadow-md bg-popover border-none z-50 text-[var(--text-primary)]"
           sideOffset={8}
           style={{ width: triggerWidth, backgroundColor: '#252525' }}
           align="start"
