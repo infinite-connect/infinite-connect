@@ -41,6 +41,7 @@ export interface BusinessCardVisibility {
   fields_of_expertise: string;
   sub_expertise: string;
   card_type: 'dawn' | 'morning' | 'day' | 'evening' | 'night';
+  interests?: string[];
 }
 
 export interface AllPrimaryBusinessCardList {
@@ -117,7 +118,7 @@ export const networkingApi = createApi({
           const { data, error } = await supabase
             .from('business_cards')
             .select(
-              'business_card_id, fields_of_expertise, sub_expertise, is_public, is_primary, card_type',
+              'business_card_id, fields_of_expertise, sub_expertise, is_public, is_primary, card_type, interests',
             )
             .eq('nickname', nickname)
             .eq('is_primary', true)
@@ -216,6 +217,24 @@ export const networkingApi = createApi({
         }
       },
     }),
+    // 로그인한 사용자 모든 명함의 조회수 가져오기 API
+    getUserCardsViewCounts: builder.query<
+      { business_card_id: string; view_count: number }[],
+      string
+    >({
+      async queryFn(nickname: string) {
+        try {
+          const { data, error } = await supabase
+            .from('business_cards')
+            .select('business_card_id, view_count')
+            .eq('nickname', nickname);
+          if (error) throw error;
+          return { data: data || [] };
+        } catch (error) {
+          return { error: error instanceof Error ? error.message : 'Unknown error' };
+        }
+      },
+    }),
   }),
 });
 // 🔹 React에서 사용할 훅 생성
@@ -226,4 +245,5 @@ export const {
   useUpdateBusinessCardVisibilityMutation,
   useGetSameCardTypeUsersQuery,
   useGetUserAllPrimaryBusinessListQuery,
+  useGetUserCardsViewCountsQuery,
 } = networkingApi;

@@ -40,6 +40,7 @@ const HotBusinessCardSection = (): React.JSX.Element => {
           leading-[140%]             
           tracking-[-0.21px]          
           self-stretch
+          mb-[30px]
           "
       >
         오늘 가장 조회수가 높은 명함이에요 :)

@@ -14,14 +14,14 @@ export function applyAllFilters(
     filtered = filtered.filter((item) => item.fields_of_expertise?.toLowerCase() === tabLower);
   }
 
-  // 2) 연차 필터
-  //    business_cards에 experience_years가 있다고 가정
-  if (filterValues.year) {
-    filtered = filtered.filter((item) => {
-      const exp = item.experience_years ?? 0; // 경험값이 없으면 0 처리
-      return matchYearRange(exp, filterValues.year);
-    });
-  }
+  // // 2) 연차 필터
+  // //    business_cards에 experience_years가 있다고 가정
+  // if (filterValues.year) {
+  //   filtered = filtered.filter((item) => {
+  //     const exp = item.experience_years ?? 0; // 경험값이 없으면 0 처리
+  //     return matchYearRange(exp, filterValues.year);
+  //   });
+  // }
 
   // 3) 직무 필터
   if (filterValues.job && filterValues.job !== 'ALL') {

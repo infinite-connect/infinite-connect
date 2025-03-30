@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@store/store';
 import { useNavigate } from 'react-router-dom';
@@ -17,10 +17,11 @@ import SloganSection from '@components/MainPage/SloganSection';
 import MyCardSection from '@components/MainPage/MyCardSection';
 const MainPage = (): React.JSX.Element => {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
+
   const nickname = userInfo?.nickname;
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const primaryCard = useSelector((state: RootState) => state.userBusinessCard.primaryCard);
   // 명함 공개 여부 확인
   const { data: userBusinessCard } = useCheckUserBusinessCardVisibilityQuery(nickname!, {
     skip: !nickname,
@@ -37,6 +38,7 @@ const MainPage = (): React.JSX.Element => {
           sub_expertise: userBusinessCard.sub_expertise,
           card_type: userBusinessCard.card_type,
           is_public: userBusinessCard.is_public,
+          interests: userBusinessCard.interests,
         }),
       );
     }
@@ -61,7 +63,7 @@ const MainPage = (): React.JSX.Element => {
   }
 
   // 명함이 비공개라면 블러 + 밝기↓ 적용
-  const isBlurred = !userBusinessCard?.is_public;
+  const isBlurred = primaryCard ? !primaryCard.is_public : true;
 
   return (
     <div className="min-h-screen bg-[var(--bg-default-black)]  text-white">

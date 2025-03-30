@@ -15,7 +15,11 @@
   margin: 0 -2px !important; /* 좌우 마진을 2px로 설정하여 간격을 줄임 */
 }
 
-/* custom color */
+.slick-slide {
+  /* box-sizing 주의 */
+  box-sizing: border-box;
+  padding: 0 8px; /* 원하는 간격 */
+}
 @theme {
   /* bg */
   --bg-default-black: #121212;

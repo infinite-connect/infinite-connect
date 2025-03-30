@@ -110,7 +110,7 @@ const UserFilterSection: React.FC = () => {
           hasMore={hasMore} // 더 로드할 데이터가 있는지 여부
           loader={<h4>Loading...</h4>}
           endMessage={<p className="text-gray-400">No more data</p>}
-          height={700}
+          height={600}
         >
           {/** 이미지부분 하드코딩 되어 있음  */}
           {displayedUsers.map((user) => (
