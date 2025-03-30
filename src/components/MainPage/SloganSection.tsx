@@ -10,7 +10,7 @@ const SloganSection = (): React.JSX.Element => {
     >
       <div className="w-full">
         <span
-          className="text-[32px] font-normal leading-[150%]"
+          className="text-[32px] font-light leading-[150%]"
           style={{ fontFamily: 'NanumGothicOTF' }}
         >
           우리는
@@ -22,7 +22,7 @@ const SloganSection = (): React.JSX.Element => {
       </div>
       <div className="flex flex-col flex-1/6">
         <ArrowUpLight />
-        <span className="text-[12px] font-normal ">
+        <span className="flex text-[12px] font-light whitespace-nowrap font-[NanumGothicOTF] ">
           컨퍼런스
           <br />
           바로가기

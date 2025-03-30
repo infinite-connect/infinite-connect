@@ -1,3 +1,4 @@
+import { CardType } from '@components/SelectCardDesignPage/types';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { supabase } from '@utils/supabaseClient';
 
@@ -220,16 +221,16 @@ export const networkingApi = createApi({
         }
       },
     }),
-    // 로그인한 사용자 모든 명함의 조회수 가져오기 API
+    // 로그인한 사용자 모든 명함의 조회수,카드타입 가져오기 API
     getUserCardsViewCounts: builder.query<
-      { business_card_id: string; view_count: number }[],
+      { business_card_id: string; view_count: number; card_type: CardType }[],
       string
     >({
       async queryFn(nickname: string) {
         try {
           const { data, error } = await supabase
             .from('business_cards')
-            .select('business_card_id, view_count')
+            .select('business_card_id, view_count, card_type')
             .eq('nickname', nickname);
           if (error) throw error;
           return { data: data || [] };

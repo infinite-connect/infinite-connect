@@ -10,13 +10,19 @@ import {
   useGetFollowingByCardIdQuery,
 } from '@features/BusinessCard/api/exchangeApi';
 import { RootState } from '@store/store';
+import { CardType } from '@components/SelectCardDesignPage/types';
 
 interface CardSlideProps {
   business_card_id: string;
   viewCount: number;
+  cardType: CardType;
 }
 
-const CardSlide = ({ business_card_id, viewCount }: CardSlideProps): React.JSX.Element => {
+const CardSlide = ({
+  business_card_id,
+  viewCount,
+  cardType,
+}: CardSlideProps): React.JSX.Element => {
   const primaryCard = useSelector((state: RootState) => state.userBusinessCard.primaryCard);
   const dispatch = useDispatch();
   const [updateBusinessCardVisibility] = useUpdateBusinessCardVisibilityMutation();
@@ -32,6 +38,14 @@ const CardSlide = ({ business_card_id, viewCount }: CardSlideProps): React.JSX.E
   if (!primaryCard) {
     return <div>로딩 중...</div>;
   }
+
+  const titleMapping: Record<CardType, string> = {
+    dawn: '신중한 새벽의 사색가',
+    morning: '차분한 오전의 전략가',
+    day: '활기찬 오후의 실천가',
+    evening: '즐거운 저녁의 커넥터',
+    night: '편안한 밤의 탐색자',
+  };
 
   const savedCount = followerUser?.cardIds?.length ?? 0;
   const receivedCount = followingUser?.cardIds?.length ?? 0;
@@ -61,7 +75,7 @@ const CardSlide = ({ business_card_id, viewCount }: CardSlideProps): React.JSX.E
   return (
     <div className="flex flex-col">
       <h2 className="text-center text-[16px] font-[NanumGothicOTF] font-semibold">
-        즐거운 저녁의 커넥터
+        {titleMapping[cardType]}
       </h2>
       <h3 className="text-center text-[12px] font-[NanumGothicOTF] font-normal text-[var(--text-secondary)]">
         추가 정보를 작성하면 사람들과 더 쉽게 연결돼요

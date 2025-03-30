@@ -75,13 +75,13 @@ const VerticalCardPreview = ({ cardId }: VerticalCardPreviewProps): React.JSX.El
             <div className="flex flex-col justify-center items-start w-full h-[42px] p-[12px] gap-[4px]">
               <div>
                 <div className="h-[7px] flex flex-row items-center justify-start gap-[4px]">
-                  <Mail className="w-[6px] h-[6px]" />
+                  <Mail className="w-[6px] h-[6px] text-[var(--text-black)]" />
                   <div className="text-[6px] leading-[7px] text-[var(--text-black)]">
                     {cardData?.email || ''}
                   </div>
                 </div>
                 <div className="h-[7px] flex flex-row items-center justify-start gap-[4px]">
-                  <IconRenderer type={primaryUrlType} size="6px" />
+                  <IconRenderer type={primaryUrlType} size="6px" color="text-[var(--text-black)]" />
                   <div className="text-[6px] leading-[7px] text-[var(--text-black)]">
                     {cardData?.primaryUrl?.[primaryUrlType] || ''}
                   </div>

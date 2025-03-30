@@ -51,6 +51,7 @@ const MyCardSection = (): React.JSX.Element => {
               <CardSlide
                 business_card_id={userCard.business_card_id}
                 viewCount={userCard.view_count}
+                cardType={userCard.card_type}
               />
             </div>
           ))}
