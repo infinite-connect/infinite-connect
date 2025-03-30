@@ -56,8 +56,8 @@ const QRScanDisplayModal: React.FC<QRScanDisplayModalProps> = ({ isOpen, onClose
             {/* TabsList 중앙 정렬 */}
             <TabsList
               className="
-                flex justify-center items-center self-center mt-9 w-[324px] h-[46px] bg-[#2a2a2a] rounded-[100px] relative z-50
-              "
+              flex justify-center items-center self-center mt-9 w-[324px] h-[46px] bg-[#2a2a2a] rounded-[100px] relative z-20
+            "
             >
               <TabsTrigger
                 value="tab1"
@@ -90,7 +90,7 @@ const QRScanDisplayModal: React.FC<QRScanDisplayModalProps> = ({ isOpen, onClose
             <TabsContent
               value="tab2"
               className={`
-                ${activeTab === 'tab2' ? 'fixed inset-0 w-full h-full z-20 m-0 p-0' : ''}
+                ${activeTab === 'tab2' ? 'fixed inset-0 w-full h-full z-10 m-0 p-0' : ''}
                 flex justify-start items-start
               `}
             >
