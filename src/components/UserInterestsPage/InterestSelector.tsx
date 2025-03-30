@@ -68,8 +68,9 @@ const InterestSelector = () => {
   };
 
   return (
-    <div className="flex flex-col bg-[var(--bg-default-black)] items-center text-center">
-      <Header className="px-[20px] bg-[var(--bg-default-black)] top-0 left-0 ">
+    <div className="flex flex-col min-h-screen bg-[var(--bg-default-black)] px-4">
+      {/* Header */}
+      <Header className="px-[4px] bg-[var(--bg-default-black)]">
         <Header.Left>
           <Logo />
         </Header.Left>
@@ -78,55 +79,55 @@ const InterestSelector = () => {
         </Header.Right>
       </Header>
 
-      <div className=" flex flex-col items-center justify-center min-h-screen flex-1  px-4">
-        <div className="px-6 py-7 space-y-3">
-          <h1 className="text-[22px] font-bold text-[var(--text-primary)]">
+      {/* 콘텐츠 영역: 텍스트 + 관심사 선택 */}
+      <main className="flex flex-col flex-1 justify-center items-center text-center gap-2">
+        {/* 텍스트 묶음 */}
+        <div className="px-7 py-6 space-y-3">
+          <h1 className="text-[22px] font-ExtraBold text-[var(--text-primary)] leading-snug">
             관심사를 등록하면
             <br />
             명함 교환율이 올라가요!
           </h1>
-          <p className="text-[14px] text-[var(--text-secondary)] mb-6">
+          <p className="text-[14px] text-[var(--text-secondary)]">
             더 풍부한 네트워킹을 경험하세요✨
           </p>
         </div>
 
-        {/* 관심사 그룹 */}
-        <section className="flex flex-col items-center">
-          <div className="flex flex-wrap justify-center gap-x-3 gap-y-4">
-            {interests.map(({ name }) => {
-              const isSelected = selectedInterests.includes(name);
-              const isDisabled = !isSelected && selectedInterests.length >= maxSelection;
+        {/* 관심사 선택 그룹 */}
+        <section className="flex flex-wrap justify-center gap-x-3 gap-y-4">
+          {interests.map(({ name }) => {
+            const isSelected = selectedInterests.includes(name);
+            const isDisabled = !isSelected && selectedInterests.length >= maxSelection;
 
-              return (
-                <div
-                  key={name}
-                  onClick={() => !isDisabled && toggleInterest(name)}
-                  className={`px-3 py-1 text-sm font-medium rounded-[6px] cursor-pointer transition-colors
-            ${
-              isSelected
-                ? 'border border-[#7253FF] bg-[rgba(114,83,255,0.25)] text-[var(--text-primary)]'
-                : 'border border-white/20 text-white/70'
-            }
-            ${isDisabled ? 'opacity-50 pointer-events-none' : ''}
-          `}
-                >
-                  {name}
-                </div>
-              );
-            })}
-          </div>
+            return (
+              <div
+                key={name}
+                onClick={() => !isDisabled && toggleInterest(name)}
+                className={`px-3 py-1 text-sm font-medium rounded-[6px] cursor-pointer transition-colors
+              ${
+                isSelected
+                  ? 'border border-[#7253FF] bg-[rgba(114,83,255,0.25)] text-[var(--text-primary)]'
+                  : 'border border-white/20 text-white/70'
+              }
+              ${isDisabled ? 'opacity-50 pointer-events-none' : ''}
+            `}
+              >
+                {name}
+              </div>
+            );
+          })}
         </section>
+      </main>
 
-        {/* 하단 버튼 */}
-        <div className="mt-8 w-full">
-          <Button
-            btntype={selectedInterests.length === 0 ? 'disabled' : 'enabled'}
-            disabled={selectedInterests.length === 0}
-            onClick={onClickCardPreviewPage}
-          >
-            완료 ({selectedInterests.length}/{maxSelection})
-          </Button>
-        </div>
+      {/* 하단 버튼 */}
+      <div className="w-full mt-auto mb-[40px]">
+        <Button
+          btntype={selectedInterests.length === 0 ? 'disabled' : 'enabled'}
+          disabled={selectedInterests.length === 0}
+          onClick={onClickCardPreviewPage}
+        >
+          완료 ({selectedInterests.length}/{maxSelection})
+        </Button>
       </div>
     </div>
   );
