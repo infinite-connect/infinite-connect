@@ -23,7 +23,7 @@ const BottomSheet = ({
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent
         className={cn(
-          'bg-[var(--bg-default-black)] px-6 pt-10 pb-6 rounded-t-2xl w-full sm:max-w-md sm:mx-auto [&>div:first-child]:hidden',
+          'bg-[var(--bg-default-black)] px-6 pt-10 pb-6 rounded-t-2xl w-full [&>div:first-child]:hidden',
           className,
         )}
       >

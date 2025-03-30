@@ -1,5 +1,30 @@
 import { z } from 'zod';
 
+export const phoneNumSchema = z.object({
+  phoneNumber: z
+    .string({
+      required_error: '핸드폰 번호를 입력해주세요',
+    })
+    .regex(/^01[016789]-?\d{3,4}-?\d{4}$/, {
+      message: '유효한 핸드폰 번호를 입력해주세요 ex) 01012345678',
+    })
+    .transform((value) => {
+      // '-'가 없는 경우 자동으로 추가
+      const formatted = value.replace(/-/g, '').replace(/(\d{3})(\d{3,4})(\d{4})/, '$1-$2-$3');
+      return formatted;
+    })
+    .refine(
+      (value) => {
+        // '-' 제거 후 길이 검사
+        const digitsOnly = value.replace(/-/g, '');
+        return digitsOnly.length === 11 && digitsOnly.startsWith('010');
+      },
+      {
+        message: '핸드폰 번호는 "010"을 제외하고 정확히 8자리여야 합니다',
+      },
+    ),
+});
+
 export const schema = z
   .object({
     name: z
@@ -11,28 +36,6 @@ export const schema = z
       .regex(/^[a-zA-Z가-힣]+$/, {
         message: '이름은 영문 또는 한글만 입력 가능합니다',
       }),
-    phoneNumber: z
-      .string({
-        required_error: '핸드폰 번호를 입력해주세요',
-      })
-      .regex(/^01[016789]-?\d{3,4}-?\d{4}$/, {
-        message: '유효한 핸드폰 번호를 입력해주세요 ex) 01012345678',
-      })
-      .transform((value) => {
-        // '-'가 없는 경우 자동으로 추가
-        const formatted = value.replace(/-/g, '').replace(/(\d{3})(\d{3,4})(\d{4})/, '$1-$2-$3');
-        return formatted;
-      })
-      .refine(
-        (value) => {
-          // '-' 제거 후 길이 검사
-          const digitsOnly = value.replace(/-/g, '');
-          return digitsOnly.length === 11 && digitsOnly.startsWith('010');
-        },
-        {
-          message: '핸드폰 번호는 "010"을 제외하고 정확히 8자리여야 합니다',
-        },
-      ),
     nickname: z
       .string({
         required_error: '아이디를 입력해주세요',
@@ -42,6 +45,7 @@ export const schema = z
       .regex(/^[a-z0-9_-]+$/, {
         message: '아이디는 영문 소문자, 숫자, 밑줄(_), 하이픈(-)만 가능합니다',
       }),
+    phoneNumber: phoneNumSchema.shape.phoneNumber,
     email: z
       .string({
         required_error: '이메일을 입력해주세요',

@@ -15,7 +15,7 @@ function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
         'pl-3 py-[17px]',
 
         // 레이아웃 & 모양
-        'flex w-full min-w-0 h-auto rounded-[4px]',
+        'flex w-full min-w-0 h-14 rounded-[4px]',
         'shadow-xs transition-[color,box-shadow] outline-none',
 
         // border
@@ -29,7 +29,7 @@ function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
 
         // disabled & aria 상태
         'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
-        'aria-invalid:border-destructive dark:aria-invalid:ring-destructive/40 aria-invalid:ring-destructive/20',
+        'aria-invalid:border-[var(--error)] aria-invalid:ring-[var(--error)]',
 
         // 커스텀 클래스
         className,
