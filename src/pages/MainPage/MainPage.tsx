@@ -16,7 +16,7 @@ import { useCheckUserBusinessCardVisibilityQuery } from '@features/Networking/ne
 import SloganSection from '@components/MainPage/SloganSection';
 import MyCardSection from '@components/MainPage/MyCardSection';
 import BottomNavbar from '@components/commons/BottomNavbar/BottomNavbar';
-import { CardType } from '@components/SelectCardDesignPage/types';
+
 const MainPage = (): React.JSX.Element => {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
 

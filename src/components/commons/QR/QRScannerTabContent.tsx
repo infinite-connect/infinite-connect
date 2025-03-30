@@ -138,13 +138,13 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
       if (html5QrCodeRef.current) {
         setIsTransitioning(true);
         try {
-          const aspectRatio = windowWidth / windowHeight;
+          // const aspectRatio = windowWidth / windowHeight;
           await html5QrCodeRef.current.start(
             { facingMode: 'environment' },
             {
               fps: 10,
               qrbox: 275,
-              aspectRatio,
+              aspectRatio: 1,
             },
             (decodedText) => {
               console.log('Decoded text:', decodedText);
@@ -299,7 +299,18 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
   return (
     <div className="relative w-full h-full bg-transparent">
       {/* 카메라 화면 */}
-      <div id="qr-scanner" ref={scannerRef} className="absolute inset-0 w-full h-full p-0" />
+      <div
+        id="qr-scanner"
+        ref={scannerRef}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: 5,
+        }}
+      />
       <div
         className={`
           absolute w-[240px] h-[20px] text-[22px] font-bold left-1/2 transform -translate-x-1/2

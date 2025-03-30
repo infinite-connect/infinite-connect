@@ -45,6 +45,7 @@ const CardSlide = ({
     day: '활기찬 오후의 실천가',
     evening: '즐거운 저녁의 커넥터',
     night: '편안한 밤의 탐색자',
+    none: '없음',
   };
 
   const savedCount = followerUser?.cardIds?.length ?? 0;
