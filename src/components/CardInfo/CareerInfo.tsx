@@ -36,7 +36,7 @@ const CareerInfo: React.FC<CareerInfoProps> = ({
       {infoItems.map((item) => (
         <div
           key={item.label}
-          className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:border-b-0"
+          className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:not:only:border-b-0"
         >
           <div className="text-[14px] leading-[150%]">{item.label}</div>
           <div>{item.value}</div>

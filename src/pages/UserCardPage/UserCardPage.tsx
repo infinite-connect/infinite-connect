@@ -23,7 +23,7 @@ import {
   useOneWayExchangeMutation,
 } from '@features/BusinessCard/api/exchangeApi';
 import { useCheckUserBusinessCardVisibilityQuery } from '@features/Networking/networkingApi';
-import { CARD_TYPE_TEXT } from '@constants/cardType';
+import { CARD_TYPE_TEXT, gradients } from '@constants/cardType';
 import { maskName } from '@utils/maskName';
 
 const UserCardPage: React.FC = (): React.JSX.Element => {
@@ -164,12 +164,13 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
   }
 
   const buttonText = exchangeStatus?.exists ? '명함첩에서 삭제하기' : '명함 추가하기';
+  console.log(businessCard.interests);
 
   return (
     <div
       className="min-h-screen text-white flex flex-col justify-start flex-grow overflow-y-auto"
       style={{
-        background: 'linear-gradient(0deg, #121212 86.3%, #606171 100%)',
+        background: gradients[businessCard.cardType],
       }}
     >
       <Header
@@ -185,15 +186,15 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
           <IconButton icon={<AlarmIcon />} />
         </Header.Right>
       </Header>
-      <div className="relative flex flex-col mt-14 pt-[30px] pb-10 items-center gap-4 justify-start overflow-x-hidden">
-        <div className="w-full h px-4 space-y-4">
+      <div className="relative flex flex-col mt-14 pt-[30px] pb-10 items-center justify-start overflow-x-hidden">
+        <div className="w-full h px-4">
           {/* 이름*/}
-          <div className="h-[48px] text-[32px] text-[var(--text-accent)] font-bold leading-[150%]">
+          <div className="h-[48px] text-[32px] mb-4 text-[var(--text-accent)] font-bold leading-[150%]">
             {businessCard.businessName ||
               (isTwoWayExchanged ? businessCard.name : maskName(businessCard.name))}
           </div>
           {/* 타입 설명 */}
-          <div className="flex flex-col p-4 rounded-[8px] text-white text-[14px] leading-[150%] bg-[#1E1E1E]">
+          <div className="flex flex-col p-4 rounded-[8px] text-white text-[14px] leading-[150%] bg-[#1F1F1F]">
             <div className="flex flex-row">
               <span className="text-[var(--text-accent)]">
                 {CARD_TYPE_TEXT[businessCard.cardType].label}
@@ -213,26 +214,24 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
           </div>
         </div>
         {/* 관심사 스크롤 */}
-        <ScrollArea className="w-full pl-4 relative">
-          <div className="flex flex-row gap-[6px] flex-nowrap overflow-x-auto">
-            {businessCard.interests?.map((interest, index) => (
-              <div
-                key={index}
-                className="px-[10px] py-[8px] bg-gray-800 rounded-[20px] text-[12px] leading-[150%] text-white text-center whitespace-nowrap"
-              >
-                {interest}
-              </div>
-            ))}
-            <div className="px-[10px] py-[8px] bg-gray-800 rounded-[20px] text-[12px] leading-[150%] text-white text-center whitespace-nowrap">
-              관심사12222
+        {businessCard.interests && businessCard.interests.length > 0 && (
+          <ScrollArea className="w-full pl-4 relative">
+            <div className="flex flex-row gap-[6px] flex-nowrap overflow-x-auto">
+              {businessCard.interests.map((interest, index) => (
+                <div
+                  key={index}
+                  className="px-[10px] py-[8px] bg-gray-800 rounded-[20px] text-[12px] leading-[150%] text-white text-center whitespace-nowrap"
+                >
+                  {interest}
+                </div>
+              ))}
             </div>
-            <div className="px-[10px] py-[8px] bg-gray-800 rounded-[20px] text-[12px] leading-[150%] text-white text-center whitespace-nowrap">
-              관심사2
-            </div>
-          </div>
-        </ScrollArea>
+          </ScrollArea>
+        )}
         {!isMyCard && (
-          <div className="w-full px-4 mt-3 gap-6 ">
+          <div
+            className={`w-full px-4 ${!businessCard.interests || businessCard.interests.length === 0 ? 'mt-2' : 'mt-7'} gap-6`}
+          >
             <Button
               btntype="enabled"
               className="w-full py-2 font-medium"
