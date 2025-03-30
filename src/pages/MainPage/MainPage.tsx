@@ -15,6 +15,8 @@ import { setPrimaryCard } from '@features/Networking/slice/userPrimaryBusinessCa
 import { useCheckUserBusinessCardVisibilityQuery } from '@features/Networking/networkingApi';
 import SloganSection from '@components/MainPage/SloganSection';
 import MyCardSection from '@components/MainPage/MyCardSection';
+import BottomNavbar from '@components/commons/BottomNavbar/BottomNavbar';
+import { CardType } from '@components/SelectCardDesignPage/types';
 const MainPage = (): React.JSX.Element => {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
 
@@ -67,7 +69,7 @@ const MainPage = (): React.JSX.Element => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-default-black)]  text-white">
-      <Header className="px-[16px] bg-[var(--bg-default-black)] z-12 fixed top-0 left-0 ">
+      <Header className="px-[16px] bg-[rgba(18,18,18,0.75)] backdrop-blur-xs z-12 fixed top-0 left-0 ">
         <Header.Left>
           <Logo />
           <span>Networking</span>
@@ -108,6 +110,7 @@ const MainPage = (): React.JSX.Element => {
           )}
         </div>
       </div>
+      <BottomNavbar userCardType={userBusinessCard?.card_type as CardType} />
     </div>
   );
 };

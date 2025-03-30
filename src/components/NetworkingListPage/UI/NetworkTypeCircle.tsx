@@ -9,9 +9,13 @@ type CardType = 'dawn' | 'morning' | 'day' | 'evening' | 'night';
 
 export interface NetworkTypeProps {
   cardType: CardType;
+  className?: string;
 }
 
-const NetworkTypCircle: React.FC<NetworkTypeProps> = ({ cardType }): React.JSX.Element => {
+const NetworkTypCircle: React.FC<NetworkTypeProps> = ({
+  cardType,
+  className,
+}): React.JSX.Element => {
   // 카드 타입에 따라 적절한 아이콘을 선택
   let iconSrc: string;
   switch (cardType) {
@@ -35,7 +39,7 @@ const NetworkTypCircle: React.FC<NetworkTypeProps> = ({ cardType }): React.JSX.E
       iconSrc = dawnIcon;
   }
 
-  return <img src={iconSrc} alt={cardType} />;
+  return <img src={iconSrc} alt={cardType} className={className} />;
 };
 
 export default NetworkTypCircle;
