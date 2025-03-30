@@ -4,6 +4,7 @@ import SeparationLine from './UI/SeparationLine';
 import PopularIcon from './UI/PopularIcon';
 import { useGetBusinessCardByIdQuery } from '@features/BusinessCard/api/businessCardApi';
 import { maskName } from '@utils/formatName';
+import { useNavigate } from 'react-router-dom';
 
 interface HotBusinessCardBoxProps {
   cardId: string;
@@ -11,6 +12,10 @@ interface HotBusinessCardBoxProps {
 
 const HotBusinessCardBox: React.FC<HotBusinessCardBoxProps> = ({ cardId }): React.JSX.Element => {
   const { data, isLoading, error } = useGetBusinessCardByIdQuery(cardId);
+  const navigate = useNavigate();
+  const goToDetailPageNavigate = () => {
+    navigate(`/${data?.name}/${cardId}`);
+  };
 
   if (isLoading) return <div>로딩 중...</div>;
   if (error) return <div>오류 발생</div>;
@@ -23,6 +28,7 @@ const HotBusinessCardBox: React.FC<HotBusinessCardBoxProps> = ({ cardId }): Reac
 
   return (
     <div
+      onClick={goToDetailPageNavigate}
       className=" flex
       flex-col
       h-[154px]
@@ -34,9 +40,10 @@ const HotBusinessCardBox: React.FC<HotBusinessCardBoxProps> = ({ cardId }): Reac
       rounded-sm
       border
       border-[#7B61FF]
-      bg-[rgba(255,255,255,0.07)]"
+      bg-[rgba(255,255,255,0.07)]
+      cursor-pointer"
     >
-      <div className="">
+      <div>
         <div className="flex items-center">
           <NetworkType cardType={data.cardType} />
           <span className=" text-[14px] ml-[4px] font-bold font-[Roboto] not-italic uppercase">
