@@ -21,6 +21,7 @@ import { SocialIcon } from '@components/AdditionalInfoPage/SocialIcon';
 import BottomSheet from '@components/commons/BottomSheet/BottomSheet';
 import { Input } from '@components/Input/input';
 import { Dropdown } from '@components/AdditionalInfoPage/DropDown';
+import { phoneNumSchema } from '@components/SignupPage/signupSchema';
 
 // Zod 스키마 정의
 const schema = z
@@ -29,7 +30,7 @@ const schema = z
     jobTitle: z.string().optional(),
     department: z.string().optional(),
     experience_years: z.string().optional(),
-    phone: z.string().optional(),
+    phone: phoneNumSchema.shape.phoneNumber.optional(),
     fax: z.string().optional(),
     address: z.string().optional(),
     nickname: z.string().optional(),
@@ -191,8 +192,11 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormLabel className="text-[var(--text-primary)]">업무용 전화번호</FormLabel>
                   <FormControl>
                     <Input
+                      type="tel"
+                      inputMode="numeric"
                       placeholder="업무용 전화번호를 입력하세요"
                       className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      maxLength={11}
                       {...field}
                     />
                   </FormControl>
