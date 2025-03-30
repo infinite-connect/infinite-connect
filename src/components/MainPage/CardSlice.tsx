@@ -69,7 +69,7 @@ const CardSlide = ({ business_card_id, viewCount }: CardSlideProps): React.JSX.E
       <div className="flex flex-row gap-4">
         <VerticalCardPreview cardId={business_card_id} />
         <div className="w-full flex flex-col justify-between">
-          <CircleProgress />
+          <CircleProgress cardId={business_card_id} />
           <div className="bg-[rgba(255,255,255,0.05)] px-2 py-3 gap-2 flex flex-col">
             <div className="flex justify-between text-[12px] font-normal font-[NanumGothicOTF]">
               <p className="text-[var(--text-secondary)]">저장된 내 명함</p>

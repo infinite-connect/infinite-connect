@@ -1,10 +1,17 @@
-import { RootState } from '@store/store';
-import { useSelector } from 'react-redux';
+import { useGetCardInterestsQuery } from '@features/Networking/networkingApi';
 
-export default function CircleProgress() {
-  const primaryCard = useSelector((state: RootState) => state.userBusinessCard.primaryCard);
+import React from 'react';
+
+interface CircleProgressProps {
+  cardId: string;
+}
+
+export default function CircleProgress({ cardId }: CircleProgressProps): React.JSX.Element {
+  // business_cards 테이블에서 해당 카드의 interests 값을 가져옴
+  const { data: interests } = useGetCardInterestsQuery(cardId);
+
   // interests가 존재하고 길이가 0보다 크면 true
-  const hasInterests = primaryCard?.interests && primaryCard.interests.length > 0;
+  const hasInterests = interests && interests.length > 0;
 
   // progress: 1이면 100%, 아니면 75%
   const progress = hasInterests ? 1 : 0.75;

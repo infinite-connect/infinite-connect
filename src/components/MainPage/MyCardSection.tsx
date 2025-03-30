@@ -34,11 +34,19 @@ const MyCardSection = (): React.JSX.Element => {
   // 3장 이상인 경우에는 AddCardSlide를 추가하지 않음
   const shouldShowAddCard = userCards.length <= 2;
 
+  // 대표 명함이 항상 첫번째에 오도록 배열 재정렬
+  const orderedCards = userCards
+    ? [
+        ...userCards.filter((card) => card.business_card_id === primaryCard.business_card_id),
+        ...userCards.filter((card) => card.business_card_id !== primaryCard.business_card_id),
+      ]
+    : [];
+
   return (
     <div className="mx-4 px-4 py-4 flex flex-col bg-[#1E1E1E] rounded-md">
       <div className="">
         <Slider key={userCards?.length} {...settings}>
-          {userCards?.map((userCard) => (
+          {orderedCards?.map((userCard) => (
             <div key={userCard.business_card_id}>
               <CardSlide
                 business_card_id={userCard.business_card_id}
