@@ -128,10 +128,26 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
     setLocationY(distance);
   }, [windowHeight]);
 
+  // 카메라 권한 확인 함수
+  const checkCameraPermission = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      stream.getTracks().forEach((track) => track.stop());
+      return true;
+    } catch (error) {
+      console.error('카메라 권한 오류:', error);
+      alert('카메라 접근 권한이 필요합니다.');
+      return false;
+    }
+  };
+
   // QR 스캐너 시작/중지 로직
   useEffect(() => {
     const startScanner = async () => {
       if (scannerRef.current && !html5QrCodeRef.current) {
+        const hasPermission = await checkCameraPermission();
+        if (!hasPermission) return;
+
         html5QrCodeRef.current = new Html5Qrcode('qr-scanner');
       }
 
@@ -139,11 +155,24 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
         setIsTransitioning(true);
         try {
           const aspectRatio = windowWidth / windowHeight;
+          const cameraConfig = {
+            facingMode: 'environment',
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          };
+
           await html5QrCodeRef.current.start(
-            { facingMode: 'environment' },
+            cameraConfig,
             {
               fps: 10,
-              qrbox: 275,
+              qrbox: (viewfinderWidth, viewfinderHeight) => {
+                const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+                const boxSize = Math.floor(minEdge * 0.7);
+                return {
+                  width: boxSize,
+                  height: boxSize,
+                };
+              },
               aspectRatio,
             },
             (decodedText) => {
@@ -183,10 +212,26 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
     }
 
     return () => {
-      stopScanner();
+      if (html5QrCodeRef.current) {
+        html5QrCodeRef.current.stop().catch((err) => {
+          console.error('QR 스캐너 정리 중 오류:', err);
+        });
+      }
     };
     // eslint-disable-next-line
   }, [isActive, navigate, windowWidth, windowHeight]);
+
+  // QR 스캐너 비디오 요소 스타일 적용
+  useEffect(() => {
+    if (scannerRef.current && isActive) {
+      const videoElement = scannerRef.current.querySelector('video');
+      if (videoElement) {
+        videoElement.style.width = '100%';
+        videoElement.style.height = '100%';
+        videoElement.style.objectFit = 'cover';
+      }
+    }
+  }, [isActive]);
 
   const [twoWayExchange] = useTwoWayExchangeMutation();
 
@@ -298,18 +343,29 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
 
   return (
     <div className="relative w-full h-full bg-transparent">
-      {/* 카메라 화면 */}
-      <div id="qr-scanner" ref={scannerRef} className="absolute inset-0 w-full h-full p-0" />
+      {/* 카메라 화면 - 전체 화면 차지하도록 수정 */}
       <div
-        className={`
-          absolute w-[240px] h-[20px] text-[22px] font-bold left-1/2 transform -translate-x-1/2
-          text-center text-white z-50
-        `}
+        id="qr-scanner"
+        ref={scannerRef}
+        className="absolute inset-0 p-0 overflow-hidden"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: '100%',
+          height: '100%',
+          maxHeight: '100vh',
+          zIndex: 5,
+        }}
+      />
+      <div
+        className="absolute w-[240px] h-[20px] text-[22px] font-bold left-1/2 transform -translate-x-1/2 text-center text-white z-50"
         style={{ top: `${locationY}px` }}
       >
         QR 코드를 스캔하세요
       </div>
-
       <div className="absolute flex flex-row w-[335px] h-[82px] px-[16px] py-[22px] bg-[#2a2a2a] rounded-[8px] border-1 border-[#7b61ff] bottom-[60px] left-1/2 transform -translate-x-1/2 z-50">
         <div className="w-full h-full flex items-center gap-[10px]">
           <div className="mr-3 h-[38px] w-[62px] flex-shrink-0">
@@ -332,7 +388,7 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
         </div>
       </div>
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} handleOnly={true}>
-        <DrawerContent hideIndicator className="bg-[#1a1a1a] pt-[21px] text-white">
+        <DrawerContent hideIndicator className="bg-[#1a1a1a] pt-[21px] text-white z-50">
           <div>
             <div className="flex flex-col justify-center item-center px-[24px] py-[30px] gap-[8px]">
               <div></div>
@@ -350,14 +406,14 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
                   align: 'center',
                   containScroll: 'trimSnaps',
                   duration: 20,
-                  skipSnaps: false, // 스냅 포인트를 건너뛰지 않도록 설정
-                  dragFree: false, // 드래그 후 항상 스냅 포인트에 정렬되도록 설정
+                  skipSnaps: false,
+                  dragFree: false,
                 }}
               >
                 <CarouselContent>
                   {businessCards.map((cardId) => {
                     return (
-                      <CarouselItem key={cardId} className=" flex-shrink-0">
+                      <CarouselItem key={cardId} className="flex-shrink-0">
                         <div className="flex justify-center items-center">
                           <HorizontalCardPreview cardId={cardId} />
                         </div>
@@ -370,9 +426,7 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
                 {businessCards.map((_, index) => (
                   <div
                     key={index}
-                    className={`w-[8px] h-[8px] rounded-full ${
-                      index === currentIndex ? 'bg-white' : 'bg-gray-400'
-                    }`}
+                    className={`w-[8px] h-[8px] rounded-full ${index === currentIndex ? 'bg-white' : 'bg-gray-400'}`}
                   ></div>
                 ))}
               </div>
@@ -391,5 +445,4 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
     </div>
   );
 };
-
 export default QRScannerTabContent;
