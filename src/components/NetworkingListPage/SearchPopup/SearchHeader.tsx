@@ -31,7 +31,7 @@ const SearchHeader: React.FC<SearchHeaderProps> = ({
           value={query}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && onSearch()}
-          placeholder="활동명, 회사 등을 검색해 보세요"
+          placeholder="회사명, 이름 등으로 명함을 검색하세요!"
           className="pl-9 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
         />
         {query && (
