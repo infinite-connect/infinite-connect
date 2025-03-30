@@ -16,17 +16,18 @@ interface QRScanDisplayModalProps {
 const QRScanDisplayModal: React.FC<QRScanDisplayModalProps> = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1');
 
-  // QR 스캔 모드일 때 다른 스타일 적용
-  const dialogContentClass =
-    activeTab === 'tab2'
-      ? '!fixed !inset-0 !w-full !h-full !max-w-none !max-h-none !translate-x-0 !translate-y-0 !rounded-none !border-none !shadow-none p-0 flex flex-col bg-black'
-      : '!fixed !inset-0 !w-full !h-full !max-w-none !max-h-none !translate-x-0 !translate-y-0 !rounded-none !border-none !shadow-none p-0 flex flex-col';
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent hideCloseButton className={dialogContentClass} aria-describedby={undefined}>
+      <DialogContent
+        hideCloseButton
+        className="
+          !fixed !inset-0 !w-full !h-full !max-w-none !max-h-none 
+          !translate-x-0 !translate-y-0 !rounded-none !border-none !shadow-none
+          p-0 flex flex-col
+        "
+      >
         {/* 헤더 */}
-        <Header className="px-[16px] bg-transparent fixed top-11 left-0 z-50">
+        <Header className="px-[16px] bg-transparent fixed top-11 left-0 z-12">
           <Header.Left>
             <Logo />
             <span className="font-semibold text-[20px] text-white tracking-[-0.33px]">
@@ -39,14 +40,12 @@ const QRScanDisplayModal: React.FC<QRScanDisplayModalProps> = ({ isOpen, onClose
         </Header>
         {/* 탭 */}
         <div
-          className={`
-            h-full flex justify-center items-start
+          className={`pt-25 px-1 h-full flex justify-center items-start space-y-[36px]
             ${
               activeTab === 'tab1'
-                ? 'pt-25 px-1 bg-[linear-gradient(0deg,#121212_86.3%,#375871_100%),linear-gradient(0deg,rgba(0,0,0,0.70)_0%,rgba(0,0,0,0.70)_100%),linear-gradient(180deg,#5D75FA_0%,#394899_100%)]'
+                ? 'bg-[linear-gradient(0deg,#121212_86.3%,#375871_100%),linear-gradient(0deg,rgba(0,0,0,0.70)_0%,rgba(0,0,0,0.70)_100%),linear-gradient(180deg,#5D75FA_0%,#394899_100%)]'
                 : ''
-            }
-          `}
+            }`}
         >
           <Tabs
             value={activeTab}
@@ -82,17 +81,17 @@ const QRScanDisplayModal: React.FC<QRScanDisplayModalProps> = ({ isOpen, onClose
             </TabsList>
 
             {/* QR 표시 콘텐츠 */}
-            <TabsContent value="tab1" className="text-white bg-[var(--bg-default-black)] pt-9">
+            <TabsContent value="tab1" className=" text-white bg-[var(--bg-default-black)] pt-9">
               <QRDisplayTabContent />
             </TabsContent>
 
-            {/* QR 스캔 콘텐츠 - 전체 화면으로 설정 */}
+            {/* QR 스캔 콘텐츠 */}
             <TabsContent
               value="tab2"
               className={`
-                ${activeTab === 'tab2' ? 'fixed inset-0 w-full h-full z-10 m-0 p-0' : ''}
-                flex justify-start items-start
-              `}
+              ${activeTab === 'tab2' ? 'absolute inset-0 w-full h-full z-10' : ''}
+              flex justify-start items-start
+            `}
             >
               <QRScannerTabContent isActive={activeTab === 'tab2'} />
             </TabsContent>
