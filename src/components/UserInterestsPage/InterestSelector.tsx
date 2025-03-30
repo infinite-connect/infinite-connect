@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Header } from '@components/commons/Header/Header';
 import { Logo } from '@components/commons/Header/Logo';
 import { Button } from '@components/commons/Button/Button';
+import SkipButton from '@components/commons/Button/SkipButton';
 
 const InterestSelector = () => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
@@ -73,7 +74,7 @@ const InterestSelector = () => {
           <Logo />
         </Header.Left>
         <Header.Right>
-          <div>skip</div>
+          <SkipButton to="/cardPreview" />
         </Header.Right>
       </Header>
 
