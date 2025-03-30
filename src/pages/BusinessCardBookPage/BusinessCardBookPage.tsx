@@ -7,7 +7,6 @@ import { Button } from '@components/commons/Button/Button';
 import { Header } from '@components/commons/Header/Header';
 import { Logo } from '@components/commons/Header/Logo';
 import { IconButton } from '@components/commons/Button/IconButton';
-import SearchIcon from '@components/NetworkingListPage/UI/SearchIcon';
 import QrIcon from '@components/NetworkingListPage/UI/QrIcon';
 import AlarmIcon from '@components/NetworkingListPage/UI/AlarmIcon';
 import Section from '@components/BusinessCardBook/Section/Section';
@@ -74,29 +73,25 @@ const BusinessCardBookPage = (): React.JSX.Element => {
       <Header className="px-[16px] bg-[var(--bg-default-black)] top-0 left-0 ">
         <Header.Left>
           <Logo />
-          <span>Networking</span>
+          <span>명함첩</span>
         </Header.Left>
         <Header.Right>
           <IconButton icon={<QrIcon />} onClick={() => {}} />
-          <IconButton icon={<SearchIcon />} onClick={() => {}} />
           <IconButton icon={<AlarmIcon />} onClick={() => {}} />
         </Header.Right>
       </Header>
 
       <Tabs defaultValue="left" onValueChange={(val) => setActiveTab(val as 'left' | 'right')}>
-        <TabsList className="w-full bg-black text-white flex justify-around py-3">
-          <TabsTrigger value="left" className="data-[state=active]:underline">
-            내 명함을 추가한 사람
-          </TabsTrigger>
-          <TabsTrigger value="right" className="data-[state=active]:underline">
-            내가 추가한 사람
-          </TabsTrigger>
+        <TabsList className="w-full flex justify-around mt-[30px]">
+          <TabsTrigger value="left">내 명함을 추가한 사람</TabsTrigger>
+          <TabsTrigger value="right">내가 추가한 사람</TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab}>
           <div className="px-4">
             <SearchHeader
               query={query}
+              showChevron={isSearchMode}
               onChange={(val) => {
                 if (!isSearchMode) setIsSearchMode(true);
                 setQuery(val);
