@@ -5,11 +5,12 @@ interface SettingRowProps {
   label: string;
   nameCount: string;
   imageUrl?: string;
+  onClick?: () => void;
 }
 
-const SettingRow: React.FC<SettingRowProps> = ({ label, nameCount, imageUrl }) => {
+const SettingRow: React.FC<SettingRowProps> = ({ label, nameCount, imageUrl, onClick }) => {
   return (
-    <div className=" flex items-center justify-between">
+    <div onClick={onClick} className=" flex items-center justify-between">
       <div className="flex items-center gap-[10px]">
         {/* 명함 이미지 */}
         <div className="w-[50px] h-[50px]">
