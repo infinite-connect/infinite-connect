@@ -21,6 +21,7 @@ import CareerInfoEdit from '@components/CardInfo/CareerInfoEdit';
 import CompanyInfoEdit from '@components/CardInfo/CompanyInfoEdit';
 import ContactInfoEdit from '@components/CardInfo/ContactInfoEdit';
 import { Button } from '@components/commons/Button/Button';
+import InterestsEdit from '@components/CardInfo/InterestEdit';
 
 const UserCardEditPage: React.FC = (): React.JSX.Element => {
   // URL에서 nickname과 cardId 가져오기
@@ -108,6 +109,7 @@ const UserCardEditPage: React.FC = (): React.JSX.Element => {
           ? hstoreFormat(editedBusinessCard.subSecondUrl)
           : null,
         name: editedBusinessCard.name,
+        interests: editedBusinessCard.interests,
       };
 
       // 타입 정의
@@ -233,6 +235,17 @@ const UserCardEditPage: React.FC = (): React.JSX.Element => {
             onUrlChange={(field, urlType, value) =>
               handleUrlChange(field as keyof BusinessCard, urlType, value)
             }
+          />
+          <InterestsEdit
+            interests={editedBusinessCard?.interests}
+            onChange={(interests) => {
+              if (!editedBusinessCard) return;
+              const updatedCard: BusinessCard = {
+                ...editedBusinessCard,
+                interests,
+              };
+              setEditedBusinessCard(updatedCard);
+            }}
           />
         </section>
         <Button btntype="enabled" className="w-full py-2" onClick={handleEditInfoSave}>
