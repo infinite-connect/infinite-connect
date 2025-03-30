@@ -5,7 +5,7 @@ import { RootState } from '@store/store';
 import { useGetUserCardsViewCountsQuery } from '@features/Networking/networkingApi';
 
 import CardSlide from './CardSlice';
-import AddCardSlide from './\bAddCardSlide';
+import AddCardSlide from './AddCardSlide';
 
 const MyCardSection = (): React.JSX.Element => {
   const primaryCard = useSelector((state: RootState) => state.userBusinessCard.primaryCard);
