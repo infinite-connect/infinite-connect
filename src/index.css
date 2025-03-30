@@ -1,6 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Nanum+Gothic&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Roboto&display=swap');
+
 @import 'tailwindcss';
 @plugin "tailwindcss-animate";
 
+html {
+  padding-top: env(safe-area-inset-top) !important;
+}
+
+body {
+  padding-bottom: env(safe-area-inset-bottom) !important;
+}
+/* custom color */
 /* dot 크기와 색상 변경 */
 .slick-dots li button:before {
   font-size: 10px !important; /* 원형 dot의 크기를 8px로 설정 */
@@ -18,9 +29,12 @@
 .slick-slide {
   /* box-sizing 주의 */
   box-sizing: border-box;
-  padding: 0 8px; /* 원하는 간격 */
+  padding: 0 4px; /* 원하는 간격 */
 }
 @theme {
+  /* font */
+  --font-sans: 'Roboto', 'Nanum Gothic', sans-serif;
+
   /* bg */
   --bg-default-black: #121212;
 
@@ -40,6 +54,9 @@
   --text-black: #020617;
   --text-tertiary: rgba(255, 255, 255, 0.4);
   --text-accent: #a28eff;
+
+  /* icon */
+  --icon-hover: rgba(196, 196, 196, 0.2);
 
   /* semantic */
   --success: rgba(85, 252, 177, 0.8);

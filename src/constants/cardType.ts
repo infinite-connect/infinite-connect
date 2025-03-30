@@ -11,6 +11,12 @@ import eveningHorizontal from '@assets/CardDesign/HorizontalCard/eveningHorizont
 import nightHorizontal from '@assets/CardDesign/HorizontalCard/nightHorizontal.png';
 import dawnHorizontal from '@assets/CardDesign/HorizontalCard/dawnHorizontal.png';
 
+import smallMorningHorizontal from '@assets/CardDesign/SmallHorizontalCard/smallMorningHorizontal.png';
+import smallDayHorizontal from '@assets/CardDesign/SmallHorizontalCard/smallDayHorizontal.png';
+import smallEveningHorizontal from '@assets/CardDesign/SmallHorizontalCard/smallEveningHorizontal.png';
+import smallNightHorizontal from '@assets/CardDesign/SmallHorizontalCard/smallNightHorizontal.png';
+import smallDawnHorizontal from '@assets/CardDesign/SmallHorizontalCard/smallDawnHorizontal.png';
+
 import morningObj from '@assets/CardDesign/CardObj/morningObj.png';
 import dayObj from '@assets/CardDesign/CardObj/dayObj.png';
 import eveningObj from '@assets/CardDesign/CardObj/eveningObj.png';
@@ -19,11 +25,19 @@ import dawnObj from '@assets/CardDesign/CardObj/dawnObj.png';
 
 export const CARD_TYPE_TEXT: Record<
   CardType,
-  { type: string; label: string; carouselTime: string; timeRange: string; tag: string }
+  {
+    type: string;
+    label: string;
+    phrase: string;
+    carouselTime: string;
+    timeRange: string;
+    tag: string;
+  }
 > = {
   morning: {
     type: '오전',
     label: '차분한 오전의 전략가',
+    phrase: '차분하고 계획적인 네트워킹을 선호해요.',
     carouselTime: '10:00 - 12:00',
     timeRange: '10:00~12:00',
     tag: '#계획적인 #성실한 #체계적인',
@@ -31,6 +45,7 @@ export const CARD_TYPE_TEXT: Record<
   day: {
     type: '오후',
     label: '활기찬 오후의 실천가',
+    phrase: '활기차고 효율적인 네트워킹을 선호해요.',
     carouselTime: '12:00 - 14:00',
     timeRange: '12:00~14:00',
     tag: '#효율적인 #생산성 #빠른네트워킹',
@@ -38,6 +53,7 @@ export const CARD_TYPE_TEXT: Record<
   evening: {
     type: '저녁',
     label: '즐거운 저녁의 커넥터',
+    phrase: '친목과 캐주얼한 대화를 선호해요.',
     carouselTime: '17:00 - 20:00',
     timeRange: '17:00~20:00',
     tag: '#친목 #캐주얼한 #자연스러운',
@@ -45,6 +61,7 @@ export const CARD_TYPE_TEXT: Record<
   night: {
     type: '밤',
     label: '편안한 밤의 탐색자',
+    phrase: '깊이 있는 대화, 아이디어 교환을 선호해요.',
     carouselTime: '20:00 - 23:00',
     timeRange: '20:00~23:00',
     tag: '#심도있는대화 #몰입형 #깊이있는',
@@ -52,18 +69,34 @@ export const CARD_TYPE_TEXT: Record<
   dawn: {
     type: '새벽',
     label: '신중한 새벽의 사색가',
+    phrase: '깊이 있는 소규모 네트워크를 선호해요.',
     carouselTime: '06:00 - 09:00',
     timeRange: '06:00~09:00',
     tag: '#소규모 #조용한네트워킹 #영감',
   },
 };
 
-export const CARD_TYPE_IMAGES: Record<CardType, { vertical: string; horizontal: string }> = {
-  morning: { vertical: morningVertical, horizontal: morningHorizontal },
-  day: { vertical: dayVertical, horizontal: dayHorizontal },
-  evening: { vertical: eveningVertical, horizontal: eveningHorizontal },
-  night: { vertical: nightVertical, horizontal: nightHorizontal },
-  dawn: { vertical: dawnVertical, horizontal: dawnHorizontal },
+export const CARD_TYPE_IMAGES: Record<
+  CardType,
+  { vertical: string; horizontal: string; sHorizontal: string }
+> = {
+  morning: {
+    vertical: morningVertical,
+    horizontal: morningHorizontal,
+    sHorizontal: smallMorningHorizontal,
+  },
+  day: { vertical: dayVertical, horizontal: dayHorizontal, sHorizontal: smallDayHorizontal },
+  evening: {
+    vertical: eveningVertical,
+    horizontal: eveningHorizontal,
+    sHorizontal: smallEveningHorizontal,
+  },
+  night: {
+    vertical: nightVertical,
+    horizontal: nightHorizontal,
+    sHorizontal: smallNightHorizontal,
+  },
+  dawn: { vertical: dawnVertical, horizontal: dawnHorizontal, sHorizontal: smallDawnHorizontal },
 };
 
 export const CARD_TYPE_OBJ: Record<CardType, { obj: string }> = {

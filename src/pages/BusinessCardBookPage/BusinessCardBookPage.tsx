@@ -1,10 +1,24 @@
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@components/ui/tabs';
-import DropDown from '@components/ui/dropDown';
-import { Button } from '@components/ui/button';
-import SearchBar from '@components/BusinessCardBook/SearchBar';
+import { LayoutGrid, Menu, SlidersHorizontal } from 'lucide-react';
+import { FilterValues, FullScreenFilter } from '@components/NetworkingListPage/FullScreenFilter';
+import { filterOptions } from '@components/NetworkingListPage/FilterOptions';
+import { Button } from '@components/commons/Button/Button';
+import { Header } from '@components/commons/Header/Header';
+import { Logo } from '@components/commons/Header/Logo';
+import { IconButton } from '@components/commons/Button/IconButton';
+import SearchIcon from '@components/NetworkingListPage/UI/SearchIcon';
+import QrIcon from '@components/NetworkingListPage/UI/QrIcon';
+import AlarmIcon from '@components/NetworkingListPage/UI/AlarmIcon';
+import Section from '@components/BusinessCardBook/Section/Section';
+import SettingRow from '@components/BusinessCardBook/Section/SettingRow';
+import EmptyState from '@components/NetworkingListPage/SearchPopup/EmptyState';
+import RecentSearchList from '@components/NetworkingListPage/SearchPopup/RecentSearchList';
+import SearchHeader from '@components/NetworkingListPage/SearchPopup/SearchHeader';
+import { useRecentSearches } from '@components/NetworkingListPage/SearchPopup/useRecentSearches';
+import UserListCard from '@components/NetworkingListPage/UserListCard';
+import GridCardBox from '@components/BusinessCardBook/GridCardBox';
 
-// 필터링 된 데이터가 이렇게 왔다고 가정...
 const profiles = [
   { id: '1', userId: '101', name: '유현상', role: 'Development', detail: '프론트엔드' },
   { id: '2', userId: '102', name: '이종혁', role: 'Development', detail: '백엔드' },
@@ -18,156 +32,235 @@ const profiles = [
   { id: '10', userId: '110', name: '조*영', role: 'Operation & Others', detail: '기술 지원' },
 ];
 
-const roles = ['All', 'Development', 'Design', 'PM / 기획', 'Data & AI', 'Operation & Others'];
-
-const detailsMap = {
-  Development: [
-    'All',
-    '프론트엔드',
-    '백엔드',
-    '풀스택',
-    '모바일',
-    '데브옵스',
-    '데이터 엔지니어링',
-    '임베디드',
-    'QA/ 테스트 엔지니어',
-    '게임 개발',
-    '블록체인 개발',
-  ],
-  Design: [
-    'All',
-    'UI/UX 디자인',
-    '제품 디자인',
-    '그래픽 디자인',
-    '모션 그래픽',
-    '브랜딩 디자인',
-    '일러스트레이션',
-    '3D 디자인',
-    '게임 아트',
-  ],
-  'PM / 기획': [
-    'All',
-    '프로덕트 매니저',
-    '프로젝트 매니저',
-    '서비스 기획',
-    '게임 기획',
-    '데이터 분석',
-    '마케팅 기획',
-    'U/UX 리서치',
-  ],
-  'Data & AI': [
-    'All',
-    '데이터 사이언스',
-    'AI 엔지니어링',
-    '머신러닝 엔지니어',
-    'BI/ 데이터 애널리스트',
-    '빅데이터 엔지니어링',
-  ],
-  'Operation & Others': [
-    'All',
-    'IT 컨설팅',
-    '기술 지원',
-    '보안',
-    'DBA',
-    '네트워크 엔지니어',
-    '클라우드 엔지니어',
-  ],
-};
-
 const BusinessCardBookPage = (): React.JSX.Element => {
-  const [tab, setTab] = useState<'left' | 'right'>('left');
+  const [activeTab, setActiveTab] = useState<'left' | 'right'>('left');
+  const [isGridView, setIsGridView] = useState(true);
+  const [filterPopupOpen, setFilterPopupOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [isSearchMode, setIsSearchMode] = useState(false);
 
-  const [selectedRole, setSelectedRole] = useState('All');
-  const [selectedDetail, setSelectedDetail] = useState('All');
-
-  //검색 상태
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const handleRoleSelect = (role: string) => {
-    setSelectedRole(role);
-    setSelectedDetail('All'); // 역할 선택 시 세부 분야 초기화
-  };
-
-  const availableDetails =
-    selectedRole === 'All' ? ['All'] : detailsMap[selectedRole as keyof typeof detailsMap];
-
-  // 필터링된 데이터 (역할+세부 분야+검색어)
-  const filteredProfiles = profiles.filter((profile) => {
-    const roleMatch = selectedRole === 'All' || profile.role === selectedRole;
-    const detailMatch = selectedDetail === 'All' || profile.detail === selectedDetail;
-    const searchMatch = profile.name.toLowerCase().includes(searchTerm.toLowerCase()); // 검색 기능 적용
-
-    return roleMatch && detailMatch && searchMatch;
+  const [filterValues, setFilterValues] = useState<FilterValues>({
+    year: '',
+    job: '',
+    subJob: '',
+    interests: [],
   });
 
-  return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <header className="p-4 bg-gray-800 text-center text-lg font-semibold">명함첩</header>
+  const { recentSearches, addSearch, removeSearch, clearSearches } = useRecentSearches();
 
-      <Tabs defaultValue="left" onValueChange={(val) => setTab(val as 'left' | 'right')}>
-        <TabsList className="w-full bg-gray-800 flex justify-center">
-          <TabsTrigger value="left">보관된 명함</TabsTrigger>
-          <TabsTrigger value="right">신청받은 명함</TabsTrigger>
+  const filteredProfiles = profiles.filter((profile) => {
+    const matchesSearch = profile.name.toLowerCase().includes(searchKeyword.toLowerCase());
+    const matchesJob = !filterValues.job || profile.role === filterValues.job;
+    const matchesSub = !filterValues.subJob || profile.detail === filterValues.subJob;
+    return matchesSearch && matchesJob && matchesSub;
+  });
+
+  const handleSearch = () => {
+    if (query.trim()) {
+      setSearchKeyword(query);
+      addSearch(query);
+    }
+  };
+
+  const handleCloseSearch = () => {
+    setQuery('');
+    setSearchKeyword('');
+    setIsSearchMode(false);
+  };
+
+  return (
+    <div className="bg-[var(--bg-default-black)] max-w-screen text-white">
+      <Header className="px-[16px] bg-[var(--bg-default-black)] top-0 left-0 ">
+        <Header.Left>
+          <Logo />
+          <span>Networking</span>
+        </Header.Left>
+        <Header.Right>
+          <IconButton icon={<QrIcon />} onClick={() => {}} />
+          <IconButton icon={<SearchIcon />} onClick={() => {}} />
+          <IconButton icon={<AlarmIcon />} onClick={() => {}} />
+        </Header.Right>
+      </Header>
+
+      <Tabs defaultValue="left" onValueChange={(val) => setActiveTab(val as 'left' | 'right')}>
+        <TabsList className="w-full bg-black text-white flex justify-around py-3">
+          <TabsTrigger value="left" className="data-[state=active]:underline">
+            내 명함을 추가한 사람
+          </TabsTrigger>
+          <TabsTrigger value="right" className="data-[state=active]:underline">
+            내가 추가한 사람
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value={tab}>
-          <div className="p-4">
-            {/* 검색 필드 */}
-            <div className="flex items-center gap-2 mb-4">
-              <SearchBar value={searchTerm} onChange={setSearchTerm} />
-              <Button>정렬</Button>
+        <TabsContent value={activeTab}>
+          <div className="px-4">
+            <SearchHeader
+              query={query}
+              onChange={(val) => {
+                if (!isSearchMode) setIsSearchMode(true);
+                setQuery(val);
+              }}
+              onSearch={handleSearch}
+              onReset={() => {
+                setQuery('');
+                setSearchKeyword('');
+              }}
+              onClose={handleCloseSearch}
+            />
+          </div>
 
-              {/* 필터 DropDown */}
-              <div className="flex gap-2 mb-4">
-                <DropDown
-                  options={roles}
-                  selected={selectedRole}
-                  onSelect={handleRoleSelect}
-                  placeholder="분야 선택"
-                  className="w-48 bg-blue-700"
-                  menuClassName="bg-blue-800 text-white shadow-lg"
-                />
-                <DropDown
-                  options={availableDetails}
-                  selected={selectedDetail}
-                  onSelect={setSelectedDetail}
-                  placeholder="세부 분야 선택"
-                  className="w-48 bg-green-700"
-                  menuClassName="bg-green-800 text-white shadow-lg"
-                  disabled={selectedRole === 'All'} // 역할 선택 전에는 비활성화
+          <div className="mt-[30px] mb-6">
+            <Section title="카테고리">
+              <SettingRow
+                label="{명함이름}을 공유받은 사람"
+                imageUrl="/path/to/image1.jpg"
+                nameCount="Eight님 외 57명"
+              />
+              <SettingRow
+                label="{명함이름} 명함을 공유받은 사람"
+                imageUrl="/path/to/image1.jpg"
+                nameCount="Eight님 외 57명"
+              />
+              <SettingRow
+                label="{명함이름} 명함을 공유받은 사람"
+                imageUrl="/path/to/image1.jpg"
+                nameCount="Eight님 외 57명"
+              />
+            </Section>
+          </div>
+
+          {isSearchMode ? (
+            searchKeyword === '' ? (
+              <div className="px-4 min-h-[40vh]">
+                <RecentSearchList
+                  items={recentSearches}
+                  onSelect={(val) => setQuery(val)}
+                  onRemove={removeSearch}
+                  onClear={clearSearches}
+                  jobKeyword={query}
+                  hideJobSearch
                 />
               </div>
-            </div>
-
-            {/* 필터링된 명함 데이터 표시 */}
-            <div>
-              {filteredProfiles.length > 0 ? (
-                filteredProfiles.map((profile) => (
-                  <div
-                    key={profile.id}
-                    className="flex items-center gap-4 bg-gray-800 p-4 rounded-lg mb-2"
+            ) : filteredProfiles.length > 0 ? (
+              <>
+                <div className="px-4 py-2 text-sm text-[var(--text-secondary)]">
+                  ‘{searchKeyword}’로 검색된 명함 {filteredProfiles.length}건
+                </div>
+                <div
+                  className={`grid ${isGridView ? 'grid-cols-2' : 'grid-cols-1'} gap-4 px-4 pb-24`}
+                >
+                  {filteredProfiles.map((profile) =>
+                    isGridView ? (
+                      <GridCardBox
+                        key={profile.id}
+                        fieldsOfExpertise={profile.role}
+                        subExpertise={profile.detail}
+                        department=""
+                        cardType="morning"
+                        businessName=""
+                        name={profile.name}
+                      />
+                    ) : (
+                      <UserListCard
+                        key={profile.id}
+                        cardId={profile.id}
+                        name={profile.name}
+                        nickName="닉네임"
+                        fieldsOfExpertise={profile.role}
+                        subExpertise={profile.detail}
+                        businessName=""
+                        cardType="morning"
+                        interests={[]}
+                        department=""
+                      />
+                    ),
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="flex justify-center items-center min-h-[40vh]">
+                <EmptyState />
+              </div>
+            )
+          ) : (
+            <>
+              <div className="flex items-center justify-between px-4 py-3">
+                <div className="text-lg font-semibold">교환한 명함 257</div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    className="icon w-8 h-8 bg-transparent text-[var(--fill-white)] hover:bg-[var(--icon-hover)]"
+                    onClick={() => setFilterPopupOpen(true)}
                   >
-                    <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center text-sm">
-                      profile
-                    </div>
-                    <div>
-                      <p className="font-semibold">{profile.name}</p>
-                      <p className="text-gray-400">
-                        <span className="font-bold">{profile.role}</span> | {profile.detail}
-                      </p>
-                    </div>
+                    <SlidersHorizontal />
+                  </Button>
+                  <div className="flex items-center gap-2 border border-[var(--fill-secondary)] p-[5px] rounded-md">
+                    <Button
+                      size="icon"
+                      className={`w-8 h-8 p-1 rounded-md ${!isGridView ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]' : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'}`}
+                      onClick={() => setIsGridView(false)}
+                    >
+                      <Menu className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      className={`w-8 h-8 p-1 rounded-md ${isGridView ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]' : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'}`}
+                      onClick={() => setIsGridView(true)}
+                    >
+                      <LayoutGrid className="w-4 h-4" />
+                    </Button>
                   </div>
-                ))
-              ) : (
-                <p className="text-gray-400">조건에 맞는 명함이 없습니다.</p>
-              )}
-            </div>
-          </div>
+                </div>
+              </div>
+              <div
+                className={`grid ${isGridView ? 'grid-cols-2' : 'grid-cols-1'} gap-4 px-4 pb-24`}
+              >
+                {filteredProfiles.map((profile) =>
+                  isGridView ? (
+                    <GridCardBox
+                      key={profile.id}
+                      fieldsOfExpertise={profile.role}
+                      subExpertise={profile.detail}
+                      department=""
+                      cardType="morning"
+                      businessName=""
+                      name={profile.name}
+                    />
+                  ) : (
+                    <UserListCard
+                      key={profile.id}
+                      cardId={profile.id}
+                      name={profile.name}
+                      nickName="닉네임"
+                      fieldsOfExpertise={profile.role}
+                      subExpertise={profile.detail}
+                      businessName=""
+                      cardType="morning"
+                      interests={[]}
+                      department=""
+                    />
+                  ),
+                )}
+              </div>
+            </>
+          )}
         </TabsContent>
       </Tabs>
-      <div className="fixed bottom-0 left-0 w-full bg-gray-700 py-3 text-center text-white">
-        네비게이션 바
-      </div>
+
+      {filterPopupOpen && (
+        <FullScreenFilter
+          values={filterValues}
+          onChange={setFilterValues}
+          onApply={(vals) => {
+            setFilterValues(vals);
+            setFilterPopupOpen(false);
+          }}
+          onClose={() => setFilterPopupOpen(false)}
+          options={filterOptions}
+        />
+      )}
+
+      <div className="fixed bottom-0 left-0 w-full py-3 bg-gray-900 text-center">네비게이션 바</div>
     </div>
   );
 };

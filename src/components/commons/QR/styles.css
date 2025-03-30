@@ -1,0 +1,8 @@
+#qr-scanner div {
+  border: 5px solid #7253ff; /* 테두리 색상 */
+  border-radius: 15px; /* 모서리를 둥글게 */
+}
+
+#qr-scanner #qr-shaded-region {
+  border-radius: 0px; /* 모서리를 둥글게 */
+}
