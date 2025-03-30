@@ -20,6 +20,7 @@ import { UrlDropdown } from '@components/AdditionalInfoPage/UrlDropdown';
 import { SocialIcon } from '@components/AdditionalInfoPage/SocialIcon';
 import BottomSheet from '@components/commons/BottomSheet/BottomSheet';
 import { Input } from '@components/Input/input';
+import { Dropdown } from '@components/AdditionalInfoPage/DropDown';
 
 // Zod 스키마 정의
 const schema = z
@@ -67,6 +68,14 @@ const schema = z
 
 // 모든 필드를 옵셔널로 정의한 타입
 type FormData = z.infer<typeof schema>;
+
+const experienceItems = [
+  { id: '0-1년차', label: '0-1년차' },
+  { id: '1-3년차', label: '1-3년차' },
+  { id: '3-6년차', label: '3-6년차' },
+  { id: '6-10년차', label: '6-10년차' },
+  { id: '10년차 이상', label: '10년차 이상' },
+];
 
 const AdditionalInfoPage = (): React.JSX.Element => {
   const location = useLocation();
@@ -310,16 +319,18 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 <FormItem>
                   <FormLabel className="text-[var(--text-primary)]">경력</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="자유롭게 경험 기반으로 선택해 주세요."
-                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
-                      {...field}
+                    <Dropdown
+                      items={experienceItems}
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="자유롭게 경험 기반으로 선택해주세요"
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             {/* 제출 버튼 */}
             <div className="flex flex-col gap-4">
               <Button btntype="enabled" className=" text-[var(--text-primary)]">

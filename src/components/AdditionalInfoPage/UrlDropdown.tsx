@@ -78,9 +78,9 @@ export const UrlDropdown = ({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className="p-2 rounded-md shadow-md bg-popover border border-border z-50 "
+          className="p-2 rounded-md shadow-md bg-popover border border-border z-50 text-[var(--text-primary)]"
           sideOffset={8}
-          style={{ width: triggerWidth }}
+          style={{ width: triggerWidth, backgroundColor: '#252525' }}
           align="start"
         >
           {SocialIcon.map((item) => (
