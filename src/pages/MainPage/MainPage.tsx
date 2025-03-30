@@ -110,7 +110,7 @@ const MainPage = (): React.JSX.Element => {
           )}
         </div>
       </div>
-      <BottomNavbar userCardType={userBusinessCard?.card_type as CardType} />
+      <BottomNavbar />
     </div>
   );
 };
