@@ -17,6 +17,7 @@ import SearchHeader from '@components/NetworkingListPage/SearchPopup/SearchHeade
 import { useRecentSearches } from '@components/NetworkingListPage/SearchPopup/useRecentSearches';
 import UserListCard from '@components/NetworkingListPage/UserListCard';
 import GridCardBox from '@components/BusinessCardBook/GridCardBox';
+import SharedCard from '@components/BusinessCardBook/SharedCard';
 
 const profiles = [
   { id: '1', userId: '101', name: '유현상', role: 'Development', detail: '프론트엔드' },
@@ -68,79 +69,170 @@ const BusinessCardBookPage = (): React.JSX.Element => {
     setIsSearchMode(false);
   };
 
+  // 카테고리 리스트 공유 명함
+  const [selectedCard, setSelectedCard] = useState<{
+    cardName: string;
+    recipients: typeof profiles;
+  } | null>(null);
+
   return (
     <div className="bg-[var(--bg-default-black)] max-w-screen text-white">
-      <Header className="px-[16px] bg-[var(--bg-default-black)] top-0 left-0 ">
-        <Header.Left>
-          <Logo />
-          <span>명함첩</span>
-        </Header.Left>
-        <Header.Right>
-          <IconButton icon={<QrIcon />} onClick={() => {}} />
-          <IconButton icon={<AlarmIcon />} onClick={() => {}} />
-        </Header.Right>
-      </Header>
+      {!selectedCard && (
+        <Header className="px-[16px] bg-[var(--bg-default-black)] top-0 left-0 ">
+          <Header.Left>
+            <Logo />
+            <span>명함첩</span>
+          </Header.Left>
+          <Header.Right>
+            <IconButton icon={<QrIcon />} onClick={() => {}} />
+            <IconButton icon={<AlarmIcon />} onClick={() => {}} />
+          </Header.Right>
+        </Header>
+      )}
+      {selectedCard ? (
+        <SharedCard
+          cardName={selectedCard.cardName}
+          recipients={selectedCard.recipients}
+          onBack={() => setSelectedCard(null)}
+        />
+      ) : (
+        <Tabs defaultValue="left" onValueChange={(val) => setActiveTab(val as 'left' | 'right')}>
+          <TabsList className="w-full flex justify-around mt-[30px]">
+            <TabsTrigger value="left">내 명함을 추가한 사람</TabsTrigger>
+            <TabsTrigger value="right">내가 추가한 사람</TabsTrigger>
+          </TabsList>
 
-      <Tabs defaultValue="left" onValueChange={(val) => setActiveTab(val as 'left' | 'right')}>
-        <TabsList className="w-full flex justify-around mt-[30px]">
-          <TabsTrigger value="left">내 명함을 추가한 사람</TabsTrigger>
-          <TabsTrigger value="right">내가 추가한 사람</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value={activeTab}>
-          <div className="px-4">
-            <SearchHeader
-              query={query}
-              showChevron={isSearchMode}
-              onChange={(val) => {
-                if (!isSearchMode) setIsSearchMode(true);
-                setQuery(val);
-              }}
-              onSearch={handleSearch}
-              onReset={() => {
-                setQuery('');
-                setSearchKeyword('');
-              }}
-              onClose={handleCloseSearch}
-            />
-          </div>
-
-          <div className="mt-[30px] mb-6">
-            <Section title="카테고리">
-              <SettingRow
-                label="{명함이름}을 공유받은 사람"
-                imageUrl="/path/to/image1.jpg"
-                nameCount="Eight님 외 57명"
+          <TabsContent value={activeTab}>
+            <div className="px-4">
+              <SearchHeader
+                query={query}
+                showChevron={isSearchMode}
+                onChange={(val) => {
+                  if (!isSearchMode) setIsSearchMode(true);
+                  setQuery(val);
+                }}
+                onSearch={handleSearch}
+                onReset={() => {
+                  setQuery('');
+                  setSearchKeyword('');
+                }}
+                onClose={handleCloseSearch}
               />
-              <SettingRow
-                label="{명함이름} 명함을 공유받은 사람"
-                imageUrl="/path/to/image1.jpg"
-                nameCount="Eight님 외 57명"
-              />
-              <SettingRow
-                label="{명함이름} 명함을 공유받은 사람"
-                imageUrl="/path/to/image1.jpg"
-                nameCount="Eight님 외 57명"
-              />
-            </Section>
-          </div>
+            </div>
 
-          {isSearchMode ? (
-            searchKeyword === '' ? (
-              <div className="px-4 min-h-[40vh]">
-                <RecentSearchList
-                  items={recentSearches}
-                  onSelect={(val) => setQuery(val)}
-                  onRemove={removeSearch}
-                  onClear={clearSearches}
-                  jobKeyword={query}
-                  hideJobSearch
+            <div className="mt-[30px] mb-6">
+              {/* with data */}
+              <Section title="카테고리">
+                <SettingRow
+                  label="대표 명함"
+                  imageUrl="/path/to/image1.jpg"
+                  nameCount="Eight님 외 57명"
+                  onClick={() =>
+                    setSelectedCard({
+                      cardName: '대표 명함',
+                      recipients: profiles, // 공유받은 사람 목록 API 데이터로 대체
+                    })
+                  }
                 />
-              </div>
-            ) : filteredProfiles.length > 0 ? (
+              </Section>
+
+              {/* empty state */}
+              <Section title="카테고리">
+                <SettingRow
+                  label="1번 명함"
+                  imageUrl="/path/to/image1.jpg"
+                  nameCount="Eight님 외 32명"
+                  onClick={() =>
+                    setSelectedCard({
+                      cardName: '1번 명함',
+                      recipients: [], //  공유받은 사람 목록 API 데이터로 대체
+                    })
+                  }
+                />
+              </Section>
+            </div>
+
+            {isSearchMode ? (
+              searchKeyword === '' ? (
+                <div className="px-4 min-h-[40vh]">
+                  <RecentSearchList
+                    items={recentSearches}
+                    onSelect={(val) => setQuery(val)}
+                    onRemove={removeSearch}
+                    onClear={clearSearches}
+                    jobKeyword={query}
+                    hideJobSearch
+                  />
+                </div>
+              ) : filteredProfiles.length > 0 ? (
+                <>
+                  <div className="px-4 py-2 text-sm text-[var(--text-secondary)]">
+                    ‘{searchKeyword}’로 검색된 명함 {filteredProfiles.length}건
+                  </div>
+                  <div
+                    className={`grid ${isGridView ? 'grid-cols-2' : 'grid-cols-1'} gap-4 px-4 pb-24`}
+                  >
+                    {filteredProfiles.map((profile) =>
+                      isGridView ? (
+                        <GridCardBox
+                          key={profile.id}
+                          fieldsOfExpertise={profile.role}
+                          subExpertise={profile.detail}
+                          department=""
+                          cardType="morning"
+                          businessName=""
+                          name={profile.name}
+                        />
+                      ) : (
+                        <UserListCard
+                          key={profile.id}
+                          cardId={profile.id}
+                          name={profile.name}
+                          nickName="닉네임"
+                          fieldsOfExpertise={profile.role}
+                          subExpertise={profile.detail}
+                          businessName=""
+                          cardType="morning"
+                          interests={[]}
+                          department=""
+                        />
+                      ),
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div className="flex justify-center items-center min-h-[40vh]">
+                  <EmptyState />
+                </div>
+              )
+            ) : (
               <>
-                <div className="px-4 py-2 text-sm text-[var(--text-secondary)]">
-                  ‘{searchKeyword}’로 검색된 명함 {filteredProfiles.length}건
+                <div className="flex items-center justify-between px-4 py-3">
+                  <div className="text-lg font-semibold">교환한 명함 257</div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      className="icon w-8 h-8 bg-transparent text-[var(--fill-white)] hover:bg-[var(--icon-hover)]"
+                      onClick={() => setFilterPopupOpen(true)}
+                    >
+                      <SlidersHorizontal />
+                    </Button>
+                    <div className="flex items-center gap-2 border border-[var(--fill-secondary)] p-[5px] rounded-md">
+                      <Button
+                        size="icon"
+                        className={`w-8 h-8 p-1 rounded-md ${!isGridView ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]' : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'}`}
+                        onClick={() => setIsGridView(false)}
+                      >
+                        <Menu className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        className={`w-8 h-8 p-1 rounded-md ${isGridView ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]' : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'}`}
+                        onClick={() => setIsGridView(true)}
+                      >
+                        <LayoutGrid className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
                 <div
                   className={`grid ${isGridView ? 'grid-cols-2' : 'grid-cols-1'} gap-4 px-4 pb-24`}
@@ -173,75 +265,10 @@ const BusinessCardBookPage = (): React.JSX.Element => {
                   )}
                 </div>
               </>
-            ) : (
-              <div className="flex justify-center items-center min-h-[40vh]">
-                <EmptyState />
-              </div>
-            )
-          ) : (
-            <>
-              <div className="flex items-center justify-between px-4 py-3">
-                <div className="text-lg font-semibold">교환한 명함 257</div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    className="icon w-8 h-8 bg-transparent text-[var(--fill-white)] hover:bg-[var(--icon-hover)]"
-                    onClick={() => setFilterPopupOpen(true)}
-                  >
-                    <SlidersHorizontal />
-                  </Button>
-                  <div className="flex items-center gap-2 border border-[var(--fill-secondary)] p-[5px] rounded-md">
-                    <Button
-                      size="icon"
-                      className={`w-8 h-8 p-1 rounded-md ${!isGridView ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]' : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'}`}
-                      onClick={() => setIsGridView(false)}
-                    >
-                      <Menu className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      className={`w-8 h-8 p-1 rounded-md ${isGridView ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]' : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'}`}
-                      onClick={() => setIsGridView(true)}
-                    >
-                      <LayoutGrid className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              <div
-                className={`grid ${isGridView ? 'grid-cols-2' : 'grid-cols-1'} gap-4 px-4 pb-24`}
-              >
-                {filteredProfiles.map((profile) =>
-                  isGridView ? (
-                    <GridCardBox
-                      key={profile.id}
-                      fieldsOfExpertise={profile.role}
-                      subExpertise={profile.detail}
-                      department=""
-                      cardType="morning"
-                      businessName=""
-                      name={profile.name}
-                    />
-                  ) : (
-                    <UserListCard
-                      key={profile.id}
-                      cardId={profile.id}
-                      name={profile.name}
-                      nickName="닉네임"
-                      fieldsOfExpertise={profile.role}
-                      subExpertise={profile.detail}
-                      businessName=""
-                      cardType="morning"
-                      interests={[]}
-                      department=""
-                    />
-                  ),
-                )}
-              </div>
-            </>
-          )}
-        </TabsContent>
-      </Tabs>
-
+            )}
+          </TabsContent>
+        </Tabs>
+      )}
       {filterPopupOpen && (
         <FullScreenFilter
           values={filterValues}
