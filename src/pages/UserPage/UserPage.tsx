@@ -6,8 +6,6 @@ import { RootState } from '@store/store';
 import {
   useAddBusinessCardMutation,
   useGetBusinessCardByIdQuery,
-  useSetPrimaryBusinessCardMutation,
-  // useSetPrimaryBusinessCardMutation,
 } from '@features/BusinessCard/api/businessCardApi';
 import {
   Carousel,
@@ -34,6 +32,7 @@ import { CardType } from '@components/SelectCardDesignPage/types';
 import CardManagementDrawer from '@components/UserPage/UserCardDrawer';
 import BottomNavbar from '@components/commons/BottomNavbar/BottomNavbar';
 import PlusBTN from '@assets/CardDesign/PlusBTN.png';
+import CompanyInfo from '@components/CardInfo/CompanyInfo';
 const UserPage: React.FC = (): React.JSX.Element => {
   // const navigate = useNavigate();
   const { nickname } = useParams<{ nickname: string }>();
@@ -46,6 +45,7 @@ const UserPage: React.FC = (): React.JSX.Element => {
   const [api, setApi] = useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isCardDrawerOpen, setIsCardDrawerOpen] = useState(false);
+  const [businessCards, setBusinessCards] = useState<string[]>([]);
 
   const [gradient, setGradient] = useState<string>(
     'linear-gradient(0deg, #121212 86.3%, #606171 100%)',
@@ -53,38 +53,28 @@ const UserPage: React.FC = (): React.JSX.Element => {
   const [nextGradient, setNextGradient] = useState<string>('');
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const [setPrimaryBusinessCard] = useSetPrimaryBusinessCardMutation();
-
-  const handleSetPrimary = async (cardId: string) => {
-    try {
-      await setPrimaryBusinessCard(cardId).unwrap();
-      // 성공 처리 (예: 토스트 메시지 표시)
-      console.log('대표 명함이 설정되었습니다.');
-    } catch (error) {
-      // 오류 처리
-      console.error('대표 명함 설정 실패:', error);
-      console.error('대표 명함 설정 실패:', error);
-    }
-  };
-
   // 명함 목록 조회
-  const { data: businessCardsWithType = [], isLoading } = useGetUserBusinessCardsWithTypeQuery(
-    nickname || '',
-    {
-      skip: !nickname,
-    },
-  );
+  const {
+    data: businessCardsWithType = [],
+    isLoading,
+    refetch: refetchCards,
+  } = useGetUserBusinessCardsWithTypeQuery(nickname || '', {
+    skip: !nickname,
+  });
 
   const [addBusinessCard] = useAddBusinessCardMutation();
-
-  // 카드 ID 배열 추출 (기존 코드와 호환성 유지)
-  const businessCards = businessCardsWithType.map((card) => card.business_card_id);
 
   // 현재 선택된 명함 데이터
   const selectedCardId = businessCards[selectedIndex];
   const { data: businessCard } = useGetBusinessCardByIdQuery(selectedCardId, {
     skip: !selectedCardId,
   });
+
+  useEffect(() => {
+    if (businessCardsWithType.length > 0) {
+      setBusinessCards(businessCardsWithType.map((card) => card.business_card_id));
+    }
+  }, [businessCardsWithType]);
 
   // 초기 그라디언트 설정
   useEffect(() => {
@@ -332,19 +322,17 @@ const UserPage: React.FC = (): React.JSX.Element => {
         {/* 정보 섹션 */}
         {businessCard && (
           <section className="space-y-[14px]">
-            <CareerInfo
+            <CompanyInfo
               company={businessCard.company}
+              fax={businessCard.fax}
+              businessWebsite={businessCard.businessWebsite}
               jobTitle={businessCard.jobTitle}
+              department={businessCard.department}
+            />
+            <CareerInfo
               experienceYears={businessCard.experienceYears}
               fieldsOfExpertise={businessCard.fieldsOfExpertise}
               subExpertise={businessCard.subExpertise}
-            />
-            <ContactInfo
-              phone={businessCard.phone}
-              email={businessCard.email}
-              primaryUrl={businessCard.primaryUrl || undefined}
-              subFirstUrl={businessCard.subFirstUrl || undefined}
-              subSecondUrl={businessCard.subSecondUrl || undefined}
             />
             <ContactInfo
               phone={businessCard.phone}
@@ -366,7 +354,7 @@ const UserPage: React.FC = (): React.JSX.Element => {
         isOpen={isCardDrawerOpen}
         onOpenChange={() => setIsCardDrawerOpen(false)}
         selectedCardId={selectedCardId}
-        onSetPrimary={handleSetPrimary}
+        refetchCards={refetchCards}
       />
     </div>
   );

@@ -25,7 +25,11 @@ export const UrlDropdown = ({
   platformId,
   onPlatformChange,
 }: UrlDropdownProps) => {
-  const [selected, setSelected] = useState(SocialIcon[0]);
+  const [selected, setSelected] = useState(() => {
+    if (!platformId) return SocialIcon[0];
+    const found = SocialIcon.find((item) => item.id === platformId);
+    return found || SocialIcon[0];
+  });
 
   const [triggerWidth, setTriggerWidth] = useState<number | undefined>(undefined);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -39,22 +43,31 @@ export const UrlDropdown = ({
   const handleSelect = (platform: SocialPlatform) => {
     setSelected(platform);
     onPlatformChange(platform.id);
-    onChange('');
   };
 
   useEffect(() => {
     if (!platformId) return;
+
     const found = SocialIcon.find((item) => item.id === platformId);
-    if (found) setSelected(found);
-  }, [platformId]);
+    if (found) {
+      setSelected(found);
+    }
+  }, [platformId]); // selected.id 제거
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
 
     if (selected.type === 'id' && selected.prefix) {
-      const noPrefix = input.replace(selected.prefix, '');
-      onChange(selected.prefix + noPrefix);
+      // 사용자가 접두사를 지우려고 할 때 방지
+      if (!input.startsWith(selected.prefix)) {
+        // 접두사가 없으면 접두사 + 입력값
+        onChange(selected.prefix + input);
+      } else {
+        // 접두사가 이미 있으면 그대로 전달
+        onChange(input);
+      }
     } else {
+      // 접두사가 필요 없는 경우 그대로 전달
       onChange(input);
     }
   };
