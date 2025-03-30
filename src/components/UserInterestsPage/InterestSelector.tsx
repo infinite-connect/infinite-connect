@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Button } from '@components/ui/button';
-import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
+import { Header } from '@components/commons/Header/Header';
+import { Logo } from '@components/commons/Header/Logo';
+import { Button } from '@components/commons/Button/Button';
 
 const InterestSelector = () => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
@@ -66,55 +67,65 @@ const InterestSelector = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen text-black p-4">
-      <h1 className="text-lg font-bold mb-2">관심사는 무엇인가요?</h1>
-      <p className="text-sm text-gray-400 mb-2">나를 나타내는 관심사, 이제 명함에 공유해 보세요.</p>
-      <p className="text-sm text-gray-400 mb-6">최대 5개까지 선택할 수 있습니다.</p>
+    <div className="flex flex-col bg-[var(--bg-default-black)] items-center text-center">
+      <Header className="px-[20px] bg-[var(--bg-default-black)] top-0 left-0 ">
+        <Header.Left>
+          <Logo />
+        </Header.Left>
+        <Header.Right>
+          <div>skip</div>
+        </Header.Right>
+      </Header>
 
-      {/* 버튼 그룹 */}
-      <div className="flex flex-wrap gap-2 justify-center">
-        {interests.map(({ name, icon }) => (
+      <div className=" flex flex-col items-center justify-center min-h-screen flex-1  px-4">
+        <div className="px-6 py-7 space-y-3">
+          <h1 className="text-[22px] font-bold text-[var(--text-primary)]">
+            관심사를 등록하면
+            <br />
+            명함 교환율이 올라가요!
+          </h1>
+          <p className="text-[14px] text-[var(--text-secondary)] mb-6">
+            더 풍부한 네트워킹을 경험하세요✨
+          </p>
+        </div>
+
+        {/* 관심사 그룹 */}
+        <section className="flex flex-col items-center">
+          <div className="flex flex-wrap justify-center gap-x-3 gap-y-4">
+            {interests.map(({ name }) => {
+              const isSelected = selectedInterests.includes(name);
+              const isDisabled = !isSelected && selectedInterests.length >= maxSelection;
+
+              return (
+                <div
+                  key={name}
+                  onClick={() => !isDisabled && toggleInterest(name)}
+                  className={`px-3 py-1 text-sm font-medium rounded-[6px] cursor-pointer transition-colors
+            ${
+              isSelected
+                ? 'border border-[#7253FF] bg-[rgba(114,83,255,0.25)] text-[var(--text-primary)]'
+                : 'border border-white/20 text-white/70'
+            }
+            ${isDisabled ? 'opacity-50 pointer-events-none' : ''}
+          `}
+                >
+                  {name}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* 하단 버튼 */}
+        <div className="mt-8 w-full">
           <Button
-            key={name}
-            variant="outline"
-            onClick={() => toggleInterest(name)}
-            className={`px-4 py-2 rounded-full flex items-center gap-2 ${
-              selectedInterests.includes(name)
-                ? 'border-2 border-green-500'
-                : 'border border-gray-600'
-            }`}
+            btntype={selectedInterests.length === 0 ? 'disabled' : 'enabled'}
+            disabled={selectedInterests.length === 0}
+            onClick={onClickCardPreviewPage}
           >
-            <Icon icon={icon} className="w-5 h-5" /> {/* 아이콘 추가 */}
-            <span>{name}</span>
+            완료 ({selectedInterests.length}/{maxSelection})
           </Button>
-        ))}
-      </div>
-
-      {/* 하단 버튼 */}
-      <div className="mt-8 w-full max-w-md">
-        <Button
-          variant="default"
-          disabled={selectedInterests.length === 0}
-          className={`w-full py-3 rounded-lg ${
-            selectedInterests.length === 0
-              ? 'bg-gray-600 cursor-not-allowed'
-              : 'bg-gradient-to-r from-blue-500 to-green-500'
-          }`}
-          onClick={onClickCardPreviewPage}
-        >
-          완료 ({selectedInterests.length}/{maxSelection})
-        </Button>
-      </div>
-      <div className="mt-2 w-full max-w-md">
-        <Button
-          variant="default"
-          className={`w-full py-3 rounded-lg ${
-            selectedInterests.length === 0 ? 'bg-gray-600 cursor-not-allowed' : ''
-          }`}
-          onClick={onClickCardPreviewPage}
-        >
-          건너뛰기
-        </Button>
+        </div>
       </div>
     </div>
   );
