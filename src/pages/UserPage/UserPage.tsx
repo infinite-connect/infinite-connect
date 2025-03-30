@@ -31,6 +31,7 @@ import { Plus } from 'lucide-react';
 import { gradients } from '@constants/cardType';
 import { CardType } from '@components/SelectCardDesignPage/types';
 import CardManagementDrawer from '@components/UserPage/UserCardDrawer';
+import BottomNavbar from '@components/commons/BottomNavbar/BottomNavbar';
 
 const UserPage: React.FC = (): React.JSX.Element => {
   // const navigate = useNavigate();
@@ -196,7 +197,7 @@ const UserPage: React.FC = (): React.JSX.Element => {
 
   return (
     <div
-      className="min-h-screen text-white flex flex-col justify-start flex-grow overflow-y-auto"
+      className="min-h-screen text-white flex flex-col justify-start flex-grow overflow-y-auto bg-[var(--bg-default-black)]"
       style={{
         background: nextGradient,
       }}
@@ -227,9 +228,9 @@ const UserPage: React.FC = (): React.JSX.Element => {
         </Header.Right>
       </Header>
 
-      <main className="relative flex flex-col mt-14 pt-[30px] pb-[24px] z-10">
+      <main className="relative flex flex-col mt-14 pb-[133px] pt-[30px] z-10">
         {/* 프로필 섹션 */}
-        <section className="px-4 space-y-4  gap-[20px]">
+        <section className="px-4 space-y-4 gap-[20px]">
           {/* 캐러셀 네비게이션 */}
           <div className="flex items-center justify-between">
             <IconButton
@@ -249,7 +250,7 @@ const UserPage: React.FC = (): React.JSX.Element => {
             />
           </div>
         </section>
-        <div className="pb-6">
+        <div className="pb-10">
           {/* 캐러셀 섹션 */}
           <Carousel
             setApi={setApi}
@@ -322,10 +323,9 @@ const UserPage: React.FC = (): React.JSX.Element => {
             )}
           </div>
         </div>
-
         {/* 정보 섹션 */}
         {businessCard && (
-          <section className="space-y-6">
+          <section className="space-y-[14px]">
             <CareerInfo
               company={businessCard.company}
               jobTitle={businessCard.jobTitle}
@@ -340,8 +340,19 @@ const UserPage: React.FC = (): React.JSX.Element => {
               subFirstUrl={businessCard.subFirstUrl || undefined}
               subSecondUrl={businessCard.subSecondUrl || undefined}
             />
+            <ContactInfo
+              phone={businessCard.phone}
+              email={businessCard.email}
+              primaryUrl={businessCard.primaryUrl || undefined}
+              subFirstUrl={businessCard.subFirstUrl || undefined}
+              subSecondUrl={businessCard.subSecondUrl || undefined}
+            />
           </section>
         )}
+        <button className="fixed flex flex-row justify-center items-center bottom-19 right-4 w-[100px] h-[40px] px-[10px] py-[6px] gap-[2px] bg-[var(--fill-primary)] rounded-[100px]">
+          <Plus className="w-[20px] h-[20px]" /> <span className="text-[14px]">명함 추가</span>
+        </button>
+        <BottomNavbar />
       </main>
 
       <QRScanDisplayModal isOpen={isQRModalOpen} onClose={() => setIsQRModalOpen(false)} />

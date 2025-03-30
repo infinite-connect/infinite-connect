@@ -4,8 +4,7 @@ import morningIcon from '@assets/NetWorkTypeCircle/morningIcon.svg';
 import dayIcon from '@assets/NetWorkTypeCircle/dayIcon.svg';
 import eveningIcon from '@assets/NetWorkTypeCircle/eveningIcon.svg';
 import nightIcon from '@assets/NetWorkTypeCircle/nightIcon.svg';
-
-type CardType = 'dawn' | 'morning' | 'day' | 'evening' | 'night';
+import { CardType } from '@components/SelectCardDesignPage/types';
 
 export interface NetworkTypeProps {
   cardType: CardType;
