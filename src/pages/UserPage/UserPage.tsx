@@ -32,7 +32,7 @@ import { gradients } from '@constants/cardType';
 import { CardType } from '@components/SelectCardDesignPage/types';
 import CardManagementDrawer from '@components/UserPage/UserCardDrawer';
 import BottomNavbar from '@components/commons/BottomNavbar/BottomNavbar';
-
+import PlusBTN from '@assets/CardDesign/PlusBTN.png';
 const UserPage: React.FC = (): React.JSX.Element => {
   // const navigate = useNavigate();
   const { nickname } = useParams<{ nickname: string }>();
@@ -280,11 +280,14 @@ const UserPage: React.FC = (): React.JSX.Element => {
                 <CarouselItem className="flex justify-center items-center flex-shrink-0">
                   <div className="flex justify-center items-center">
                     <button
-                      className="w-[334px] h-[206px] bg-transparent border-2 border-dashed border-[#7B61FF]/[0.50] rounded-[7.713px] flex justify-center items-center"
+                      className="w-[334px] h-[206px] bg-transparent flex justify-center items-center rounded-[7.713px]"
+                      style={{
+                        backgroundImage: `url(${PlusBTN})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }}
                       onClick={handleAddCard}
-                    >
-                      <Plus className="w-[32px] h-[32px] text-[var(--fill-primary)]" />
-                    </button>
+                    ></button>
                   </div>
                 </CarouselItem>
               )}
