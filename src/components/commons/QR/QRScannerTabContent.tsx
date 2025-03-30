@@ -157,8 +157,6 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
           const aspectRatio = windowWidth / windowHeight;
           const cameraConfig = {
             facingMode: 'environment',
-            width: { ideal: 1280 },
-            height: { ideal: 720 },
           };
 
           await html5QrCodeRef.current.start(
