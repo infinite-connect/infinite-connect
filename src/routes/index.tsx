@@ -21,6 +21,7 @@ import CardPreviewPage from '@pages/CardPreviewPage/CardPreviewPage';
 import QrScannerPage from '@pages/QrScannerPage/QrScannerPage';
 import BusinessCardBookPage from '@pages/BusinessCardBookPage/BusinessCardBookPage';
 import Success from '@components/SignupPage/Success';
+import UserEditPage from '@pages/UserEditPage/UserEditPage';
 
 const AppRouter = () => {
   return (
@@ -31,6 +32,7 @@ const AppRouter = () => {
       <Route path={RoutePaths.SELECTCARDDESIGN} element={<SelectCardDesignPage />} />
       <Route path={RoutePaths.ADDITIONALINFO} element={<AdditionalInfoPage />} />
       <Route path={`${RoutePaths.MAIN}:nickname?`} element={<UserPage />} />
+      <Route path={`${RoutePaths.MAIN}:nickname?${RoutePaths.EDIT}`} element={<UserEditPage />} />
       {/* <Route path={`${RoutePaths.USER}${RoutePaths.CARD}/:cardId?`} element={<UserCardPage />} /> */}
       <Route path={`${RoutePaths.USER}${RoutePaths.SETTING}`} element={<UserSettingPage />} />
       <Route path={RoutePaths.INFO} element={<InfoPage />} />
