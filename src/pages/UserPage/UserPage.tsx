@@ -6,6 +6,7 @@ import { RootState } from '@store/store';
 import {
   useAddBusinessCardMutation,
   useGetBusinessCardByIdQuery,
+  useSetPrimaryBusinessCardMutation,
   // useSetPrimaryBusinessCardMutation,
 } from '@features/BusinessCard/api/businessCardApi';
 import {
@@ -52,17 +53,19 @@ const UserPage: React.FC = (): React.JSX.Element => {
   const [nextGradient, setNextGradient] = useState<string>('');
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // const [setPrimaryBusinessCard] = useSetPrimaryBusinessCardMutation();
+  const [setPrimaryBusinessCard] = useSetPrimaryBusinessCardMutation();
 
-  // const handleSetPrimary = async (cardId: string) => {
-  //   try {
-  //     await setPrimaryBusinessCard(cardId).unwrap();
-  //     // 성공 처리 (예: 토스트 메시지 표시)
-  //   } catch (error) {
-  //     // 오류 처리
-  //     console.error('대표 명함 설정 실패:', error);
-  //   }
-  // };
+  const handleSetPrimary = async (cardId: string) => {
+    try {
+      await setPrimaryBusinessCard(cardId).unwrap();
+      // 성공 처리 (예: 토스트 메시지 표시)
+      console.log('대표 명함이 설정되었습니다.');
+    } catch (error) {
+      // 오류 처리
+      console.error('대표 명함 설정 실패:', error);
+      console.error('대표 명함 설정 실패:', error);
+    }
+  };
 
   // 명함 목록 조회
   const { data: businessCardsWithType = [], isLoading } = useGetUserBusinessCardsWithTypeQuery(
@@ -362,6 +365,8 @@ const UserPage: React.FC = (): React.JSX.Element => {
       <CardManagementDrawer
         isOpen={isCardDrawerOpen}
         onOpenChange={() => setIsCardDrawerOpen(false)}
+        selectedCardId={selectedCardId}
+        onSetPrimary={handleSetPrimary}
       />
     </div>
   );

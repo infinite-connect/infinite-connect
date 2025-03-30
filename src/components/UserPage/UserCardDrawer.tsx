@@ -8,13 +8,33 @@ import {
   GearIcon,
   TrashIcon,
 } from '@radix-ui/react-icons';
+import { useNavigate } from 'react-router-dom';
 
 interface CardManagementDrawerProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  selectedCardId: string;
+  onSetPrimary: (cardId: string) => void;
 }
 
-const CardManagementDrawer: React.FC<CardManagementDrawerProps> = ({ isOpen, onOpenChange }) => {
+const CardManagementDrawer: React.FC<CardManagementDrawerProps> = ({
+  isOpen,
+  onOpenChange,
+  selectedCardId,
+  onSetPrimary,
+}) => {
+  const navigate = useNavigate();
+
+  const handleEditCard = () => {
+    navigate(`edit/${selectedCardId}`);
+    onOpenChange(false);
+  };
+
+  const handleSetPrimary = (selectedCardId: string) => {
+    onSetPrimary(selectedCardId);
+    onOpenChange(false);
+  };
+
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange}>
       <DrawerContent hideIndicator className="bg-[#1a1a1a] text-white rounded-t-3xl">
@@ -25,14 +45,18 @@ const CardManagementDrawer: React.FC<CardManagementDrawerProps> = ({ isOpen, onO
         </DrawerHeader>
 
         <div className="flex flex-col justify-center item-center px-[24px] gap-[9px]">
-          <Button btntype="secondary" className="w-full gap-[6px]">
+          <Button btntype="secondary" className="w-full gap-[6px]" onClick={handleEditCard}>
             <Pencil1Icon />내 명함 수정하기
           </Button>
           <Button btntype="secondary" className="w-full gap-[6px]">
             <ListBulletIcon />
             교환 목록 바로가기
           </Button>
-          <Button btntype="secondary" className="w-full gap-[6px]">
+          <Button
+            btntype="secondary"
+            className="w-full gap-[6px]"
+            onClick={() => handleSetPrimary(selectedCardId)}
+          >
             <BookmarkIcon />
             대표명함으로 설정하기
           </Button>
