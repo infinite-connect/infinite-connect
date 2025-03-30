@@ -173,14 +173,17 @@ export const networkingApi = createApi({
             business_card_id,
             nickname,
             business_name,
+            name,
             fields_of_expertise,
             sub_expertise,
+            department,
             card_type
           `,
             )
             .eq('card_type', cardType)
             .neq('nickname', excludeNickname)
             .eq('is_public', true) // 공개된 명함만 보고 싶다면
+            .eq('is_primary', true)
             .limit(15); // 원하는 만큼 제한
           if (error) throw error;
           return { data };
@@ -235,6 +238,23 @@ export const networkingApi = createApi({
         }
       },
     }),
+    // businessCardId로 interests 값을 가져오는 API
+    getCardInterests: builder.query<string[], string>({
+      async queryFn(businessCardId) {
+        try {
+          const { data, error } = await supabase
+            .from('business_cards')
+            .select('interests')
+            .eq('business_card_id', businessCardId)
+            .single();
+          if (error) throw error;
+          // data.interests가 null이면 빈 배열로 반환
+          return { data: data?.interests || [] };
+        } catch (error) {
+          return { error: error instanceof Error ? error.message : 'Unknown error' };
+        }
+      },
+    }),
   }),
 });
 // 🔹 React에서 사용할 훅 생성
@@ -246,4 +266,5 @@ export const {
   useGetSameCardTypeUsersQuery,
   useGetUserAllPrimaryBusinessListQuery,
   useGetUserCardsViewCountsQuery,
+  useGetCardInterestsQuery,
 } = networkingApi;
