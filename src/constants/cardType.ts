@@ -74,6 +74,14 @@ export const CARD_TYPE_TEXT: Record<
     timeRange: '06:00~09:00',
     tag: '#소규모 #조용한네트워킹 #영감',
   },
+  none: {
+    type: 'none',
+    label: 'none',
+    phrase: 'none',
+    carouselTime: 'none',
+    timeRange: 'none',
+    tag: 'none',
+  },
 };
 
 export const CARD_TYPE_IMAGES: Record<
@@ -97,6 +105,7 @@ export const CARD_TYPE_IMAGES: Record<
     sHorizontal: smallNightHorizontal,
   },
   dawn: { vertical: dawnVertical, horizontal: dawnHorizontal, sHorizontal: smallDawnHorizontal },
+  none: { vertical: 'none', horizontal: 'none', sHorizontal: 'none' },
 };
 
 export const CARD_TYPE_OBJ: Record<CardType, { obj: string }> = {
@@ -105,4 +114,14 @@ export const CARD_TYPE_OBJ: Record<CardType, { obj: string }> = {
   evening: { obj: eveningObj },
   night: { obj: nightObj },
   dawn: { obj: dawnObj },
+  none: { obj: 'none' },
+};
+
+export const gradients: Record<CardType, string> = {
+  dawn: 'linear-gradient(0deg, #121212 86.3%, #9A8BC6 100%)', // 새벽
+  morning: 'linear-gradient(0deg, #121212 86.3%, #375871 100%)', // 오전
+  day: 'linear-gradient(0deg, #121212 86.3%, #61856B 100%)', // 오후
+  evening: 'linear-gradient(0deg, #121212 86.3%, #7D596D 100%)', // 저녁
+  night: 'linear-gradient(0deg, #121212 86.3%, #606171 100%)', // 밤
+  none: 'linear-gradient(0deg, #121212 86.3%, ##635589 100%)', // 기본값
 };

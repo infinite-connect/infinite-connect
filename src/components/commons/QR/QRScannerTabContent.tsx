@@ -32,6 +32,7 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
   const windowHeight = useWindowHeight();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [tempSelectedCardId, setTempSelectedCardId] = useState<string>('');
+  const [locationY, setLocationY] = useState<number>(0);
 
   // Shadcn UI의 CarouselApi 사용
   const [api, setApi] = useState<CarouselApi>();
@@ -121,6 +122,11 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
       setTempSelectedCardId(businessCards[currentIndex]);
     }
   }, [currentIndex, businessCards, isDrawerOpen]);
+
+  useEffect(() => {
+    const distance = windowHeight / 2 - 137 - 50;
+    setLocationY(distance);
+  }, [windowHeight]);
 
   // QR 스캐너 시작/중지 로직
   useEffect(() => {
@@ -296,9 +302,10 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
       <div id="qr-scanner" ref={scannerRef} className="absolute inset-0 w-full h-full p-0" />
       <div
         className={`
-          absolute w-[240px] h-[20px] text-[22px] font-bold top-[250px] left-1/2 transform -translate-x-1/2
+          absolute w-[240px] h-[20px] text-[22px] font-bold left-1/2 transform -translate-x-1/2
           text-center text-white z-50
         `}
+        style={{ top: `${locationY}px` }}
       >
         QR 코드를 스캔하세요
       </div>
