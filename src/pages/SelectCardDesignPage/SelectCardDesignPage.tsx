@@ -3,6 +3,7 @@ import TypeCardCarousel from '@components/commons/Card/TypeCardCarousel';
 import { Header } from '@components/commons/Header/Header';
 import { Logo } from '@components/commons/Header/Logo';
 import { CardType } from '@components/SelectCardDesignPage/types';
+import { gradients } from '@constants/cardType';
 import { useUpdateBusinessCardTypeMutation } from '@features/BusinessCard/api/selectCardDesignApi';
 import { RootState } from '@store/store';
 import React, { useState } from 'react';
@@ -20,14 +21,6 @@ const SelectCardDesignPage = (): React.JSX.Element => {
   );
   const [nextGradient, setNextGradient] = useState<string>('');
   const [isTransitioning, setIsTransitioning] = useState(false);
-
-  const gradients: Record<CardType, string> = {
-    dawn: 'linear-gradient(0deg, #121212 86.3%, #9A8BC6 100%)', // 새벽
-    morning: 'linear-gradient(0deg, #121212 86.3%, #375871 100%)', // 오전
-    day: 'linear-gradient(0deg, #121212 86.3%, #61856B 100%)', // 오후
-    evening: 'linear-gradient(0deg, #121212 86.3%, #7D596D 100%)', // 저녁
-    night: 'linear-gradient(0deg, #121212 86.3%, #606171 100%)', // 밤
-  };
 
   const { businessCardId } = location.state || {};
 

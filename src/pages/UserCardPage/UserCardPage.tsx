@@ -23,7 +23,7 @@ import {
   useOneWayExchangeMutation,
 } from '@features/BusinessCard/api/exchangeApi';
 import { useCheckUserBusinessCardVisibilityQuery } from '@features/Networking/networkingApi';
-import { CARD_TYPE_TEXT } from '@constants/cardType';
+import { CARD_TYPE_TEXT, gradients } from '@constants/cardType';
 import { maskName } from '@utils/maskName';
 
 const UserCardPage: React.FC = (): React.JSX.Element => {
@@ -170,7 +170,7 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
     <div
       className="min-h-screen text-white flex flex-col justify-start flex-grow overflow-y-auto"
       style={{
-        background: 'linear-gradient(0deg, #121212 86.3%, #606171 100%)',
+        background: gradients[businessCard.cardType],
       }}
     >
       <Header
@@ -230,8 +230,7 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
         )}
         {!isMyCard && (
           <div
-            // 관심사 없을 때
-            className={`w-full px-4 mt-${businessCard.interests && businessCard.interests.length > 0 ? 7 : 4} gap-6 `}
+            className={`w-full px-4 ${!businessCard.interests || businessCard.interests.length === 0 ? 'mt-2' : 'mt-7'} gap-6`}
           >
             <Button
               btntype="enabled"

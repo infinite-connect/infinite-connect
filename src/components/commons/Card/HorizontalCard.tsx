@@ -1,7 +1,7 @@
 import { CardType } from '@components/SelectCardDesignPage/types';
 import { CARD_TYPE_IMAGES, CARD_TYPE_TEXT } from '@constants/cardType'; // 텍스트 매핑 상수
 import { useState } from 'react';
-import { Mail } from 'lucide-react';
+import { Mail, MoreHorizontal } from 'lucide-react';
 import IconRenderer from './CardIconRenderer';
 import { useGetBusinessCardByIdQuery } from '@features/BusinessCard/api/businessCardApi';
 import { subExpertiseMaps } from '@constants/subExpertiseMap';
@@ -11,11 +11,15 @@ import { maskName } from '@utils/maskName';
 type HorizontalCardProps = {
   cardId: string;
   isTwoWayExchanged?: boolean;
+  isSetting?: boolean;
+  onClickCardMenu?: (e: React.MouseEvent) => void;
 };
 
 const HorizontalCard = ({
   cardId,
-  isTwoWayExchanged = true,
+  isTwoWayExchanged = false,
+  isSetting = false,
+  onClickCardMenu,
 }: HorizontalCardProps): React.JSX.Element => {
   const [isFront, setIsFront] = useState<boolean>(true); // 내부적으로 앞뒷면 상태 관리
   const [isFrontVisible, setIsFrontVisible] = useState<boolean>(true); // 화면 표시용 앞뒷면 상태
@@ -27,7 +31,7 @@ const HorizontalCard = ({
 
   const primaryUrlType = Object.keys(cardData?.primaryUrl || {})[0] as keyof typeof ICONS;
 
-  const type = 'dawn' as CardType;
+  const type = (cardData?.cardType || 'none') as CardType;
 
   const handleFlip = () => {
     if (isAnimating) return; // 비활성화된 카드나 애니메이션 중인 카드는 클릭 불가
@@ -57,6 +61,7 @@ const HorizontalCard = ({
         height: '246px',
       }}
     >
+      {isSetting ?? <div className="absolute top-30 right-10 text-black">케밥 버튼</div>}
       <div
         className="rounded-3xl relative scale-100"
         style={{
@@ -87,6 +92,20 @@ const HorizontalCard = ({
               zIndex: isFrontVisible ? 10 : -1, // 앞면이 활성화될 때 z-index를 높게 설정
             }}
           >
+            {/* 미트볼 버튼 - isSetting이 true일 때만 표시 */}
+            {isSetting && (
+              <div
+                className="absolute flex justify-center items-center w-[36px] h-[36px] top-[10px] right-[10px] z-20 rounded-[4px] bg-[var(--fill-primary)]/[0.80] backdrop-blur-sm cursor-pointer  transition-colors"
+                style={{
+                  backfaceVisibility: isFrontVisible ? 'visible' : 'hidden',
+                  transform: 'rotateY(0deg)',
+                  zIndex: isFrontVisible ? 50 : -1, // 앞면이 활성화될 때 z-index를 높게 설정
+                }}
+                onClick={onClickCardMenu}
+              >
+                <MoreHorizontal className="w-5 h-5 self-center text-[var(--text-black)]" />
+              </div>
+            )}
             <div className="relative flex flex-col w-full h-full justify-between gap-[18px]">
               <div className="flex flex-col w-full h-[78px] px-[20px] pt-[20px] gap-[4px]">
                 <div className="h-[31px] text-[24px] text-[var(--text-black)] font-bold leading-[30.9px] tracking-[-0.36px]">

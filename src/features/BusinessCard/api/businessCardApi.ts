@@ -229,7 +229,7 @@ export const businessCardApi = createApi({
               name,
               is_public: false,
               is_primary: false,
-              card_type: 'dawn',
+              card_type: 'day',
             })
             .select()
             .single();
