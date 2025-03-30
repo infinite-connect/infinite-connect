@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Check, ChevronDown } from 'lucide-react';
 import { SocialIcon, SocialPlatform } from './SocialIcon';
@@ -10,6 +10,7 @@ import {
 } from '@radix-ui/react-dropdown-menu';
 import { Button } from '@components/commons/Button/Button';
 import { Input } from '@components/Input/input';
+import clsx from 'clsx';
 
 type UrlDropdownProps = {
   value: string | undefined;
@@ -26,10 +27,19 @@ export const UrlDropdown = ({
 }: UrlDropdownProps) => {
   const [selected, setSelected] = useState(SocialIcon[0]);
 
+  const [triggerWidth, setTriggerWidth] = useState<number | undefined>(undefined);
+  const triggerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (triggerRef.current) {
+      setTriggerWidth(triggerRef.current.offsetWidth);
+    }
+  }, []);
+
   const handleSelect = (platform: SocialPlatform) => {
     setSelected(platform);
-    onPlatformChange(platform.id); // platformId를 form에 반영
-    onChange(''); // 기존 인풋 초기화
+    onPlatformChange(platform.id);
+    onChange('');
   };
 
   useEffect(() => {
@@ -38,19 +48,18 @@ export const UrlDropdown = ({
     if (found) setSelected(found);
   }, [platformId]);
 
-  // 인풋 값 변경 시 선택한 prefix가 있으면 prefix를 붙여줌
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
 
     if (selected.type === 'id' && selected.prefix) {
-      // ID 기반은 조립
       const noPrefix = input.replace(selected.prefix, '');
       onChange(selected.prefix + noPrefix);
     } else {
-      // URL 기반은 사용자가 쓴 그대로
       onChange(input);
     }
   };
+
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const displayValue =
     selected.type === 'id' && selected.prefix
@@ -58,23 +67,34 @@ export const UrlDropdown = ({
       : (value ?? '');
 
   return (
-    <div className="flex w-full items-center gap-2">
+    <div className="flex w-full items-center gap-2 relative" ref={triggerRef}>
       {/* 드롭다운 버튼 */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className="flex items-center gap-2 pl-[12px] h-10 pr-[56px] py-[17px] rounded-md">
-            {selected.icon} <ChevronDown className="w-4 h-4" />
-          </Button>
+          <div>
+            <Button className="gap-2 pl-[12px] h-14 pr-[56px] py-[17px] rounded-md bg-[var(--fill-secondary)] hover:bg-[var(--fill-secondary-hover)]">
+              {selected.icon} <ChevronDown className="w-4 h-4" />
+            </Button>
+          </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className="w-64 p-2 rounded-md shadow-md bg-popover border border-border z-50"
-          sideOffset={8} // 버튼 간격
+          className="p-2 rounded-md shadow-md bg-popover border-none z-50 text-[var(--text-primary)]"
+          sideOffset={8}
+          style={{ width: triggerWidth, backgroundColor: '#252525' }}
+          align="start"
         >
           {SocialIcon.map((item) => (
             <DropdownMenuItem
               key={item.id}
               onClick={() => handleSelect(item)}
-              className="flex items-center gap-2 px-3 py-2"
+              onMouseEnter={() => setHoveredId(item.id)}
+              onMouseLeave={() => setHoveredId(null)}
+              className={clsx(
+                'flex items-center gap-2 px-3 py-2 rounded-md transition-colors',
+                'outline-none focus:outline-none ring-0 focus:ring-0 border-none',
+                (hoveredId === item.id || (!hoveredId && selected.id === item.id)) &&
+                  'bg-[#7253FF33]',
+              )}
             >
               {item.icon}
               <span>{item.label}</span>
@@ -89,7 +109,7 @@ export const UrlDropdown = ({
         placeholder={selected.placeholder + '를 입력해 주세요'}
         value={displayValue}
         onChange={handleChange}
-        className="flex-1 h-10 border-0 text-[var(--text-primary)] text-[var(--text-primary)] bg-[var(--fill-quaternary)] "
+        className="flex-1 text-[var(--text-primary)] bg-[var(--fill-quaternary)] "
       />
     </div>
   );

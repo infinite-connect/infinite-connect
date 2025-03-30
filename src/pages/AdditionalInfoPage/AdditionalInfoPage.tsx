@@ -20,15 +20,16 @@ import { UrlDropdown } from '@components/AdditionalInfoPage/UrlDropdown';
 import { SocialIcon } from '@components/AdditionalInfoPage/SocialIcon';
 import BottomSheet from '@components/commons/BottomSheet/BottomSheet';
 import { Input } from '@components/Input/input';
+import { Dropdown } from '@components/AdditionalInfoPage/DropDown';
+import { phoneNumSchema } from '@components/SignupPage/signupSchema';
 
 // Zod 스키마 정의
 const schema = z
   .object({
     company: z.string().optional(),
-    jobTitle: z.string().optional(),
     department: z.string().optional(),
     experience_years: z.string().optional(),
-    phone: z.string().optional(),
+    phone: phoneNumSchema.shape.phoneNumber.optional(),
     fax: z.string().optional(),
     address: z.string().optional(),
     nickname: z.string().optional(),
@@ -68,6 +69,14 @@ const schema = z
 // 모든 필드를 옵셔널로 정의한 타입
 type FormData = z.infer<typeof schema>;
 
+const experienceItems = [
+  { id: '0-1년차', label: '0-1년차' },
+  { id: '1-3년차', label: '1-3년차' },
+  { id: '3-6년차', label: '3-6년차' },
+  { id: '6-10년차', label: '6-10년차' },
+  { id: '10년차 이상', label: '10년차 이상' },
+];
+
 const AdditionalInfoPage = (): React.JSX.Element => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -89,7 +98,6 @@ const AdditionalInfoPage = (): React.JSX.Element => {
     resolver: zodResolver(schema),
     defaultValues: {
       company: '',
-      jobTitle: '',
       experience_years: '',
       department: '',
       phone: '',
@@ -165,7 +173,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormControl>
                     <Input
                       placeholder="비즈니스명을 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
                       {...field}
                     />
                   </FormControl>
@@ -182,8 +190,11 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormLabel className="text-[var(--text-primary)]">업무용 전화번호</FormLabel>
                   <FormControl>
                     <Input
+                      type="tel"
+                      inputMode="numeric"
                       placeholder="업무용 전화번호를 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      maxLength={11}
                       {...field}
                     />
                   </FormControl>
@@ -198,7 +209,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               name="website"
               render={({ field: websiteField }) => (
                 <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">URL</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)]">대표 URL</FormLabel>
                   <FormControl>
                     <UrlDropdown
                       value={websiteField.value}
@@ -222,7 +233,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormControl>
                     <Input
                       placeholder="현재 소속된 회사명을 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
                       {...field}
                     />
                   </FormControl>
@@ -230,24 +241,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 </FormItem>
               )}
             />
-            {/* 직책 필드 */}
-            <FormField
-              control={form.control}
-              name="jobTitle"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">직책</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="직책을 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             {/* 부서 필드 */}
             <FormField
               control={form.control}
@@ -258,7 +252,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormControl>
                     <Input
                       placeholder="부서를 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
                       {...field}
                     />
                   </FormControl>
@@ -276,7 +270,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormControl>
                     <Input
                       placeholder="주소를 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
                       {...field}
                     />
                   </FormControl>
@@ -294,7 +288,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                   <FormControl>
                     <Input
                       placeholder="FAX 번호를 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
                       {...field}
                     />
                   </FormControl>
@@ -310,16 +304,18 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 <FormItem>
                   <FormLabel className="text-[var(--text-primary)]">경력</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="경력을 입력하세요"
-                      className="h-10 border-none text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
-                      {...field}
+                    <Dropdown
+                      items={experienceItems}
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="자유롭게 경험 기반으로 선택해주세요"
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             {/* 제출 버튼 */}
             <div className="flex flex-col gap-4">
               <Button btntype="enabled" className=" text-[var(--text-primary)]">
