@@ -27,7 +27,6 @@ import { phoneNumSchema } from '@components/SignupPage/signupSchema';
 const schema = z
   .object({
     company: z.string().optional(),
-    jobTitle: z.string().optional(),
     department: z.string().optional(),
     experience_years: z.string().optional(),
     phone: phoneNumSchema.shape.phoneNumber.optional(),
@@ -99,7 +98,6 @@ const AdditionalInfoPage = (): React.JSX.Element => {
     resolver: zodResolver(schema),
     defaultValues: {
       company: '',
-      jobTitle: '',
       experience_years: '',
       department: '',
       phone: '',
@@ -243,24 +241,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 </FormItem>
               )}
             />
-            {/* 직책 필드 */}
-            <FormField
-              control={form.control}
-              name="jobTitle"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">직책</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="직책을 입력하세요"
-                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             {/* 부서 필드 */}
             <FormField
               control={form.control}
