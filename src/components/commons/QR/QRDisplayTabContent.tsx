@@ -50,7 +50,7 @@ const QRDisplayTabContent: React.FC = () => {
                 imageOptions: {
                   crossOrigin: 'anonymous',
                   margin: 10,
-                  imageSize: 0.3,
+                  imageSize: 2,
                 },
                 dotsOptions: {
                   color: '#000000',
@@ -64,6 +64,9 @@ const QRDisplayTabContent: React.FC = () => {
                 },
                 cornersDotOptions: {
                   type: 'dot',
+                },
+                qrOptions: {
+                  errorCorrectionLevel: 'L', // 가장 낮은 오류 수정 레벨 (7%)
                 },
               });
 

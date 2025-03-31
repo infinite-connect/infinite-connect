@@ -97,6 +97,9 @@ const CardShareDrawer: React.FC<CardShareDrawerProps> = ({
             cornersDotOptions: {
               type: 'dot',
             },
+            qrOptions: {
+              errorCorrectionLevel: 'L', // 가장 낮은 오류 수정 레벨 (7%)
+            },
           });
 
           const dataUrl = await qrCode.getRawData('png');

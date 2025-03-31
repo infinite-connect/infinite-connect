@@ -143,8 +143,8 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive, onC
           await html5QrCodeRef.current.start(
             { facingMode: 'environment' },
             {
-              fps: 5,
-              qrbox: 275,
+              fps: 10,
+              qrbox: 300,
               aspectRatio,
             },
             (decodedText) => {
