@@ -17,7 +17,7 @@ const VerticalCardPreview = ({ cardId }: VerticalCardPreviewProps): React.JSX.El
 
   console.log(cardData);
 
-  const type = 'dawn' as CardType;
+  const type = cardData?.cardType || 'none';
   const primaryUrlType = Object.keys(cardData?.primaryUrl || {})[0] as keyof typeof ICONS;
 
   return (
