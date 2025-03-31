@@ -5,11 +5,20 @@ import { Logo } from '@components/commons/Header/Logo';
 import { Button } from '@components/commons/Button/Button';
 import SkipButton from '@components/commons/Button/SkipButton';
 import { interests } from '@components/NetworkingListPage/FilterOptions';
+import { useUpdateBusinessCardInterestsMutation } from '@features/BusinessCard/api/businessCardApi';
 
-const InterestSelector = () => {
+interface InterestSelectorProps {
+  cardId: string;
+}
+
+const InterestSelector = ({ cardId }: InterestSelectorProps): React.JSX.Element => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const maxSelection = 5;
   const navigate = useNavigate();
+
+  const [updateInterests] = useUpdateBusinessCardInterestsMutation();
+
+  console.log(selectedInterests);
 
   const toggleInterest = (interestName: string) => {
     if (selectedInterests.includes(interestName)) {
@@ -19,8 +28,18 @@ const InterestSelector = () => {
     }
   };
 
-  const onClickCardPreviewPage = () => {
-    navigate('/cardPreview');
+  const onClickCardPreviewPage = async () => {
+    try {
+      // 관심사 업데이트 API 호출
+      await updateInterests({
+        businessCardId: cardId,
+        interests: selectedInterests,
+      }).unwrap();
+
+      navigate('/cardPreview', { state: { businessCardId: cardId } });
+    } catch (error) {
+      console.error('관심사 업데이트 실패:', error);
+    }
   };
 
   return (

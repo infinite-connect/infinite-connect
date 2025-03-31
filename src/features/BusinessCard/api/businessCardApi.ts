@@ -391,6 +391,30 @@ export const businessCardApi = createApi({
         }
       },
     }),
+    updateBusinessCardInterests: builder.mutation<
+      void,
+      { businessCardId: string; interests: string[] }
+    >({
+      queryFn: async ({ businessCardId, interests }) => {
+        try {
+          const { error } = await supabase
+            .from('business_cards')
+            .update({ interests: interests })
+            .eq('business_card_id', businessCardId);
+
+          if (error) throw error;
+
+          return { data: undefined };
+        } catch (error) {
+          return {
+            error: {
+              message: error instanceof Error ? error.message : 'Unknown error',
+              name: error instanceof Error ? error.name : 'Error',
+            },
+          };
+        }
+      },
+    }),
   }),
 });
 
@@ -403,4 +427,5 @@ export const {
   useSetPrimaryBusinessCardMutation,
   useGetBusinessCardNamesQuery,
   useGetBusinessCardNamesAndTypesQuery,
+  useUpdateBusinessCardInterestsMutation,
 } = businessCardApi;
