@@ -248,7 +248,7 @@ const CardShareDrawer: React.FC<CardShareDrawerProps> = ({
                     className="flex flex-col w-[192px] h-[250px] bg-white rounded-lg overflow-hidden"
                   >
                     <img
-                      src={CARD_TYPE_IMAGES[type]?.thumbnail || ''}
+                      src={CARD_TYPE_IMAGES[type]?.header || ''}
                       alt={`${nickname}의 명함 링크 복사`}
                       className="w-[192px] h-[170px] object-cover"
                     />
