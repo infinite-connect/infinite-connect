@@ -17,11 +17,11 @@ import smallEveningHorizontal from '@assets/CardDesign/SmallHorizontalCard/small
 import smallNightHorizontal from '@assets/CardDesign/SmallHorizontalCard/smallNightHorizontal.png';
 import smallDawnHorizontal from '@assets/CardDesign/SmallHorizontalCard/smallDawnHorizontal.png';
 
-import morningHeader from '@assets/CardDesign/CardThumbNail/morningHeader.png';
-import dayHeader from '@assets/CardDesign/CardThumbNail/dayHeader.png';
-import eveningHeader from '@assets/CardDesign/CardThumbNail/eveningHeader.png';
-import nightHeader from '@assets/CardDesign/CardThumbNail/nightHeader.png';
-import dawnHeader from '@assets/CardDesign/CardThumbNail/dawnHeader.png';
+import morningHeader from '@assets/CardDesign/CardHeader/morningHeader.png';
+import dayHeader from '@assets/CardDesign/CardHeader/dayHeader.png';
+import eveningHeader from '@assets/CardDesign/CardHeader/eveningHeader.png';
+import nightHeader from '@assets/CardDesign/CardHeader/nightHeader.png';
+import dawnHeader from '@assets/CardDesign/CardHeader/dawnHeader.png';
 
 import morningObj from '@assets/CardDesign/CardObj/morningObj.png';
 import dayObj from '@assets/CardDesign/CardObj/dayObj.png';
