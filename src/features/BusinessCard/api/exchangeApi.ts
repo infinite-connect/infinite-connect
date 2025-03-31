@@ -326,6 +326,28 @@ export const exchangeApi = createApi({
         return { data: { success: true } };
       },
     }),
+    getCardsAlarmFollowedByUserNickname: builder.query<
+      { cards: { cardId: string; nickname: string; createdAt: string }[] },
+      { nickname: string; cardId: string }
+    >({
+      queryFn: async ({ nickname, cardId }) => {
+        const { data, error } = await supabase
+          .from('business_card_exchanges')
+          .select('follower_card_id, follower_nickname, created_at')
+          .eq('following_nickname', nickname)
+          .eq('following_card_id', cardId);
+
+        if (error) return { error: error.message };
+
+        const cards = data.map((record) => ({
+          cardId: record.follower_card_id,
+          nickname: record.follower_nickname,
+          createdAt: record.created_at,
+        }));
+
+        return { data: { cards } };
+      },
+    }),
   }),
 });
 
@@ -342,4 +364,5 @@ export const {
   useCheckAllOneWayExchangeQuery,
   useDeleteOneWayExchangeMutation,
   useCheckSpecificTwoWayExchangeQuery,
+  useGetCardsAlarmFollowedByUserNicknameQuery,
 } = exchangeApi;
