@@ -280,8 +280,8 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive, onC
   const handleQRCodeScan = (decodedText: string) => {
     try {
       // URL에서 nickname과 cardId 추출
-      // URL 형식: https://infinite-connect.site/user/{nickname}/{cardId}
-      const urlPattern = /\/([^/]+)\/([^/]+)/;
+      // URL 형식: https://infinite-connect.site/{nickname}/{cardId}
+      const urlPattern = /infinite-connect\.site\/([^/]+)\/([^/]+)/;
       const match = decodedText.match(urlPattern);
 
       if (match && match.length === 3) {
