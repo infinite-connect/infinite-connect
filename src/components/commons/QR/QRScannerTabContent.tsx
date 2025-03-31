@@ -18,7 +18,6 @@ import {
   useCheckTwoWayExchangeQuery,
   useTwoWayExchangeMutation,
 } from '@features/BusinessCard/api/exchangeApi';
-import { decode } from 'punycode';
 
 interface QRScannerTabContentProps {
   isActive: boolean;
