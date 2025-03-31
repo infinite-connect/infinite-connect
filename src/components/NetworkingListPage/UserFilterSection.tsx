@@ -115,17 +115,7 @@ const UserFilterSection: React.FC = () => {
           {/** 이미지부분 하드코딩 되어 있음  */}
           {displayedUsers.map((user) => (
             <div key={user.business_card_id} className="mb-4">
-              <UserListCard
-                cardId={user.business_card_id}
-                fieldsOfExpertise={user.fields_of_expertise}
-                subExpertise={user.sub_expertise}
-                businessName={user.business_name}
-                cardType={user.card_type}
-                department={user.department}
-                nickName={user.nickname}
-                name={user.name}
-                interests={user.interests || []}
-              />
+              <UserListCard cardId={user.business_card_id} nickName={user.nickname} />
             </div>
           ))}
         </InfiniteScroll>
