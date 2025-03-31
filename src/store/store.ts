@@ -9,6 +9,7 @@ import { viewCountApi } from '@features/User/api/viewCountApi';
 import { exchangeApi } from '@features/BusinessCard/api/exchangeApi';
 
 import userPrimaryBusinessCardRedcuer from '@features/Networking/slice/userPrimaryBusinessCardSlice';
+import { businessCardBookApi } from '@features/BusinessCardBookPage/BusinessCardBookApi';
 export const store = configureStore({
   reducer: {
     [userCardListApi.reducerPath]: userCardListApi.reducer,
@@ -18,6 +19,7 @@ export const store = configureStore({
     [networkingApi.reducerPath]: networkingApi.reducer,
     [viewCountApi.reducerPath]: viewCountApi.reducer,
     [exchangeApi.reducerPath]: exchangeApi.reducer,
+    [businessCardBookApi.reducerPath]: businessCardBookApi.reducer,
     user: userReducer,
     userBusinessCard: userPrimaryBusinessCardRedcuer,
   },
@@ -32,6 +34,7 @@ export const store = configureStore({
       networkingApi.middleware,
       viewCountApi.middleware,
       exchangeApi.middleware,
+      businessCardBookApi.middleware,
     ),
 });
 

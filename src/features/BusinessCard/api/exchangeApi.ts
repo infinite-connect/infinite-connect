@@ -1,6 +1,10 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { supabase } from '@utils/supabaseClient';
 
+interface RecipientRecord {
+  follower_card_id: string;
+  follower_nickname: string;
+}
 export const exchangeApi = createApi({
   reducerPath: 'exchangeApi',
   baseQuery: fakeBaseQuery(),
@@ -348,6 +352,24 @@ export const exchangeApi = createApi({
         return { data: { cards } };
       },
     }),
+
+    getRecipientsByFollowingCardId: builder.query<
+      { cardId: string; nickname: string }[],
+      { cardId: string }
+    >({
+      queryFn: async ({ cardId }) => {
+        const { data, error } = await supabase
+          .from('business_card_exchanges')
+          .select('follower_card_id, follower_nickname')
+          .eq('following_card_id', cardId);
+        if (error) return { error: error.message };
+        const recipients = (data || []).map((record: RecipientRecord) => ({
+          cardId: record.follower_card_id,
+          nickname: record.follower_nickname,
+        }));
+        return { data: recipients };
+      },
+    }),
   }),
 });
 
@@ -365,4 +387,5 @@ export const {
   useDeleteOneWayExchangeMutation,
   useCheckSpecificTwoWayExchangeQuery,
   useGetCardsAlarmFollowedByUserNicknameQuery,
+  useGetRecipientsByFollowingCardIdQuery,
 } = exchangeApi;
