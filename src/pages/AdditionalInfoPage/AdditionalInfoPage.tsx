@@ -15,66 +15,15 @@ import { Header } from '@components/commons/Header/Header';
 import { Logo } from '@components/commons/Header/Logo';
 import { Button } from '@components/commons/Button/Button';
 import { UrlDropdown } from '@components/AdditionalInfoPage/UrlDropdown';
-import { SocialIcon } from '@components/AdditionalInfoPage/SocialIcon';
 import BottomSheet from '@components/commons/BottomSheet/BottomSheet';
 import { Input } from '@components/Input/input';
 import { Dropdown } from '@components/AdditionalInfoPage/DropDown';
-import { phoneNumSchema } from '@components/SignupPage/signupSchema';
 import SkipButton from '@components/commons/Button/SkipButton';
+import { experienceItems } from '@constants/additionalInfoConstants';
+import { schema } from '@constants/additionalInfoSchema';
+import { useUpdateBusinessCardMutation } from '@features/BusinessCard/api/businessCardApi';
 
-// Zod 스키마 정의
-const schema = z
-  .object({
-    company: z.string().optional(),
-    department: z.string().optional(),
-    experience_years: z.string().optional(),
-    phone: phoneNumSchema.shape.phoneNumber.optional(),
-    fax: z.string().optional(),
-    address: z.string().optional(),
-    nickname: z.string().optional(),
-    platformId: z.string().optional(),
-    website: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    const { platformId, website } = data;
-
-    if (!website || !platformId) return;
-
-    const platform = SocialIcon.find((p) => p.id === platformId);
-    if (!platform) return;
-
-    if (platform.type === 'url' && platform.prefix && !website.includes(platform.prefix)) {
-      ctx.addIssue({
-        path: ['website'],
-        code: z.ZodIssueCode.custom,
-        message: `${platform.label} 링크가 올바르지 않아요`,
-      });
-    }
-
-    if (platform.type === 'id') {
-      const idRegex = /^[a-zA-Z0-9._-]{1,30}$/;
-      const idOnly = platform.prefix ? website.replace(platform.prefix, '') : website;
-
-      if (!idRegex.test(idOnly)) {
-        ctx.addIssue({
-          path: ['website'],
-          code: z.ZodIssueCode.custom,
-          message: `${platform.label} 아이디 형식이 올바르지 않아요`,
-        });
-      }
-    }
-  });
-
-// 모든 필드를 옵셔널로 정의한 타입
 type FormData = z.infer<typeof schema>;
-
-const experienceItems = [
-  { id: '0-1년차', label: '0-1년차' },
-  { id: '1-3년차', label: '1-3년차' },
-  { id: '3-6년차', label: '3-6년차' },
-  { id: '6-10년차', label: '6-10년차' },
-  { id: '10년차 이상', label: '10년차 이상' },
-];
 
 const AdditionalInfoPage = (): React.JSX.Element => {
   const location = useLocation();
@@ -84,10 +33,13 @@ const AdditionalInfoPage = (): React.JSX.Element => {
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+  const [updateBusinessCard] = useUpdateBusinessCardMutation();
+  const businessCardId = location.state?.businessCardId || 'ca8f485b-2817-4b63-9ccc-14689416beb5';
+
   useEffect(() => {
     // 최초 입장 시에는 Drawer를 열고, 스캔 페이지에서 돌아온 경우에는 열지 않음
     if (!scannedData && !isFromScanPage) {
-      setIsDrawerOpen(true); // 최초 입장 시 Drawer 열기
+      setIsDrawerOpen(false); // 최초 입장 시 Drawer 열기
     } else {
       setIsDrawerOpen(false); // 스캔 페이지에서 돌아온 경우 Drawer 닫기
     }
@@ -96,22 +48,72 @@ const AdditionalInfoPage = (): React.JSX.Element => {
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
+      business_name: '',
       company: '',
-      experience_years: '',
       department: '',
-      phone: '',
+      job_title: '',
       fax: '',
-      address: '',
-      website: '',
-      nickname: '',
-      ...scannedData, // 스캔된 데이터가 있으면 덮어쓰기
+      business_website: '',
+      experience_years: '',
+      business_address: '',
+      ...scannedData,
     },
   });
 
-  const onSubmit = (values: FormData) => {
-    console.log('폼 제출 데이터:', values);
-    onClickUserInterestsPage();
-    // 제출 로직 추가 가능
+  const hstoreFormat = (obj: Record<string, string>) => {
+    return Object.entries(obj)
+      .map(([key, value]) => `"${key}"=>"${value}"`)
+      .join(',');
+  };
+
+  const onSubmit = async (values: FormData) => {
+    if (!businessCardId) return;
+
+    try {
+      const updateData = {
+        business_name: values.business_name,
+        company: values.company,
+        department: values.department,
+        job_title: values.job_title,
+        fax: values.fax,
+        business_website: values.business_website,
+        experience_years: values.experience_years,
+        business_address: values.business_address,
+        primary_url:
+          values.primaryUrlPlatform && values.primaryUrlValue
+            ? hstoreFormat({ [values.primaryUrlPlatform]: values.primaryUrlValue })
+            : null,
+        sub_url_01:
+          values.subUrl01Platform && values.subUrl01Value
+            ? hstoreFormat({ [values.subUrl01Platform]: values.subUrl01Value })
+            : null,
+        sub_url_02:
+          values.subUrl02Platform && values.subUrl02Value
+            ? hstoreFormat({ [values.subUrl02Platform]: values.subUrl02Value })
+            : null,
+      };
+
+      // 타입 정의
+      type UpdateDataKey = keyof typeof updateData;
+
+      // 타입 안전한 방식으로 처리
+      (Object.keys(updateData) as UpdateDataKey[]).forEach((key) => {
+        if (updateData[key] === undefined) {
+          delete updateData[key];
+        }
+      });
+
+      console.log(updateData);
+
+      await updateBusinessCard({
+        businessCardId,
+        businessCard: updateData,
+      }).unwrap();
+
+      onClickUserInterestsPage();
+    } catch (error) {
+      console.error('업데이트 실패:', error);
+    }
   };
 
   const onClickMovetoRealCardScanPage = () => {
@@ -141,33 +143,29 @@ const AdditionalInfoPage = (): React.JSX.Element => {
             onPrimary={onClickMovetoRealCardScanPage}
             onSecondary={() => setIsDrawerOpen(false)}
           />
-
           <BottomSheet.TextButton onClick={onClickCardPreviewPage}>
             나중에 할래요
           </BottomSheet.TextButton>
         </BottomSheet.Actions>
       </BottomSheet>
 
-      <div className="px-5">
+      <div className="px-5 pb-10">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            {/* Header */}
             <Header>
               <Header.Left>
                 <Logo />
               </Header.Left>
-
               <Header.Right>
                 <SkipButton to="/userinterests" />
               </Header.Right>
             </Header>
 
-            {/* 비즈니스명 필드 */}
             <FormField
               control={form.control}
-              name="nickname"
+              name="business_name"
               render={({ field }) => (
-                <FormItem className="gap-[6px]">
+                <FormItem>
                   <FormLabel className="text-[var(--text-primary)]">비즈니스명</FormLabel>
                   <FormControl>
                     <Input
@@ -180,49 +178,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 </FormItem>
               )}
             />
-            {/* 업무 폰 필드 */}
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">업무용 전화번호</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="tel"
-                      inputMode="numeric"
-                      placeholder="업무용 전화번호를 입력하세요"
-                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
-                      maxLength={11}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
-            {/* url 필드 */}
-            <FormField
-              control={form.control}
-              name="website"
-              render={({ field: websiteField }) => (
-                <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">대표 URL</FormLabel>
-                  <FormControl>
-                    <UrlDropdown
-                      value={websiteField.value}
-                      onChange={websiteField.onChange}
-                      platformId={form.watch('platformId')}
-                      onPlatformChange={(id) => form.setValue('platformId', id)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* 회사명 필드 */}
             <FormField
               control={form.control}
               name="company"
@@ -241,7 +197,6 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               )}
             />
 
-            {/* 부서 필드 */}
             <FormField
               control={form.control}
               name="department"
@@ -259,10 +214,28 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 </FormItem>
               )}
             />
-            {/* 회사 주소 필드 */}
+
             <FormField
               control={form.control}
-              name="address"
+              name="job_title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[var(--text-primary)]">직책</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="직책을 입력하세요"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="business_address"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-[var(--text-primary)]">회사 주소</FormLabel>
@@ -277,7 +250,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 </FormItem>
               )}
             />
-            {/* FAX 필드 */}
+
             <FormField
               control={form.control}
               name="fax"
@@ -295,7 +268,25 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                 </FormItem>
               )}
             />
-            {/* 경력 필드 */}
+
+            <FormField
+              control={form.control}
+              name="business_website"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[var(--text-primary)]">회사 웹사이트</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="회사 웹사이트 URL을 입력하세요"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="experience_years"
@@ -315,9 +306,40 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               )}
             />
 
-            {/* 제출 버튼 */}
-            <div className="flex flex-col gap-4">
-              <Button btntype="enabled" className=" text-[var(--text-primary)]">
+            <div className="space-y-5">
+              <div>
+                <h3 className="text-[var(--text-primary)] font-medium mb-2">대표 URL</h3>
+                <UrlDropdown
+                  value={form.watch('primaryUrlValue')}
+                  onChange={(value) => form.setValue('primaryUrlValue', value)}
+                  platformId={form.watch('primaryUrlPlatform')}
+                  onPlatformChange={(id) => form.setValue('primaryUrlPlatform', id)}
+                />
+              </div>
+
+              <div>
+                <h3 className="text-[var(--text-primary)] font-medium mb-2">보조 URL 1</h3>
+                <UrlDropdown
+                  value={form.watch('subUrl01Value')}
+                  onChange={(value) => form.setValue('subUrl01Value', value)}
+                  platformId={form.watch('subUrl01Platform')}
+                  onPlatformChange={(id) => form.setValue('subUrl01Platform', id)}
+                />
+              </div>
+
+              <div>
+                <h3 className="text-[var(--text-primary)] font-medium mb-2">보조 URL 2</h3>
+                <UrlDropdown
+                  value={form.watch('subUrl02Value')}
+                  onChange={(value) => form.setValue('subUrl02Value', value)}
+                  platformId={form.watch('subUrl02Platform')}
+                  onPlatformChange={(id) => form.setValue('subUrl02Platform', id)}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-4 mt-8">
+              <Button btntype="enabled" className="text-[var(--text-primary)]" type="submit">
                 제출
               </Button>
             </div>
