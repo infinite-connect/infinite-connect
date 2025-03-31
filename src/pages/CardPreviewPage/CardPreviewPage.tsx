@@ -1,10 +1,12 @@
-import Card from '@components/commons/Card/Card';
-import { Button } from '@components/ui/button';
+import { Button } from '@components/commons/Button/Button';
+import VerticalCard from '@components/commons/Card/VerticalCard';
+import { Header } from '@components/commons/Header/Header';
+import { Logo } from '@components/commons/Header/Logo';
 import React, { useEffect, useState } from 'react';
 import { isMobile as detectMobile } from 'react-device-detect';
 
 const CardPreviewPage = (): React.JSX.Element => {
-  const [isMobileDevice, setIsMobileDevice] = useState(false);
+  const [, setIsMobileDevice] = useState(false);
 
   useEffect(() => {
     const checkIfMobile = () => {
@@ -19,13 +21,29 @@ const CardPreviewPage = (): React.JSX.Element => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center gap-4 p-6">
-      <h1 className="text-lg font-bold mb-2">명함이 생성되었습니다!</h1>
-      <Card isGlossy={true} isMobile={isMobileDevice} cardColor="#1E90ff" />
+    <div className="flex flex-col min-h-screen bg-[var(--bg-default-black)]  text-white px-5">
+      {/* Header */}
+      <Header>
+        <Header.Left>
+          <Logo />
+        </Header.Left>
+      </Header>
 
-      <Button variant="default" className="w-full py-3 rounded-lg mt-5">
-        완료
-      </Button>
+      {/* 상단 안내 영역 */}
+      <div className="flex flex-col items-center justify-center text-center px-6 pt-20 pb-10">
+        <h1 className="text-2xl font-extrabold mb-2">명함 생성이 완료되었어요</h1>
+        <p className="text-sm text-gray-300">새로운 사람들과의 멋진 연결을 시작해 보세요!</p>
+      </div>
+
+      {/* 카드 영역 */}
+      <div className="flex items-center justify-center  px-6 mb-8">
+        <VerticalCard cardId="abc123" />
+      </div>
+
+      {/* 버튼 영역 */}
+      <div className="mt-auto px-1 pb-10">
+        <Button>확인</Button>
+      </div>
     </div>
   );
 };
