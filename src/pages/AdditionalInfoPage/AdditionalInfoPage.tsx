@@ -27,6 +27,7 @@ type FormData = z.infer<typeof schema>;
 
 const AdditionalInfoPage = (): React.JSX.Element => {
   const location = useLocation();
+  const businessCardId = location.state?.businessCardId || '';
   const navigate = useNavigate();
   const scannedData = (location.state as Partial<FormData>) || null;
   const isFromScanPage = location.state?.fromScanPage || false;
@@ -34,12 +35,11 @@ const AdditionalInfoPage = (): React.JSX.Element => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const [updateBusinessCard] = useUpdateBusinessCardMutation();
-  const businessCardId = location.state?.businessCardId || 'ca8f485b-2817-4b63-9ccc-14689416beb5';
 
   useEffect(() => {
     // 최초 입장 시에는 Drawer를 열고, 스캔 페이지에서 돌아온 경우에는 열지 않음
     if (!scannedData && !isFromScanPage) {
-      setIsDrawerOpen(false); // 최초 입장 시 Drawer 열기
+      setIsDrawerOpen(true); // 최초 입장 시 Drawer 열기
     } else {
       setIsDrawerOpen(false); // 스캔 페이지에서 돌아온 경우 Drawer 닫기
     }
@@ -121,11 +121,15 @@ const AdditionalInfoPage = (): React.JSX.Element => {
   };
 
   const onClickUserInterestsPage = () => {
-    navigate('/userinterests');
+    navigate('/userinterests', {
+      state: { businessCardId: businessCardId },
+    });
   };
 
   const onClickCardPreviewPage = () => {
-    navigate('/cardPreview');
+    navigate('/cardPreview', {
+      state: { businessCardId: businessCardId },
+    });
   };
 
   return (
@@ -172,6 +176,25 @@ const AdditionalInfoPage = (): React.JSX.Element => {
                       placeholder="비즈니스명을 입력하세요"
                       className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
                       {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="experience_years"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[var(--text-primary)]">경력</FormLabel>
+                  <FormControl>
+                    <Dropdown
+                      items={experienceItems}
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="자유롭게 경험 기반으로 선택해주세요"
                     />
                   </FormControl>
                   <FormMessage />
@@ -287,28 +310,9 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="experience_years"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">경력</FormLabel>
-                  <FormControl>
-                    <Dropdown
-                      items={experienceItems}
-                      value={field.value}
-                      onChange={field.onChange}
-                      placeholder="자유롭게 경험 기반으로 선택해주세요"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <div className="space-y-5">
               <div>
-                <h3 className="text-[var(--text-primary)] font-medium mb-2">대표 URL</h3>
+                <h3 className="text-[var(--text-primary)] font-medium mb-[6px]">대표 URL</h3>
                 <UrlDropdown
                   value={form.watch('primaryUrlValue')}
                   onChange={(value) => form.setValue('primaryUrlValue', value)}
@@ -318,7 +322,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               </div>
 
               <div>
-                <h3 className="text-[var(--text-primary)] font-medium mb-2">보조 URL 1</h3>
+                <h3 className="text-[var(--text-primary)] font-medium mb-[6px]">보조 URL 1</h3>
                 <UrlDropdown
                   value={form.watch('subUrl01Value')}
                   onChange={(value) => form.setValue('subUrl01Value', value)}
@@ -328,7 +332,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               </div>
 
               <div>
-                <h3 className="text-[var(--text-primary)] font-medium mb-2">보조 URL 2</h3>
+                <h3 className="text-[var(--text-primary)] font-medium mb-[6px]">보조 URL 2</h3>
                 <UrlDropdown
                   value={form.watch('subUrl02Value')}
                   onChange={(value) => form.setValue('subUrl02Value', value)}
