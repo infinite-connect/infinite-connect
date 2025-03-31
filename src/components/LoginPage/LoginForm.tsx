@@ -42,7 +42,7 @@ const LoginForm = (): React.JSX.Element => {
         // 로그인 성공 시 추가 사용자 정보를 가져옴
         const { data: userData, error: userError } = await supabase
           .from('users')
-          .select('nickname, name')
+          .select('nickname, name, phone_number')
           .eq('user_id', data.user.id)
           .single();
 
@@ -59,6 +59,7 @@ const LoginForm = (): React.JSX.Element => {
             email: data.user.email ?? '',
             nickname: userData?.nickname ?? '',
             name: userData?.name ?? '',
+            phone_number: userData?.phone_number ?? '',
           }),
         );
 

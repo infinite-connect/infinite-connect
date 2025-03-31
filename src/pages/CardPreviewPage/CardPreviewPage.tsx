@@ -2,23 +2,13 @@ import { Button } from '@components/commons/Button/Button';
 import VerticalCard from '@components/commons/Card/VerticalCard';
 import { Header } from '@components/commons/Header/Header';
 import { Logo } from '@components/commons/Header/Logo';
-import React, { useEffect, useState } from 'react';
-import { isMobile as detectMobile } from 'react-device-detect';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 const CardPreviewPage = (): React.JSX.Element => {
-  const [, setIsMobileDevice] = useState(false);
-
-  useEffect(() => {
-    const checkIfMobile = () => {
-      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      const isSmallScreen = window.innerWidth <= 768;
-      setIsMobileDevice(detectMobile || (isTouchDevice && isSmallScreen));
-    };
-
-    checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
-    return () => window.removeEventListener('resize', checkIfMobile);
-  }, []);
+  const location = useLocation();
+  const businessCardId = location.state?.businessCardId || '';
+  console.log(businessCardId);
 
   return (
     <div className="flex flex-col min-h-screen bg-[var(--bg-default-black)]  text-white px-5">
