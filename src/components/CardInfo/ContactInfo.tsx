@@ -39,8 +39,11 @@ const ContactInfo: React.FC<ContactInfoProps> = ({
     );
   };
 
+  const hasContactInfo = phone || email || primaryUrl || subFirstUrl || subSecondUrl;
+  if (!hasContactInfo) return null;
+
   return (
-    <div className="relative flex flex-col px-5 py-4 items-center  bg-[#1E1E1E]">
+    <div className="relative flex flex-col px-5 py-4 items-center bg-[#1E1E1E]">
       <div className="w-full h-[33px] flex items-start justify-start text-[14px] font-bold leading-[150%]">
         연락처
       </div>

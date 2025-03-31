@@ -272,6 +272,30 @@ export const businessCardApi = createApi({
       },
       invalidatesTags: (_, __, cardId) => [{ type: 'BusinessCard', id: cardId }],
     }),
+    updateBusinessCard: builder.mutation<
+      void,
+      { businessCardId: string; businessCard: Partial<BusinessCard> }
+    >({
+      queryFn: async ({ businessCardId, businessCard }) => {
+        try {
+          const { error } = await supabase
+            .from('business_cards')
+            .update(businessCard)
+            .eq('business_card_id', businessCardId);
+
+          if (error) throw error;
+
+          return { data: undefined };
+        } catch (error) {
+          return {
+            error: {
+              message: error instanceof Error ? error.message : 'Unknown error',
+              name: error instanceof Error ? error.name : 'Error',
+            },
+          };
+        }
+      },
+    }),
     setPrimaryBusinessCard: builder.mutation<void, string>({
       queryFn: async (cardId) => {
         try {
@@ -374,6 +398,7 @@ export const {
   useGetBusinessCardByIdQuery,
   useAddBusinessCardMutation,
   useDeleteBusinessCardMutation,
+  useUpdateBusinessCardMutation,
   useGetUserByNicknameQuery,
   useSetPrimaryBusinessCardMutation,
   useGetBusinessCardNamesQuery,
