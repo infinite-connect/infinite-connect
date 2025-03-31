@@ -57,6 +57,7 @@ const ThirdStep: React.FC = () => {
             email: authData.user.email ?? '',
             nickname: getValues('nickname'),
             name: authData.user.user_metadata?.name || '',
+            phone_number: getValues('phone_number'),
           }),
         );
         navigate('/success', { state: { businessCardId: businessCardData.business_card_id } });
