@@ -5,6 +5,7 @@ const RoutePaths = {
   SELECTCARDDESIGN: '/selectcarddesign',
   ADDITIONALINFO: '/additionalinfo',
   USER: '/user',
+  EDIT: '/edit',
   CARD: '/card',
   INFO: '/info',
   MEMBERSHIP: '/membership',

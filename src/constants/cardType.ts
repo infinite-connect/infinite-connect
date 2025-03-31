@@ -17,6 +17,12 @@ import smallEveningHorizontal from '@assets/CardDesign/SmallHorizontalCard/small
 import smallNightHorizontal from '@assets/CardDesign/SmallHorizontalCard/smallNightHorizontal.png';
 import smallDawnHorizontal from '@assets/CardDesign/SmallHorizontalCard/smallDawnHorizontal.png';
 
+import morningHeader from '@assets/CardDesign/CardHeader/morningHeader.png';
+import dayHeader from '@assets/CardDesign/CardHeader/dayHeader.png';
+import eveningHeader from '@assets/CardDesign/CardHeader/eveningHeader.png';
+import nightHeader from '@assets/CardDesign/CardHeader/nightHeader.png';
+import dawnHeader from '@assets/CardDesign/CardHeader/dawnHeader.png';
+
 import morningObj from '@assets/CardDesign/CardObj/morningObj.png';
 import dayObj from '@assets/CardDesign/CardObj/dayObj.png';
 import eveningObj from '@assets/CardDesign/CardObj/eveningObj.png';
@@ -86,26 +92,39 @@ export const CARD_TYPE_TEXT: Record<
 
 export const CARD_TYPE_IMAGES: Record<
   CardType,
-  { vertical: string; horizontal: string; sHorizontal: string }
+  { vertical: string; horizontal: string; sHorizontal: string; header: string }
 > = {
   morning: {
     vertical: morningVertical,
     horizontal: morningHorizontal,
     sHorizontal: smallMorningHorizontal,
+    header: morningHeader,
   },
-  day: { vertical: dayVertical, horizontal: dayHorizontal, sHorizontal: smallDayHorizontal },
+  day: {
+    vertical: dayVertical,
+    horizontal: dayHorizontal,
+    sHorizontal: smallDayHorizontal,
+    header: dayHeader,
+  },
   evening: {
     vertical: eveningVertical,
     horizontal: eveningHorizontal,
     sHorizontal: smallEveningHorizontal,
+    header: eveningHeader,
   },
   night: {
     vertical: nightVertical,
     horizontal: nightHorizontal,
     sHorizontal: smallNightHorizontal,
+    header: nightHeader,
   },
-  dawn: { vertical: dawnVertical, horizontal: dawnHorizontal, sHorizontal: smallDawnHorizontal },
-  none: { vertical: 'none', horizontal: 'none', sHorizontal: 'none' },
+  dawn: {
+    vertical: dawnVertical,
+    horizontal: dawnHorizontal,
+    sHorizontal: smallDawnHorizontal,
+    header: dawnHeader,
+  },
+  none: { vertical: 'none', horizontal: 'none', sHorizontal: 'none', header: 'none' },
 };
 
 export const CARD_TYPE_OBJ: Record<CardType, { obj: string }> = {

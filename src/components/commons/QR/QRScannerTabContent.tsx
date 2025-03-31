@@ -139,13 +139,13 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive, onC
       if (html5QrCodeRef.current) {
         setIsTransitioning(true);
         try {
-          const aspectRatio = windowWidth / windowHeight;
+          // const aspectRatio = windowWidth / windowHeight;
           await html5QrCodeRef.current.start(
             { facingMode: 'environment' },
             {
               fps: 10,
               qrbox: 275,
-              aspectRatio,
+              aspectRatio: 1,
             },
             (decodedText) => {
               console.log('Decoded text:', decodedText);
@@ -280,8 +280,8 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive, onC
   const handleQRCodeScan = (decodedText: string) => {
     try {
       // URL에서 nickname과 cardId 추출
-      // URL 형식: https://infinite-connect.site/user/{nickname}/{cardId}
-      const urlPattern = /\/user\/([^/]+)\/([^/]+)/;
+      // URL 형식: https://infinite-connect.site/{nickname}/{cardId}
+      const urlPattern = /infinite-connect\.site\/([^/]+)\/([^/]+)/;
       const match = decodedText.match(urlPattern);
 
       if (match && match.length === 3) {

@@ -65,6 +65,9 @@ const QRDisplayTabContent: React.FC = () => {
                 cornersDotOptions: {
                   type: 'dot',
                 },
+                // qrOptions: {
+                //   errorCorrectionLevel: 'L', // 가장 낮은 오류 수정 레벨 (7%)
+                // },
               });
 
               // QR 코드를 이미지 URL로 변환

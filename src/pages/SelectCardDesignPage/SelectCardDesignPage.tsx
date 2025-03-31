@@ -33,7 +33,9 @@ const SelectCardDesignPage = (): React.JSX.Element => {
       await updateCardType({ cardId: businessCardId, cardType });
       console.log('선택한 타입:', cardType);
       alert('명함 타입이 성공적으로 업데이트되었습니다!');
-      navigate('/additionalinfo');
+      navigate('/additionalinfo', {
+        state: { businessCardId: businessCardId },
+      });
     } catch (error) {
       console.error('명함 타입 업데이트 중 오류 발생:', error);
       alert('명함 타입 업데이트에 실패했습니다.');
@@ -58,9 +60,9 @@ const SelectCardDesignPage = (): React.JSX.Element => {
     setCardType(newCardType); // 카드 타입 업데이트
   };
 
-  // if (!businessCardId) {
-  //   return <p>유효한 명함 ID가 없습니다.</p>;
-  // }
+  if (!businessCardId) {
+    return <p>유효한 명함 ID가 없습니다.</p>;
+  }
 
   return (
     <div

@@ -1,26 +1,26 @@
-// CareerInfo.tsx (수정됨)
 import React from 'react';
 
-interface CareerInfoProps {
-  experienceYears?: string;
-  fieldsOfExpertise?: string;
-  subExpertise?: string;
+interface CompanyInfoProps {
+  company?: string;
+  fax?: string;
+  businessWebsite?: string;
+  jobTitle?: string;
+  department?: string;
 }
 
-const CareerInfo: React.FC<CareerInfoProps> = ({
-  experienceYears,
-  fieldsOfExpertise,
-  subExpertise,
+const CompanyInfo: React.FC<CompanyInfoProps> = ({
+  company,
+  fax,
+  businessWebsite,
+  jobTitle,
+  department,
 }) => {
   const infoItems = [
-    { label: '연차', value: experienceYears },
-    {
-      label: '직무',
-      value:
-        fieldsOfExpertise && subExpertise
-          ? `${fieldsOfExpertise} | ${subExpertise}`
-          : fieldsOfExpertise || subExpertise,
-    },
+    { label: '회사', value: company },
+    { label: '부서', value: department },
+    { label: '직책', value: jobTitle },
+    { label: '팩스', value: fax },
+    { label: '회사 웹사이트', value: businessWebsite },
   ].filter((item) => item.value);
 
   if (infoItems.length === 0) return null;
@@ -28,7 +28,7 @@ const CareerInfo: React.FC<CareerInfoProps> = ({
   return (
     <div className="relative flex flex-col px-5 py-4 items-center bg-[#1E1E1E]">
       <div className="w-full h-[33px] flex items-start justify-start text-[14px] font-bold leading-[150%]">
-        경력 정보
+        회사 정보
       </div>
       {infoItems.map((item) => (
         <div
@@ -43,4 +43,4 @@ const CareerInfo: React.FC<CareerInfoProps> = ({
   );
 };
 
-export default CareerInfo;
+export default CompanyInfo;

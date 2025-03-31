@@ -4,56 +4,21 @@ import { Header } from '@components/commons/Header/Header';
 import { Logo } from '@components/commons/Header/Logo';
 import { Button } from '@components/commons/Button/Button';
 import SkipButton from '@components/commons/Button/SkipButton';
+import { interests } from '@components/NetworkingListPage/FilterOptions';
+import { useUpdateBusinessCardInterestsMutation } from '@features/BusinessCard/api/businessCardApi';
 
-const InterestSelector = () => {
+interface InterestSelectorProps {
+  cardId: string;
+}
+
+const InterestSelector = ({ cardId }: InterestSelectorProps): React.JSX.Element => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const maxSelection = 5;
   const navigate = useNavigate();
 
-  // 기술 스택과 아이콘 매핑
-  const interests = [
-    { name: 'React', icon: 'logos:react' },
-    { name: 'TypeScript', icon: 'logos:typescript-icon' },
-    { name: 'CSS', icon: 'logos:css-3' },
-    { name: 'HTML5', icon: 'logos:html-5' },
-    { name: 'AWS', icon: 'logos:aws' },
-    { name: 'Figma', icon: 'logos:figma' },
-    { name: 'Spring', icon: 'logos:spring' },
-    { name: 'Chakra UI', icon: 'logos:chakraui' },
-    { name: 'Shadcn UI', icon: 'logos:webflow' }, // 대체 아이콘 사용
-    { name: 'Python', icon: 'logos:python' },
-    { name: 'JAVA', icon: 'logos:java' },
-    { name: 'JavaScript', icon: 'logos:javascript' },
-    { name: 'C/C++', icon: 'logos:c-plusplus' }, // C++ 아이콘 사용
-    { name: 'Kotlin', icon: 'logos:kotlin' },
-    { name: 'Node.js', icon: 'logos:nodejs-icon' },
-    { name: 'Svelte', icon: 'logos:svelte-icon' },
-    { name: 'Vue.js', icon: 'logos:vue' },
-    { name: 'AngularJS', icon: 'logos:angular-icon' },
-    { name: 'jQuery', icon: 'logos:jquery' },
-    { name: 'Django', icon: 'logos:django-icon' },
-    { name: 'PHP', icon: 'logos:mysql' },
-    { name: 'MySQL', icon: 'logos:mysql-icon' },
-    { name: 'Oracle', icon: 'simple-icons:mysql' },
-    { name: 'SwiftUI', icon: 'simple-icons:flutter' },
-    { name: 'TensorFlow', icon: 'logos:tensorflow' },
-    { name: 'Next.js', icon: 'logos:nextjs-icon' },
-    { name: 'Tailwind CSS', icon: 'logos:tailwindcss-icon' },
-    { name: 'GraphQL', icon: 'logos:graphql' },
-    { name: 'Docker', icon: 'logos:docker-icon' },
-    { name: 'PostgreSQL', icon: 'logos:postgresql' },
-    { name: 'MongoDB', icon: 'logos:mongodb-icon' },
-    { name: 'Redis', icon: 'logos:redis' },
-    { name: 'Prisma', icon: 'logos:prisma' },
-    { name: 'Vite', icon: 'logos:vitejs' },
-    { name: 'Jest', icon: 'logos:jest' },
-    { name: 'Flutter', icon: 'logos:flutter' },
-    { name: 'Rust', icon: 'logos:rust' },
-    { name: 'Golang', icon: 'logos:go' },
-    { name: 'Ruby on Rails', icon: 'logos:ruby-on-rails' },
-    { name: 'Three.js', icon: 'logos:threejs' },
-    { name: 'Solidity', icon: 'logos:solidity' },
-  ];
+  const [updateInterests] = useUpdateBusinessCardInterestsMutation();
+
+  console.log(selectedInterests);
 
   const toggleInterest = (interestName: string) => {
     if (selectedInterests.includes(interestName)) {
@@ -63,8 +28,18 @@ const InterestSelector = () => {
     }
   };
 
-  const onClickCardPreviewPage = () => {
-    navigate('/cardPreview');
+  const onClickCardPreviewPage = async () => {
+    try {
+      // 관심사 업데이트 API 호출
+      await updateInterests({
+        businessCardId: cardId,
+        interests: selectedInterests,
+      }).unwrap();
+
+      navigate('/cardPreview', { state: { businessCardId: cardId } });
+    } catch (error) {
+      console.error('관심사 업데이트 실패:', error);
+    }
   };
 
   return (
@@ -95,7 +70,7 @@ const InterestSelector = () => {
 
         {/* 관심사 선택 그룹 */}
         <section className="flex flex-wrap justify-center gap-x-3 gap-y-4">
-          {interests.map(({ name }) => {
+          {interests.map((name) => {
             const isSelected = selectedInterests.includes(name);
             const isDisabled = !isSelected && selectedInterests.length >= maxSelection;
 
@@ -104,13 +79,13 @@ const InterestSelector = () => {
                 key={name}
                 onClick={() => !isDisabled && toggleInterest(name)}
                 className={`px-3 py-1 text-sm font-medium rounded-[6px] cursor-pointer transition-colors
-              ${
-                isSelected
-                  ? 'border border-[#7253FF] bg-[rgba(114,83,255,0.25)] text-[var(--text-primary)]'
-                  : 'border border-white/20 text-white/70'
-              }
-              ${isDisabled ? 'opacity-50 pointer-events-none' : ''}
-            `}
+          ${
+            isSelected
+              ? 'border border-[#7253FF] bg-[rgba(114,83,255,0.25)] text-[var(--text-primary)]'
+              : 'border border-white/20 text-white/70'
+          }
+          ${isDisabled ? 'opacity-50 pointer-events-none' : ''}
+        `}
               >
                 {name}
               </div>

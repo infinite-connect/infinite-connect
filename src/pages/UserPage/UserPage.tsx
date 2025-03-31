@@ -6,7 +6,6 @@ import { RootState } from '@store/store';
 import {
   useAddBusinessCardMutation,
   useGetBusinessCardByIdQuery,
-  // useSetPrimaryBusinessCardMutation,
 } from '@features/BusinessCard/api/businessCardApi';
 import {
   Carousel,
@@ -27,11 +26,14 @@ import { useGetUserBusinessCardsWithTypeQuery } from '@features/UserPage/api/use
 import AlarmIcon from '@components/NetworkingListPage/UI/AlarmIcon';
 import QrIcon from '@components/NetworkingListPage/UI/QrIcon';
 import { Logo } from '@components/commons/Header/Logo';
-import { Plus } from 'lucide-react';
+import { Plus, Share2Icon } from 'lucide-react';
 import { gradients } from '@constants/cardType';
 import { CardType } from '@components/SelectCardDesignPage/types';
 import CardManagementDrawer from '@components/UserPage/UserCardDrawer';
-
+import BottomNavbar from '@components/commons/BottomNavbar/BottomNavbar';
+import PlusBTN from '@assets/CardDesign/PlusBTN.png';
+import CompanyInfo from '@components/CardInfo/CompanyInfo';
+import CardShareDrawer from '@components/commons/Card/CardShareDrawer';
 const UserPage: React.FC = (): React.JSX.Element => {
   // const navigate = useNavigate();
   const { nickname } = useParams<{ nickname: string }>();
@@ -44,6 +46,8 @@ const UserPage: React.FC = (): React.JSX.Element => {
   const [api, setApi] = useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isCardDrawerOpen, setIsCardDrawerOpen] = useState(false);
+  const [isCardShareDrawerOpen, setIsCardShareDrawerOpen] = useState(false);
+  const [businessCards, setBusinessCards] = useState<string[]>([]);
 
   const [gradient, setGradient] = useState<string>(
     'linear-gradient(0deg, #121212 86.3%, #606171 100%)',
@@ -51,36 +55,28 @@ const UserPage: React.FC = (): React.JSX.Element => {
   const [nextGradient, setNextGradient] = useState<string>('');
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // const [setPrimaryBusinessCard] = useSetPrimaryBusinessCardMutation();
-
-  // const handleSetPrimary = async (cardId: string) => {
-  //   try {
-  //     await setPrimaryBusinessCard(cardId).unwrap();
-  //     // 성공 처리 (예: 토스트 메시지 표시)
-  //   } catch (error) {
-  //     // 오류 처리
-  //     console.error('대표 명함 설정 실패:', error);
-  //   }
-  // };
-
   // 명함 목록 조회
-  const { data: businessCardsWithType = [], isLoading } = useGetUserBusinessCardsWithTypeQuery(
-    nickname || '',
-    {
-      skip: !nickname,
-    },
-  );
+  const {
+    data: businessCardsWithType = [],
+    isLoading,
+    refetch: refetchCards,
+  } = useGetUserBusinessCardsWithTypeQuery(nickname || '', {
+    skip: !nickname,
+  });
 
   const [addBusinessCard] = useAddBusinessCardMutation();
-
-  // 카드 ID 배열 추출 (기존 코드와 호환성 유지)
-  const businessCards = businessCardsWithType.map((card) => card.business_card_id);
 
   // 현재 선택된 명함 데이터
   const selectedCardId = businessCards[selectedIndex];
   const { data: businessCard } = useGetBusinessCardByIdQuery(selectedCardId, {
     skip: !selectedCardId,
   });
+
+  useEffect(() => {
+    if (businessCardsWithType.length > 0) {
+      setBusinessCards(businessCardsWithType.map((card) => card.business_card_id));
+    }
+  }, [businessCardsWithType]);
 
   // 초기 그라디언트 설정
   useEffect(() => {
@@ -196,7 +192,7 @@ const UserPage: React.FC = (): React.JSX.Element => {
 
   return (
     <div
-      className="min-h-screen text-white flex flex-col justify-start flex-grow overflow-y-auto"
+      className="min-h-screen text-white flex flex-col justify-start flex-grow overflow-y-auto bg-[var(--bg-default-black)]"
       style={{
         background: nextGradient,
       }}
@@ -223,13 +219,18 @@ const UserPage: React.FC = (): React.JSX.Element => {
             onClick={() => setIsQRModalOpen(true)}
             aria-label="QR 코드 스캔"
           />
+          <IconButton
+            icon={<Share2Icon />}
+            onClick={() => setIsCardShareDrawerOpen(true)}
+            aria-label="카드 공유"
+          />
           <IconButton icon={<AlarmIcon />} aria-label="알림" />
         </Header.Right>
       </Header>
 
-      <main className="relative flex flex-col mt-14 pt-[30px] pb-[24px] z-10">
+      <main className="relative flex flex-col mt-14 pb-[133px] pt-[30px] z-10">
         {/* 프로필 섹션 */}
-        <section className="px-4 space-y-4  gap-[20px]">
+        <section className="px-4 space-y-4 gap-[20px]">
           {/* 캐러셀 네비게이션 */}
           <div className="flex items-center justify-between">
             <IconButton
@@ -249,7 +250,7 @@ const UserPage: React.FC = (): React.JSX.Element => {
             />
           </div>
         </section>
-        <div className="pb-6">
+        <div className="pb-10">
           {/* 캐러셀 섹션 */}
           <Carousel
             setApi={setApi}
@@ -279,11 +280,14 @@ const UserPage: React.FC = (): React.JSX.Element => {
                 <CarouselItem className="flex justify-center items-center flex-shrink-0">
                   <div className="flex justify-center items-center">
                     <button
-                      className="w-[334px] h-[206px] bg-transparent border-2 border-dashed border-[#7B61FF]/[0.50] rounded-[7.713px] flex justify-center items-center"
+                      className="w-[334px] h-[206px] bg-transparent flex justify-center items-center rounded-[7.713px]"
+                      style={{
+                        backgroundImage: `url(${PlusBTN})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }}
                       onClick={handleAddCard}
-                    >
-                      <Plus className="w-[32px] h-[32px] text-[var(--fill-primary)]" />
-                    </button>
+                    ></button>
                   </div>
                 </CarouselItem>
               )}
@@ -322,13 +326,17 @@ const UserPage: React.FC = (): React.JSX.Element => {
             )}
           </div>
         </div>
-
         {/* 정보 섹션 */}
         {businessCard && (
-          <section className="space-y-6">
-            <CareerInfo
+          <section className="space-y-[14px]">
+            <CompanyInfo
               company={businessCard.company}
+              fax={businessCard.fax}
+              businessWebsite={businessCard.businessWebsite}
               jobTitle={businessCard.jobTitle}
+              department={businessCard.department}
+            />
+            <CareerInfo
               experienceYears={businessCard.experienceYears}
               fieldsOfExpertise={businessCard.fieldsOfExpertise}
               subExpertise={businessCard.subExpertise}
@@ -342,12 +350,28 @@ const UserPage: React.FC = (): React.JSX.Element => {
             />
           </section>
         )}
+        <button className="fixed flex flex-row justify-center items-center bottom-19 right-4 w-[100px] h-[40px] px-[10px] py-[6px] gap-[2px] bg-[var(--fill-primary)] rounded-[100px]">
+          <Plus className="w-[20px] h-[20px]" /> <span className="text-[14px]">명함 추가</span>
+        </button>
+        <BottomNavbar />
       </main>
 
       <QRScanDisplayModal isOpen={isQRModalOpen} onClose={() => setIsQRModalOpen(false)} />
+      <CardShareDrawer
+        isOpen={isCardShareDrawerOpen}
+        onOpenChange={() => setIsCardShareDrawerOpen(false)}
+        nickname={nickname ?? ''}
+        selectedCardId={selectedCardId}
+        cardType={businessCard?.cardType ?? 'none'}
+        subExpertise={businessCard?.subExpertise ?? 'none'}
+        businessName={businessCard?.businessName}
+        name={businessCard?.name ?? 'none'}
+      />
       <CardManagementDrawer
         isOpen={isCardDrawerOpen}
         onOpenChange={() => setIsCardDrawerOpen(false)}
+        selectedCardId={selectedCardId}
+        refetchCards={refetchCards}
       />
     </div>
   );

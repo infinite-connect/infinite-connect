@@ -13,21 +13,21 @@ export type SocialPlatform = {
 
 export const SocialIcon: SocialPlatform[] = [
   {
-    id: 'custom',
+    id: 'none',
     label: '직접 입력',
     icon: <LinkIcon className="w-4 h-4" />,
     prefix: 'https://',
     type: 'url',
     placeholder: '링크',
   },
-  {
-    id: 'linkedin',
-    label: 'Linkedin',
-    icon: <Icon icon="mdi:linkedin" className="w-4 h-4" />,
-    prefix: 'linkedin',
-    type: 'url',
-    placeholder: '링크드인 링크',
-  },
+  // {
+  //   id: 'linkedin',
+  //   label: 'Linkedin',
+  //   icon: <Icon icon="mdi:linkedin" className="w-4 h-4" />,
+  //   prefix: 'linkedin',
+  //   type: 'url',
+  //   placeholder: '링크드인 링크',
+  // },
   {
     id: 'github',
     label: 'Github',

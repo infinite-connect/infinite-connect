@@ -25,6 +25,7 @@ import {
 import { useCheckUserBusinessCardVisibilityQuery } from '@features/Networking/networkingApi';
 import { CARD_TYPE_TEXT, gradients } from '@constants/cardType';
 import { maskName } from '@utils/maskName';
+import CompanyInfo from '@components/CardInfo/CompanyInfo';
 
 const UserCardPage: React.FC = (): React.JSX.Element => {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
@@ -246,23 +247,24 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
         )}
       </div>
       <div className="flex flex-col gap-[10px]">
-        <div className="flex flex-col gap-[10px]">
-          <CareerInfo
-            company={businessCard.company}
-            jobTitle={businessCard.jobTitle}
-            experienceYears={businessCard.experienceYears}
-            fieldsOfExpertise={businessCard.fieldsOfExpertise}
-            subExpertise={businessCard.subExpertise}
-          />
-        </div>
-
+        <CompanyInfo
+          company={businessCard.company}
+          fax={businessCard.fax}
+          businessWebsite={businessCard.businessWebsite}
+          jobTitle={businessCard.jobTitle}
+          department={businessCard.department}
+        />
+        <CareerInfo
+          experienceYears={businessCard.experienceYears}
+          fieldsOfExpertise={businessCard.fieldsOfExpertise}
+          subExpertise={businessCard.subExpertise}
+        />
         <ContactInfo
-          isTwoWayExchanged={isTwoWayExchanged}
-          phone={businessCard.phone || undefined}
-          email={businessCard.email || undefined}
-          primaryUrl={businessCard.primaryUrl ?? undefined}
-          subFirstUrl={businessCard.subFirstUrl ?? undefined}
-          subSecondUrl={businessCard.subSecondUrl ?? undefined}
+          phone={businessCard.phone}
+          email={businessCard.email}
+          primaryUrl={businessCard.primaryUrl || undefined}
+          subFirstUrl={businessCard.subFirstUrl || undefined}
+          subSecondUrl={businessCard.subSecondUrl || undefined}
         />
       </div>
       <QRScanDisplayModal isOpen={isQRModalOpen} onClose={() => setIsQRModalOpen(false)} />

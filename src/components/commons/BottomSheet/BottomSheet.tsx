@@ -29,7 +29,7 @@ const BottomSheet = ({
       >
         <div className="text-center mb-5">
           <h2 className="text-xl font-bold text-[var(--text-primary)]">{title}</h2>
-          {subtitle && <p className="mt-1 text-sm text-[var(--text-secondary)]">{subtitle}</p>}
+          {subtitle && <p className="mt-2 text-sm text-[var(--text-secondary)]">{subtitle}</p>}
         </div>
 
         {children}
