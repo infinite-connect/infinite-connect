@@ -154,21 +154,7 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive, onC
             },
             (decodedText) => {
               console.log('Decoded text:', decodedText);
-              alert(decodedText);
-              // 스캔 성공 시 즉시 스캐너 중지
-              if (html5QrCodeRef.current) {
-                // 여기에 null 체크 추가
-                html5QrCodeRef.current
-                  .stop()
-                  .then(() => {
-                    console.log('QR 코드 스캐너가 중지되었습니다.');
-                    // 스캔 결과 처리
-                    handleQRCodeScan(decodedText);
-                  })
-                  .catch((err) => {
-                    console.error('QR 코드 스캐너 중지 중 오류 발생:', err);
-                  });
-              }
+              handleQRCodeScan(decodedText);
             },
             (errorMessage) => {
               console.warn('QR Code Scan Error:', errorMessage);
