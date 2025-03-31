@@ -1,4 +1,3 @@
-import { CardType } from '@components/SelectCardDesignPage/types';
 import { CARD_TYPE_IMAGES, CARD_TYPE_OBJ } from '@constants/cardType';
 import { Mail } from 'lucide-react';
 import IconRenderer from './CardIconRenderer';
