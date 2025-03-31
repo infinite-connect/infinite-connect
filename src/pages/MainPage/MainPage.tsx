@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@store/store';
 import { useNavigate } from 'react-router-dom';
@@ -16,14 +16,20 @@ import { useCheckUserBusinessCardVisibilityQuery } from '@features/Networking/ne
 import SloganSection from '@components/MainPage/SloganSection';
 import MyCardSection from '@components/MainPage/MyCardSection';
 import BottomNavbar from '@components/commons/BottomNavbar/BottomNavbar';
+import QRScanDisplayModal from '@components/commons/QR/QRScanDisplayModal';
+import SlideDrawer from '@components/Alarm/SlideDrawer';
+
+import AlarmContents from '@components/Alarm/AlarmContents';
 
 const MainPage = (): React.JSX.Element => {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
-
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const nickname = userInfo?.nickname;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const primaryCard = useSelector((state: RootState) => state.userBusinessCard.primaryCard);
+
   // 명함 공개 여부 확인
   const { data: userBusinessCard } = useCheckUserBusinessCardVisibilityQuery(nickname!, {
     skip: !nickname,
@@ -75,9 +81,9 @@ const MainPage = (): React.JSX.Element => {
           <span>Networking</span>
         </Header.Left>
         <Header.Right>
-          <IconButton icon={<QrIcon />} onClick={handleQrClick} />
+          <IconButton icon={<QrIcon />} onClick={() => setIsQRModalOpen(true)} />
           <IconButton icon={<SearchIcon />} onClick={handleQrClick} />
-          <IconButton icon={<AlarmIcon />} onClick={handleQrClick} />
+          <IconButton icon={<AlarmIcon />} onClick={() => setIsDrawerOpen(true)} />
         </Header.Right>
       </Header>
 
@@ -111,6 +117,11 @@ const MainPage = (): React.JSX.Element => {
         </div>
       </div>
       <BottomNavbar />
+      <QRScanDisplayModal isOpen={isQRModalOpen} onClose={() => setIsQRModalOpen(false)} />
+      {/* Drawer */}
+      <SlideDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
+        <AlarmContents />
+      </SlideDrawer>
     </div>
   );
 };
