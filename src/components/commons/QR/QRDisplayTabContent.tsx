@@ -50,7 +50,7 @@ const QRDisplayTabContent: React.FC = () => {
                 imageOptions: {
                   crossOrigin: 'anonymous',
                   margin: 10,
-                  imageSize: 2,
+                  imageSize: 0.3,
                 },
                 dotsOptions: {
                   color: '#000000',
@@ -65,9 +65,9 @@ const QRDisplayTabContent: React.FC = () => {
                 cornersDotOptions: {
                   type: 'dot',
                 },
-                qrOptions: {
-                  errorCorrectionLevel: 'L', // 가장 낮은 오류 수정 레벨 (7%)
-                },
+                // qrOptions: {
+                //   errorCorrectionLevel: 'L', // 가장 낮은 오류 수정 레벨 (7%)
+                // },
               });
 
               // QR 코드를 이미지 URL로 변환
