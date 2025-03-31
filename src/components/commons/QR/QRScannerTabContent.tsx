@@ -21,10 +21,9 @@ import {
 
 interface QRScannerTabContentProps {
   isActive: boolean;
-  onClose: () => void;
 }
 
-const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive, onClose }) => {
+const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) => {
   const scannerRef = useRef<HTMLDivElement>(null);
   const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -133,12 +132,7 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive, onC
   useEffect(() => {
     const startScanner = async () => {
       if (scannerRef.current && !html5QrCodeRef.current) {
-        html5QrCodeRef.current = new Html5Qrcode('qr-scanner', {
-          experimentalFeatures: {
-            useBarCodeDetectorIfSupported: false,
-          },
-          verbose: true,
-        });
+        html5QrCodeRef.current = new Html5Qrcode('qr-scanner');
       }
 
       if (html5QrCodeRef.current) {
@@ -205,8 +199,6 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive, onC
       // exists 속성이 true인 경우에만 "이미 교환된 명함" 메시지 표시
       if (exchangeStatus.exists === true) {
         alert('이미 교환된 명함입니다.');
-        onClose();
-        navigate('/');
       }
       // exists 속성이 명확하게 false인 경우에만 교환 진행
       else if (exchangeStatus.exists === false) {
@@ -251,17 +243,7 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive, onC
 
       if (exchangeResult.success) {
         alert('명함 교환이 완료되었습니다!');
-        const moveToCardPage = confirm(`${followingNickname}님의 명함 페이지로 이동하시겠습니까?`);
-
-        if (moveToCardPage) {
-          onClose();
-          // 사용자가 '예'를 선택한 경우 해당 명함 페이지로 이동
-          navigate(`/${followingNickname}/${followingCardId}`);
-        } else {
-          onClose();
-          // '아니오'를 선택한 경우 홈으로 이동
-          navigate('/');
-        }
+        navigate('/');
       } else {
         alert('명함 교환에 실패했습니다.');
       }
