@@ -37,7 +37,7 @@ const CardPreviewPage = (): React.JSX.Element => {
 
       {/* 카드 영역 */}
       <div className="flex items-center justify-center  px-6 mb-8">
-        <VerticalCard cardId="abc123" />
+        <VerticalCard cardId="29a47668-0205-424b-a0e9-728e7a4b4530" />
       </div>
 
       {/* 버튼 영역 */}
