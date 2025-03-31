@@ -134,10 +134,8 @@ const BusinessCardBookPage = (): React.JSX.Element => {
                     })
                   }
                 />
-              </Section>
 
-              {/* empty state */}
-              <Section title="카테고리">
+                {/* empty state */}
                 <SettingRow
                   label="1번 명함"
                   imageUrl="/path/to/image1.jpg"
