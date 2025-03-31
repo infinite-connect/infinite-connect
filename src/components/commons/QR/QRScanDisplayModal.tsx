@@ -93,7 +93,7 @@ const QRScanDisplayModal: React.FC<QRScanDisplayModalProps> = ({ isOpen, onClose
               flex justify-start items-start
             `}
             >
-              <QRScannerTabContent isActive={activeTab === 'tab2'} />
+              <QRScannerTabContent isActive={activeTab === 'tab2'} onClose={onClose} />
             </TabsContent>
           </Tabs>
         </div>

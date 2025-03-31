@@ -21,9 +21,10 @@ import {
 
 interface QRScannerTabContentProps {
   isActive: boolean;
+  onClose: () => void;
 }
 
-const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) => {
+const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive, onClose }) => {
   const scannerRef = useRef<HTMLDivElement>(null);
   const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -138,17 +139,31 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
       if (html5QrCodeRef.current) {
         setIsTransitioning(true);
         try {
-          // const aspectRatio = windowWidth / windowHeight;
+          const aspectRatio = windowWidth / windowHeight;
           await html5QrCodeRef.current.start(
             { facingMode: 'environment' },
             {
               fps: 10,
               qrbox: 275,
-              aspectRatio: 1,
+              aspectRatio,
             },
             (decodedText) => {
               console.log('Decoded text:', decodedText);
-              handleQRCodeScan(decodedText);
+              alert(decodedText);
+              // 스캔 성공 시 즉시 스캐너 중지
+              if (html5QrCodeRef.current) {
+                // 여기에 null 체크 추가
+                html5QrCodeRef.current
+                  .stop()
+                  .then(() => {
+                    console.log('QR 코드 스캐너가 중지되었습니다.');
+                    // 스캔 결과 처리
+                    handleQRCodeScan(decodedText);
+                  })
+                  .catch((err) => {
+                    console.error('QR 코드 스캐너 중지 중 오류 발생:', err);
+                  });
+              }
             },
             (errorMessage) => {
               console.warn('QR Code Scan Error:', errorMessage);
@@ -199,6 +214,8 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
       // exists 속성이 true인 경우에만 "이미 교환된 명함" 메시지 표시
       if (exchangeStatus.exists === true) {
         alert('이미 교환된 명함입니다.');
+        onClose();
+        navigate('/');
       }
       // exists 속성이 명확하게 false인 경우에만 교환 진행
       else if (exchangeStatus.exists === false) {
@@ -243,9 +260,17 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive }) =
 
       if (exchangeResult.success) {
         alert('명함 교환이 완료되었습니다!');
-        navigate('/');
-      } else {
-        alert('명함 교환에 실패했습니다.');
+        const moveToCardPage = confirm(`${followingNickname}님의 명함 페이지로 이동하시겠습니까?`);
+
+        if (moveToCardPage) {
+          onClose();
+          // 사용자가 '예'를 선택한 경우 해당 명함 페이지로 이동
+          navigate(`/${followingNickname}/${followingCardId}`);
+        } else {
+          onClose();
+          // '아니오'를 선택한 경우 홈으로 이동
+          navigate('/');
+        }
       }
     } catch (error) {
       console.error('명함 교환 중 오류:', error);
