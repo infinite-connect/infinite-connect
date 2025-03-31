@@ -23,13 +23,9 @@ const BottomNavbar: React.FC = () => {
   const isSelected = (route: string) => location.pathname === route;
 
   return (
-    <div className="fixed bottom-0 left-0 w-full h-[56px] bg-[var(--bg-default-black)] flex items-center justify-around text-white z-50">
+    <div className="fixed bottom-0 left-0 w-full h-[76px] bg-[var(--bg-default-black)] flex justify-around text-white z-50 py-4">
       {/* 홈 버튼 */}
-      <button
-        type="button"
-        onClick={() => navigate(homeRoute)}
-        className="flex flex-col items-center justify-center"
-      >
+      <button type="button" onClick={() => navigate(homeRoute)} className="flex flex-col">
         <img
           src={homeIcon}
           alt="홈"
@@ -42,11 +38,7 @@ const BottomNavbar: React.FC = () => {
       </button>
 
       {/* 명함 버튼 */}
-      <button
-        type="button"
-        onClick={() => navigate(cardRoute)}
-        className="flex flex-col items-center justify-center"
-      >
+      <button type="button" onClick={() => navigate(cardRoute)} className="flex flex-col">
         <img
           src={twoPersonIcon}
           alt="명함"
@@ -59,13 +51,9 @@ const BottomNavbar: React.FC = () => {
       </button>
 
       {/* MY 버튼 (사용자 카드 타입 아이콘) */}
-      <button
-        type="button"
-        onClick={() => navigate(myRoute)}
-        className="flex flex-col items-center justify-center"
-      >
+      <button type="button" onClick={() => navigate(myRoute)} className="flex flex-col">
         <NetworkTypeCircle
-          className="w-[18px] h-[18px]"
+          className="w-[16px] h-[24px]"
           cardType={primaryCard?.card_type as CardType}
         />
         <span className="mt-1 text-[10px]" style={{ opacity: isSelected(myRoute) ? 1 : 0.5 }}>
