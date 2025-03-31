@@ -133,12 +133,7 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive, onC
   useEffect(() => {
     const startScanner = async () => {
       if (scannerRef.current && !html5QrCodeRef.current) {
-        html5QrCodeRef.current = new Html5Qrcode('qr-scanner', {
-          experimentalFeatures: {
-            useBarCodeDetectorIfSupported: false,
-          },
-          verbose: true,
-        });
+        html5QrCodeRef.current = new Html5Qrcode('qr-scanner');
       }
 
       if (html5QrCodeRef.current) {
