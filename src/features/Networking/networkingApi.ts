@@ -223,14 +223,20 @@ export const networkingApi = createApi({
     }),
     // 로그인한 사용자 모든 명함의 조회수,카드타입 가져오기 API
     getUserCardsViewCounts: builder.query<
-      { business_card_id: string; view_count: number; card_type: CardType }[],
+      {
+        business_card_id: string;
+        view_count: number;
+        card_type: CardType;
+        card_name: string;
+        is_primary: boolean;
+      }[],
       string
     >({
       async queryFn(nickname: string) {
         try {
           const { data, error } = await supabase
             .from('business_cards')
-            .select('business_card_id, view_count, card_type')
+            .select('business_card_id, view_count, card_type, card_name, is_primary')
             .eq('nickname', nickname);
           if (error) throw error;
           return { data: data || [] };
