@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { interests } from '@components/NetworkingListPage/FilterOptions';
 import { BottomSheet } from '@components/commons/BottomSheet/BottomSheet';
 
@@ -7,10 +7,23 @@ interface InterestBottomSheetProps {
   setOpen: (open: boolean) => void;
   onSave?: (selected: string[]) => void;
   max?: number;
+  initialSelected: string[];
 }
 
-const InterestBottomSheet = ({ open, setOpen, onSave, max = 5 }: InterestBottomSheetProps) => {
+const InterestBottomSheet = ({
+  open,
+  setOpen,
+  onSave,
+  max = 5,
+  initialSelected,
+}: InterestBottomSheetProps) => {
   const [selected, setSelected] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (open) {
+      setSelected(initialSelected);
+    }
+  }, [open, initialSelected]);
 
   const toggle = (name: string) => {
     if (selected.includes(name)) {

@@ -91,8 +91,6 @@ const UserCardEditPage: React.FC = (): React.JSX.Element => {
         fields_of_expertise: editedBusinessCard.fieldsOfExpertise,
         sub_expertise: editedBusinessCard.subExpertise,
         company: editedBusinessCard.company,
-        phone: editedBusinessCard.phone,
-        email: editedBusinessCard.email,
         business_website: editedBusinessCard.businessWebsite,
         experience_years: editedBusinessCard.experienceYears,
         card_type: editedBusinessCard.cardType,
