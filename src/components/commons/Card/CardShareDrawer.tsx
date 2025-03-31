@@ -203,7 +203,7 @@ const CardShareDrawer: React.FC<CardShareDrawerProps> = ({
 
         <div className="w-full">
           {/* 슬라이더 컨테이너에 클래스 추가 */}
-          <div className="w-full [&_.slick-slider]:!h-[300px] [&_.slick-list]:!h-full [&_.slick-track]:!h-full [&_.slick-slide]:!h-full [&_.slick-slide>div]:!h-full">
+          <div className="w-full [&_.slick-slider]:!h-[280px] [&_.slick-list]:!h-full [&_.slick-track]:!h-full [&_.slick-slide]:!h-full [&_.slick-slide>div]:!h-full">
             <Slider ref={sliderRef} {...settings} className="w-full">
               {/* 첫번째 슬라이드 */}
               <div className="flex items-center justify-center h-full">
@@ -215,7 +215,7 @@ const CardShareDrawer: React.FC<CardShareDrawerProps> = ({
               </div>
               {/* 두번째 슬라이드 */}
               <div className="flex items-center justify-center h-full py-2">
-                <div className="scale-75 h-full flex items-center justify-center">
+                <div className="scale-70 h-full flex items-center justify-center">
                   <div ref={verticalCardRef}>
                     <VerticalCard cardId={selectedCardId} />
                   </div>
@@ -278,12 +278,14 @@ const CardShareDrawer: React.FC<CardShareDrawerProps> = ({
             </Slider>
           </div>
         </div>
-        {currentSlide === 3 && (
-          <div className="flex flex-row justify-center items-center gap-[4px]">
-            <Link2Icon className="w-[20px] h-[20px] " />
-            탭해도 복사돼요!
-          </div>
-        )}
+        <div className="h-[20px] flex flex-row justify-center items-center gap-[4px]">
+          {currentSlide === 3 && (
+            <>
+              <Link2Icon className="w-[20px] h-[20px]" />
+              탭해도 복사돼요!
+            </>
+          )}
+        </div>
 
         <div className="flex justify-center items-center gap-2 mt-5">
           {[0, 1, 2, 3].map((index) => (
