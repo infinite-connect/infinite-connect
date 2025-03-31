@@ -117,7 +117,9 @@ const AdditionalInfoPage = (): React.JSX.Element => {
   };
 
   const onClickMovetoRealCardScanPage = () => {
-    navigate('/realcardscan');
+    navigate('/realcardscan', {
+      state: { businessCardId: businessCardId },
+    });
   };
 
   const onClickUserInterestsPage = () => {
@@ -155,7 +157,7 @@ const AdditionalInfoPage = (): React.JSX.Element => {
 
       <div className="px-5 pb-10">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <Header>
               <Header.Left>
                 <Logo />
@@ -170,7 +172,9 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               name="business_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">비즈니스명</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)] text-[14px] leading-[20px]">
+                    비즈니스명
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder="비즈니스명을 입력하세요"
@@ -188,7 +192,9 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               name="experience_years"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">경력</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)] text-[14px] leading-[20px]">
+                    경력
+                  </FormLabel>
                   <FormControl>
                     <Dropdown
                       items={experienceItems}
@@ -207,7 +213,9 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               name="company"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">회사명</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)] text-[14px] leading-[20px]">
+                    회사명
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder="현재 소속된 회사명을 입력하세요"
@@ -225,7 +233,9 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               name="department"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">부서</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)] text-[14px] leading-[20px]">
+                    부서
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder="부서를 입력하세요"
@@ -243,7 +253,9 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               name="job_title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">직책</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)] text-[14px] leading-[20px]">
+                    직책
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder="직책을 입력하세요"
@@ -261,7 +273,9 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               name="business_address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">회사 주소</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)] text-[14px] leading-[20px]">
+                    회사 주소
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder="주소를 입력하세요"
@@ -276,28 +290,12 @@ const AdditionalInfoPage = (): React.JSX.Element => {
 
             <FormField
               control={form.control}
-              name="fax"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">FAX</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="FAX 번호를 입력하세요"
-                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name="business_website"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[var(--text-primary)]">회사 웹사이트</FormLabel>
+                  <FormLabel className="text-[var(--text-primary)] text-[14px] leading-[20px]">
+                    회사 웹사이트
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder="회사 웹사이트 URL을 입력하세요"
@@ -310,9 +308,31 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="fax"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[var(--text-primary)] text-[14px] leading-[20px]">
+                    FAX
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="FAX 번호를 입력하세요"
+                      className="text-[var(--text-primary)] bg-[var(--fill-quaternary)]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <div className="space-y-5">
               <div>
-                <h3 className="text-[var(--text-primary)] font-medium mb-[6px]">대표 URL</h3>
+                <h3 className="text-[var(--text-primary)] text-[14px] leading-[20px] mb-[6px]">
+                  대표 URL
+                </h3>
                 <UrlDropdown
                   value={form.watch('primaryUrlValue')}
                   onChange={(value) => form.setValue('primaryUrlValue', value)}
@@ -322,7 +342,9 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               </div>
 
               <div>
-                <h3 className="text-[var(--text-primary)] font-medium mb-[6px]">보조 URL 1</h3>
+                <h3 className="text-[var(--text-primary)] text-[14px] leading-[20px] mb-[6px]">
+                  보조 URL 1
+                </h3>
                 <UrlDropdown
                   value={form.watch('subUrl01Value')}
                   onChange={(value) => form.setValue('subUrl01Value', value)}
@@ -332,7 +354,9 @@ const AdditionalInfoPage = (): React.JSX.Element => {
               </div>
 
               <div>
-                <h3 className="text-[var(--text-primary)] font-medium mb-[6px]">보조 URL 2</h3>
+                <h3 className="text-[var(--text-primary)] text-[14px] leading-[20px] mb-[6px]">
+                  보조 URL 2
+                </h3>
                 <UrlDropdown
                   value={form.watch('subUrl02Value')}
                   onChange={(value) => form.setValue('subUrl02Value', value)}

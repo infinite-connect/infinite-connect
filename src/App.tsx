@@ -8,17 +8,19 @@ import useAutoLogin from '@hooks/Login/useAutoLogin';
 const AppContent = (): React.JSX.Element => {
   useAutoLogin();
   return (
-    <BrowserRouter>
+    <>
       <AppRouter />
       <Toaster />
-    </BrowserRouter>
+    </>
   );
 };
 
 function App() {
   return (
     <Provider store={store}>
-      <AppContent />
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
     </Provider>
   );
 }
