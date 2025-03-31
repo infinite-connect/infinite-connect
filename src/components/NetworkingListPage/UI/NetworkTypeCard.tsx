@@ -5,14 +5,14 @@ import dayCard from '@assets/NetWorkTypeCard/dayCard.png';
 import eveningCard from '@assets/NetWorkTypeCard/eveningCard.png';
 import nightCard from '@assets/NetWorkTypeCard/nightCard.png';
 
-type CardType = 'dawn' | 'morning' | 'day' | 'evening' | 'night';
+type CardType = 'dawn' | 'morning' | 'day' | 'evening' | 'night' | 'none';
 
 interface NetworkTypeCardProps {
   cardType: CardType;
 }
 
 const NetworkTypeCard: React.FC<NetworkTypeCardProps> = ({ cardType }) => {
-  let imageSrc: string;
+  let imageSrc: string = cardType;
 
   switch (cardType) {
     case 'dawn':

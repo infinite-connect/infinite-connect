@@ -15,6 +15,7 @@ export interface BusinessCardList {
 // 명함 상세 정보 타입
 export interface BusinessCard {
   business_card_id: string;
+  department?: string;
   nickname: string;
   card_name: string;
   fields_of_expertise: string;
@@ -32,6 +33,8 @@ export interface BusinessCard {
   created_at: string;
   qr_image_url?: string;
   business_name?: string;
+  name: string;
+  card_type: CardType;
 }
 
 // 명함 공개 여부 및 사용자 직무, 세무직무 타입
@@ -96,8 +99,8 @@ export const networkingApi = createApi({
             .select(
               `
               business_card_id, nickname, card_name, fields_of_expertise, sub_expertise, 
-              company, phone, email, linkedin, website, experience_years, view_count,  
-              is_public, is_primary, created_at, qr_image_url, business_name, interests
+              company, phone, email, website, experience_years, view_count, name, department,
+              is_public, is_primary, created_at, business_name, interests, card_type
               `,
             )
             .eq('business_card_id', businessCardId)

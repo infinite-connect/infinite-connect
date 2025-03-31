@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@components/ui/tabs';
 import { LayoutGrid, Menu, SlidersHorizontal } from 'lucide-react';
 import { FilterValues, FullScreenFilter } from '@components/NetworkingListPage/FullScreenFilter';
@@ -18,19 +18,15 @@ import { useRecentSearches } from '@components/NetworkingListPage/SearchPopup/us
 import UserListCard from '@components/NetworkingListPage/UserListCard';
 import GridCardBox from '@components/BusinessCardBook/GridCardBox';
 import SharedCard from '@components/BusinessCardBook/SharedCard';
-
-const profiles = [
-  { id: '1', userId: '101', name: '유현상', role: 'Development', detail: '프론트엔드' },
-  { id: '2', userId: '102', name: '이종혁', role: 'Development', detail: '백엔드' },
-  { id: '3', userId: '103', name: '조혜주', role: 'Design', detail: 'UI/UX 디자인' },
-  { id: '4', userId: '104', name: '김해담', role: 'Design', detail: '그래픽 디자인' },
-  { id: '5', userId: '105', name: '최*서', role: 'PM / 기획', detail: '프로덕트 매니저' },
-  { id: '6', userId: '106', name: '유*민', role: 'PM / 기획', detail: '게임 기획' },
-  { id: '7', userId: '107', name: '배*진', role: 'Data & AI', detail: '데이터 사이언스' },
-  { id: '8', userId: '108', name: '조*영', role: 'Data & AI', detail: 'AI 엔지니어' },
-  { id: '9', userId: '109', name: '배*진', role: 'Operation & Others', detail: 'IT 컨설팅' },
-  { id: '10', userId: '110', name: '조*영', role: 'Operation & Others', detail: '기술 지원' },
-];
+import BottomNavbar from '@components/commons/BottomNavbar/BottomNavbar';
+import { useSelector } from 'react-redux';
+import { RootState } from '@store/store';
+import { useGetUserCardsViewCountsQuery } from '@features/Networking/networkingApi';
+import {
+  useGetFollowingViewQuery,
+  useGetFollowerViewQuery,
+  DetailedCard,
+} from '@features/BusinessCardBookPage/BusinessCardBookApi';
 
 const BusinessCardBookPage = (): React.JSX.Element => {
   const [activeTab, setActiveTab] = useState<'left' | 'right'>('left');
@@ -40,6 +36,7 @@ const BusinessCardBookPage = (): React.JSX.Element => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearchMode, setIsSearchMode] = useState(false);
 
+  const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [filterValues, setFilterValues] = useState<FilterValues>({
     year: '',
     job: '',
@@ -47,14 +44,62 @@ const BusinessCardBookPage = (): React.JSX.Element => {
     interests: [],
   });
 
-  const { recentSearches, addSearch, removeSearch, clearSearches } = useRecentSearches();
+  const userInfo = useSelector((state: RootState) => state.user.userInfo);
+  const primaryCard = useSelector((state: RootState) => state.userBusinessCard.primaryCard);
 
-  const filteredProfiles = profiles.filter((profile) => {
-    const matchesSearch = profile.name.toLowerCase().includes(searchKeyword.toLowerCase());
-    const matchesJob = !filterValues.job || profile.role === filterValues.job;
-    const matchesSub = !filterValues.subJob || profile.detail === filterValues.subJob;
-    return matchesSearch && matchesJob && matchesSub;
-  });
+  const { data: userCards } = useGetUserCardsViewCountsQuery(userInfo?.nickname || '');
+
+  // 대표 명함을 맨 위로 정렬
+  const orderedCards = useMemo(() => {
+    if (!userCards) return [];
+    if (!primaryCard) return userCards;
+    return [...userCards].sort((a, b) => {
+      if (a.business_card_id === primaryCard.business_card_id) return -1;
+      if (b.business_card_id === primaryCard.business_card_id) return 1;
+      return 0;
+    });
+  }, [userCards, primaryCard]);
+
+  // “내 명함을 추가한 사람” (followerView), “내가 추가한 사람” (followingView)
+  const followerViewQuery = useGetFollowerViewQuery({ myNickname: userInfo?.nickname || '' });
+  const followingViewQuery = useGetFollowingViewQuery({ myNickname: userInfo?.nickname || '' });
+
+  // activeTab에 따라 상세 데이터를 가져옴
+  const detailedCards = useMemo<DetailedCard[]>(() => {
+    return activeTab === 'left'
+      ? followerViewQuery.data?.cards || []
+      : followingViewQuery.data?.cards || [];
+  }, [activeTab, followerViewQuery.data, followingViewQuery.data]);
+
+  // 필터 + 검색어 적용 (각 필드를 빈 문자열로 기본값 설정)
+  const filteredCards = useMemo<DetailedCard[]>(() => {
+    const lowerSearch = (searchKeyword || '').toLowerCase();
+    return detailedCards.filter((card) => {
+      const nickname = (card.nickname || '').toLowerCase();
+      const expertise = (card.fields_of_expertise || '').toLowerCase();
+      const subExpertise = (card.sub_expertise || '').toLowerCase();
+      const businessName = (card.business_name || '').toLowerCase();
+      const name = (card.name || '').toLowerCase();
+
+      const matchesSearch =
+        !searchKeyword ||
+        nickname.includes(lowerSearch) ||
+        expertise.includes(lowerSearch) ||
+        subExpertise.includes(lowerSearch) ||
+        businessName.includes(lowerSearch) ||
+        name.includes(lowerSearch);
+      const matchesJob = filterValues.job
+        ? expertise === (filterValues.job || '').toLowerCase()
+        : true;
+      const matchesSubJob = filterValues.subJob
+        ? subExpertise === (filterValues.subJob || '').toLowerCase()
+        : true;
+      return matchesSearch && matchesJob && matchesSubJob;
+    });
+  }, [detailedCards, searchKeyword, filterValues]);
+
+  // 검색 기록
+  const { recentSearches, addSearch, removeSearch, clearSearches } = useRecentSearches();
 
   const handleSearch = () => {
     if (query.trim()) {
@@ -69,14 +114,32 @@ const BusinessCardBookPage = (): React.JSX.Element => {
     setIsSearchMode(false);
   };
 
-  // 카테고리 리스트 공유 명함
-  const [selectedCard, setSelectedCard] = useState<{
-    cardName: string;
-    recipients: typeof profiles;
-  } | null>(null);
+  // 공통 카드 렌더링 함수
+  const renderCardList = (cards: DetailedCard[]) => {
+    if (cards.length === 0) {
+      // 카드가 없을 때 “결과가 없습니다” 표시
+      return (
+        <div className="flex flex-col items-center justify-center min-h-[40vh] text-sm text-gray-400">
+          결과가 없습니다
+        </div>
+      );
+    }
+    return (
+      <div className={`grid ${isGridView ? 'grid-cols-2' : 'grid-cols-1'} gap-4 px-4 pb-24`}>
+        {cards.map((card) =>
+          isGridView ? (
+            <GridCardBox key={card.cardId} cardId={card.cardId} nickName={card.nickname} />
+          ) : (
+            <UserListCard key={card.cardId} cardId={card.cardId} nickName={card.nickname} />
+          ),
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="bg-[var(--bg-default-black)] max-w-screen text-white">
+      {/* 상단 헤더 */}
       {!selectedCard && (
         <Header className="px-[16px] bg-[var(--bg-default-black)] top-0 left-0 ">
           <Header.Left>
@@ -89,12 +152,10 @@ const BusinessCardBookPage = (): React.JSX.Element => {
           </Header.Right>
         </Header>
       )}
+
+      {/* SharedCard (명함 클릭 시 상세) */}
       {selectedCard ? (
-        <SharedCard
-          cardName={selectedCard.cardName}
-          recipients={selectedCard.recipients}
-          onBack={() => setSelectedCard(null)}
-        />
+        <SharedCard selectCardId={selectedCard} onBack={() => setSelectedCard(null)} />
       ) : (
         <Tabs defaultValue="left" onValueChange={(val) => setActiveTab(val as 'left' | 'right')}>
           <TabsList className="w-full flex justify-around mt-[30px]">
@@ -103,6 +164,7 @@ const BusinessCardBookPage = (): React.JSX.Element => {
           </TabsList>
 
           <TabsContent value={activeTab}>
+            {/* 검색 입력 */}
             <div className="px-4">
               <SearchHeader
                 query={query}
@@ -120,37 +182,29 @@ const BusinessCardBookPage = (): React.JSX.Element => {
               />
             </div>
 
+            {/* 카테고리(내 명함 목록) */}
             <div className="mt-[30px] mb-6">
-              {/* with data */}
               <Section title="카테고리">
-                <SettingRow
-                  label="대표 명함"
-                  imageUrl="/path/to/image1.jpg"
-                  nameCount="Eight님 외 57명"
-                  onClick={() =>
-                    setSelectedCard({
-                      cardName: '대표 명함',
-                      recipients: profiles, // 공유받은 사람 목록 API 데이터로 대체
-                    })
-                  }
-                />
-
-                {/* empty state */}
-                <SettingRow
-                  label="1번 명함"
-                  imageUrl="/path/to/image1.jpg"
-                  nameCount="Eight님 외 32명"
-                  onClick={() =>
-                    setSelectedCard({
-                      cardName: '1번 명함',
-                      recipients: [], //  공유받은 사람 목록 API 데이터로 대체
-                    })
-                  }
-                />
+                {orderedCards.length > 0 ? (
+                  orderedCards.map((card) => (
+                    <SettingRow
+                      key={card.business_card_id}
+                      label={`${card.card_name}`}
+                      networkType={card.card_type}
+                      loginUser={userInfo?.nickname || ''}
+                      loginUserCardId={card.business_card_id}
+                      onClick={() => setSelectedCard(card.business_card_id)}
+                    />
+                  ))
+                ) : (
+                  <div className="p-4 text-sm text-gray-400">명함 정보가 없습니다.</div>
+                )}
               </Section>
             </div>
 
+            {/* 검색 모드 / 일반 모드 */}
             {isSearchMode ? (
+              // 검색 모드
               searchKeyword === '' ? (
                 <div className="px-4 min-h-[40vh]">
                   <RecentSearchList
@@ -162,51 +216,24 @@ const BusinessCardBookPage = (): React.JSX.Element => {
                     hideJobSearch
                   />
                 </div>
-              ) : filteredProfiles.length > 0 ? (
+              ) : filteredCards.length > 0 ? (
                 <>
                   <div className="px-4 py-2 text-sm text-[var(--text-secondary)]">
-                    ‘{searchKeyword}’로 검색된 명함 {filteredProfiles.length}건
+                    ‘{searchKeyword}’로 검색된 명함 {filteredCards.length}건
                   </div>
-                  <div
-                    className={`grid ${isGridView ? 'grid-cols-2' : 'grid-cols-1'} gap-4 px-4 pb-24`}
-                  >
-                    {filteredProfiles.map((profile) =>
-                      isGridView ? (
-                        <GridCardBox
-                          key={profile.id}
-                          fieldsOfExpertise={profile.role}
-                          subExpertise={profile.detail}
-                          department=""
-                          cardType="morning"
-                          businessName=""
-                          name={profile.name}
-                        />
-                      ) : (
-                        <UserListCard
-                          key={profile.id}
-                          cardId={profile.id}
-                          name={profile.name}
-                          nickName="닉네임"
-                          fieldsOfExpertise={profile.role}
-                          subExpertise={profile.detail}
-                          businessName=""
-                          cardType="morning"
-                          interests={[]}
-                          department=""
-                        />
-                      ),
-                    )}
-                  </div>
+                  {renderCardList(filteredCards)}
                 </>
               ) : (
+                // 검색 결과가 없는 경우
                 <div className="flex justify-center items-center min-h-[40vh]">
                   <EmptyState />
                 </div>
               )
             ) : (
+              // 일반 모드
               <>
                 <div className="flex items-center justify-between px-4 py-3">
-                  <div className="text-lg font-semibold">교환한 명함 257</div>
+                  <div className="text-lg font-semibold">교환한 명함 {filteredCards.length}</div>
                   <div className="flex items-center gap-2">
                     <Button
                       className="icon w-8 h-8 bg-transparent text-[var(--fill-white)] hover:bg-[var(--icon-hover)]"
@@ -217,14 +244,22 @@ const BusinessCardBookPage = (): React.JSX.Element => {
                     <div className="flex items-center gap-2 border border-[var(--fill-secondary)] p-[5px] rounded-md">
                       <Button
                         size="icon"
-                        className={`w-8 h-8 p-1 rounded-md ${!isGridView ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]' : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'}`}
+                        className={`w-8 h-8 p-1 rounded-md ${
+                          !isGridView
+                            ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]'
+                            : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'
+                        }`}
                         onClick={() => setIsGridView(false)}
                       >
                         <Menu className="w-4 h-4" />
                       </Button>
                       <Button
                         size="icon"
-                        className={`w-8 h-8 p-1 rounded-md ${isGridView ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]' : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'}`}
+                        className={`w-8 h-8 p-1 rounded-md ${
+                          isGridView
+                            ? 'bg-[var(--fill-secondary)] text-[var(--fill-white)] hover:bg-[var(--icon-hover)]'
+                            : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--icon-hover)]'
+                        }`}
                         onClick={() => setIsGridView(true)}
                       >
                         <LayoutGrid className="w-4 h-4" />
@@ -232,41 +267,14 @@ const BusinessCardBookPage = (): React.JSX.Element => {
                     </div>
                   </div>
                 </div>
-                <div
-                  className={`grid ${isGridView ? 'grid-cols-2' : 'grid-cols-1'} gap-4 px-4 pb-24`}
-                >
-                  {filteredProfiles.map((profile) =>
-                    isGridView ? (
-                      <GridCardBox
-                        key={profile.id}
-                        fieldsOfExpertise={profile.role}
-                        subExpertise={profile.detail}
-                        department=""
-                        cardType="morning"
-                        businessName=""
-                        name={profile.name}
-                      />
-                    ) : (
-                      <UserListCard
-                        key={profile.id}
-                        cardId={profile.id}
-                        name={profile.name}
-                        nickName="닉네임"
-                        fieldsOfExpertise={profile.role}
-                        subExpertise={profile.detail}
-                        businessName=""
-                        cardType="morning"
-                        interests={[]}
-                        department=""
-                      />
-                    ),
-                  )}
-                </div>
+                {renderCardList(filteredCards)}
               </>
             )}
           </TabsContent>
         </Tabs>
       )}
+
+      {/* 풀화면 필터 팝업 */}
       {filterPopupOpen && (
         <FullScreenFilter
           values={filterValues}
@@ -280,7 +288,7 @@ const BusinessCardBookPage = (): React.JSX.Element => {
         />
       )}
 
-      <div className="fixed bottom-0 left-0 w-full py-3 bg-gray-900 text-center">네비게이션 바</div>
+      <BottomNavbar />
     </div>
   );
 };
