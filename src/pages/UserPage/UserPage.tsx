@@ -26,13 +26,14 @@ import { useGetUserBusinessCardsWithTypeQuery } from '@features/UserPage/api/use
 import AlarmIcon from '@components/NetworkingListPage/UI/AlarmIcon';
 import QrIcon from '@components/NetworkingListPage/UI/QrIcon';
 import { Logo } from '@components/commons/Header/Logo';
-import { Plus } from 'lucide-react';
+import { Plus, Share2Icon } from 'lucide-react';
 import { gradients } from '@constants/cardType';
 import { CardType } from '@components/SelectCardDesignPage/types';
 import CardManagementDrawer from '@components/UserPage/UserCardDrawer';
 import BottomNavbar from '@components/commons/BottomNavbar/BottomNavbar';
 import PlusBTN from '@assets/CardDesign/PlusBTN.png';
 import CompanyInfo from '@components/CardInfo/CompanyInfo';
+import CardShareDrawer from '@components/commons/Card/CardShareDrawer';
 const UserPage: React.FC = (): React.JSX.Element => {
   // const navigate = useNavigate();
   const { nickname } = useParams<{ nickname: string }>();
@@ -45,6 +46,7 @@ const UserPage: React.FC = (): React.JSX.Element => {
   const [api, setApi] = useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isCardDrawerOpen, setIsCardDrawerOpen] = useState(false);
+  const [isCardShareDrawerOpen, setIsCardShareDrawerOpen] = useState(false);
   const [businessCards, setBusinessCards] = useState<string[]>([]);
 
   const [gradient, setGradient] = useState<string>(
@@ -217,6 +219,11 @@ const UserPage: React.FC = (): React.JSX.Element => {
             onClick={() => setIsQRModalOpen(true)}
             aria-label="QR 코드 스캔"
           />
+          <IconButton
+            icon={<Share2Icon />}
+            onClick={() => setIsCardShareDrawerOpen(true)}
+            aria-label="카드 공유"
+          />
           <IconButton icon={<AlarmIcon />} aria-label="알림" />
         </Header.Right>
       </Header>
@@ -350,6 +357,16 @@ const UserPage: React.FC = (): React.JSX.Element => {
       </main>
 
       <QRScanDisplayModal isOpen={isQRModalOpen} onClose={() => setIsQRModalOpen(false)} />
+      <CardShareDrawer
+        isOpen={isCardShareDrawerOpen}
+        onOpenChange={() => setIsCardShareDrawerOpen(false)}
+        nickname={nickname ?? ''}
+        selectedCardId={selectedCardId}
+        cardType={businessCard?.cardType ?? 'none'}
+        subExpertise={businessCard?.subExpertise ?? 'none'}
+        businessName={businessCard?.businessName}
+        name={businessCard?.name ?? 'none'}
+      />
       <CardManagementDrawer
         isOpen={isCardDrawerOpen}
         onOpenChange={() => setIsCardDrawerOpen(false)}
