@@ -1,5 +1,5 @@
 // 캐싱할 파일 리스트 (필요시 수정)
-const CACHE_NAME = 'infinite-connect-cache-v1.1';
+const CACHE_NAME = 'infinite-connect-cache-v1.2';
 const urlsToCache = ['/', '/index.html', '/icons/icon-192x192.png', '/icons/icon-512x512.png'];
 
 // 서비스 워커 설치 후 캐싱
@@ -45,4 +45,11 @@ self.addEventListener('push', (event) => {
     icon: '/icons/icon-192x192.png',
     vibrate: [200, 100, 200],
   });
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.action === 'skipWaiting') {
+    console.log('✅ [Service Worker] Skipping waiting and activating new version');
+    self.skipWaiting();
+  }
 });
