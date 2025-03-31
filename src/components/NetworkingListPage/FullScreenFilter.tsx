@@ -36,8 +36,13 @@ export const FullScreenFilter: React.FC<FullScreenFilterProps> = ({
   onClose,
   options,
 }) => {
+  // 단일 선택: 이미 선택된 값이면 초기화, 아니면 선택
   const handleSingleSelect = (key: keyof FilterValues, value: string) => {
-    onChange({ ...values, [key]: values[key] === value ? '' : value });
+    onChange({
+      ...values,
+      [key]: values[key] === value ? '' : value,
+      ...(key === 'job' && { subJob: '' }),
+    });
   };
 
   const handleInterestToggle = (interest: string) => {
@@ -59,30 +64,29 @@ export const FullScreenFilter: React.FC<FullScreenFilterProps> = ({
     onChange({ year: '', job: '', subJob: '', interests: [] });
   };
 
+  // job 선택 시 options에서 해당 job에 맞는 subJobs 목록 가져오기
   const subJobs = values.job ? options.subJobsMap[values.job] || [] : [];
 
   return (
-    <div className="fixed inset-0 z-50 bg-[var(--bg-default-black)] flex flex-col p-5 ">
-      {/* Header */}
+    <div className="fixed inset-0 z-55 bg-[var(--bg-default-black)] flex flex-col p-5 ">
+      {/* 상단 헤더 */}
       <Header>
         <Header.Left>
           <Logo />
         </Header.Left>
-
         <Header.Right>
           <IconButton icon={<X className="stroke-white" />} onClick={onClose} />
         </Header.Right>
       </Header>
 
-      {/*  body */}
+      {/* 필터 옵션 영역 */}
       <div className="flex-1 overflow-y-auto space-y-8 mt-6 pb-[100px] scrollbar-hide">
         {/* 연차 */}
         <section className="flex flex-col gap-[14px]">
-          <h2 className="font-medium text-[var(--text-primary)] ">연차</h2>
+          <h2 className="font-medium text-[var(--text-primary)]">연차</h2>
           <div className="flex flex-wrap gap-[14px]">
             {options.years.map((year) => {
               const isSelected = values.year === year;
-
               return (
                 <Badge
                   key={year}
@@ -103,11 +107,10 @@ export const FullScreenFilter: React.FC<FullScreenFilterProps> = ({
 
         {/* 직무 */}
         <section className="flex flex-col gap-[14px]">
-          <h2 className="font-medium text-[var(--text-primary)] ">직무</h2>
+          <h2 className="font-medium text-[var(--text-primary)]">직무</h2>
           <div className="flex flex-wrap gap-[14px]">
             {options.jobs.map((job) => {
               const isSelected = values.job === job;
-
               return (
                 <Badge
                   key={job}
@@ -133,7 +136,6 @@ export const FullScreenFilter: React.FC<FullScreenFilterProps> = ({
             <div className="flex flex-wrap gap-[14px]">
               {subJobs.map((sub) => {
                 const isSelected = values.subJob === sub;
-
                 return (
                   <Badge
                     key={sub}
@@ -155,7 +157,7 @@ export const FullScreenFilter: React.FC<FullScreenFilterProps> = ({
 
         {/* 관심사 */}
         <section className="flex flex-col gap-[14px]">
-          <h2 className="font-medium text-[var(--text-primary)] ">
+          <h2 className="font-medium text-[var(--text-primary)]">
             관심사 ({values.interests.length}/5)
           </h2>
           <p className="text-sm text-[var(--text-tertiary)]">
@@ -165,7 +167,6 @@ export const FullScreenFilter: React.FC<FullScreenFilterProps> = ({
             {options.interests.map((interest) => {
               const isSelected = values.interests.includes(interest);
               const isDisabled = !isSelected && values.interests.length >= 5;
-
               return (
                 <Badge
                   key={interest}
@@ -186,14 +187,15 @@ export const FullScreenFilter: React.FC<FullScreenFilterProps> = ({
         </section>
       </div>
 
-      {/* Footer (fixed) */}
+      {/* Footer */}
       <div className="fixed bottom-0 left-0 w-full z-50 px-6 pb-10 pt-4 bg-[var(--bg-default-black)]">
-        <div className="flex items-center gap-[10px] ">
+        <div className="flex items-center gap-[10px]">
           <Button
             size="icon"
-            className="bg-[var(--fill-secondary)] hover:bg-[var(--fill-secondary-hover)] "
+            className="bg-[var(--fill-secondary)] hover:bg-[var(--fill-secondary-hover)]"
+            onClick={handleReset}
           >
-            <RefreshCcw onClick={handleReset}></RefreshCcw>
+            <RefreshCcw />
           </Button>
           <Button
             className="flex-1 text-base font-semibold py-4 rounded-[6px]"
