@@ -18,6 +18,7 @@ import {
   useCheckTwoWayExchangeQuery,
   useTwoWayExchangeMutation,
 } from '@features/BusinessCard/api/exchangeApi';
+import { decode } from 'punycode';
 
 interface QRScannerTabContentProps {
   isActive: boolean;
@@ -133,7 +134,12 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive, onC
   useEffect(() => {
     const startScanner = async () => {
       if (scannerRef.current && !html5QrCodeRef.current) {
-        html5QrCodeRef.current = new Html5Qrcode('qr-scanner');
+        html5QrCodeRef.current = new Html5Qrcode('qr-scanner', {
+          experimentalFeatures: {
+            useBarCodeDetectorIfSupported: false,
+          },
+          verbose: true,
+        });
       }
 
       if (html5QrCodeRef.current) {
@@ -149,7 +155,7 @@ const QRScannerTabContent: React.FC<QRScannerTabContentProps> = ({ isActive, onC
             },
             (decodedText) => {
               console.log('Decoded text:', decodedText);
-
+              alert(decodedText);
               // 스캔 성공 시 즉시 스캐너 중지
               if (html5QrCodeRef.current) {
                 // 여기에 null 체크 추가
