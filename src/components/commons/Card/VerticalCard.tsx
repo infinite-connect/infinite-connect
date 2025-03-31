@@ -103,7 +103,8 @@ const VerticalCard = ({ cardId }: VerticalCardProps): React.JSX.Element => {
                   <Mail className="w-[12px] h-[12px]" />
                   <div className="text-[12px] leading-[13.3px]">eightkim-mail@gmail.com</div>
                 </div>
-                <div className="flex flex-row gap-[7.6hpx]">
+                v
+                <div className="flex flex-row gap-[7.6px]">
                   <IconRenderer type="none" />
                   <div className="text-[12px] leading-[13.3px]">eightkim-portfolio.com</div>
                 </div>
