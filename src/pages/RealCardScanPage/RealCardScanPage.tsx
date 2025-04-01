@@ -175,7 +175,21 @@ const RealCardScanPage = (): React.JSX.Element => {
   };
 
   const onClickMovetoAdditionalInfoPageWithData = () => {
-    navigate('/additionalinfo', { state: parsedData }); // parsedData를 전달
+    // null 값을 undefined로 변환
+    const cleanedData = Object.entries(parsedData).reduce(
+      (acc, [key, value]) => {
+        acc[key as keyof typeof parsedData] = value === null ? undefined : value;
+        return acc;
+      },
+      {} as typeof parsedData,
+    );
+
+    navigate('/additionalinfo', {
+      state: {
+        ...cleanedData,
+        fromScanPage: true,
+      },
+    });
   };
 
   const onClickDirectInputButton = () => {

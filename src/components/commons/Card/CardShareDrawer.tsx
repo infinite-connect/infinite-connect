@@ -82,7 +82,7 @@ const CardShareDrawer: React.FC<CardShareDrawerProps> = ({
             imageOptions: {
               crossOrigin: 'anonymous',
               margin: 10,
-              imageSize: 0.3,
+              imageSize: 0.5,
             },
             dotsOptions: {
               color: '#000000',
@@ -97,9 +97,9 @@ const CardShareDrawer: React.FC<CardShareDrawerProps> = ({
             cornersDotOptions: {
               type: 'dot',
             },
-            qrOptions: {
-              errorCorrectionLevel: 'L', // 가장 낮은 오류 수정 레벨 (7%)
-            },
+            // qrOptions: {
+            //   errorCorrectionLevel: 'L', // 가장 낮은 오류 수정 레벨 (7%)
+            // },
           });
 
           const dataUrl = await qrCode.getRawData('png');
@@ -143,6 +143,26 @@ const CardShareDrawer: React.FC<CardShareDrawerProps> = ({
       setTimeout(() => setIsCopied(false), 2000);
     } catch (error) {
       console.error('클립보드 복사 오류:', error);
+    }
+  };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${name}의 명함`,
+          text: `${subExpertiseMaps[subExpertise || '']} ${businessName ? businessName + '.' : ''} ${name}`,
+          url: shareUrl,
+        });
+        console.log('공유 성공');
+      } catch (error) {
+        console.error('공유 실패:', error);
+      }
+    } else {
+      // Web Share API가 지원되지 않는 경우 대체 동작
+      console.log('Web Share API가 지원되지 않습니다.');
+      // 여기에 대체 공유 방법 구현 (클립보드 복사 등)
+      copyToClipboard(shareUrl);
     }
   };
 
@@ -303,7 +323,7 @@ const CardShareDrawer: React.FC<CardShareDrawerProps> = ({
 
         <DrawerFooter className="w-full flex justify-center items-center pt-[40px] pb-[24px] px-[24px] gap-[4px]">
           {renderActionButton()}
-          <Button btntype="secondary" className="w-full">
+          <Button btntype="secondary" className="w-full" onClick={handleShare}>
             더보기
           </Button>
         </DrawerFooter>
