@@ -6,7 +6,7 @@ interface BottomSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
-  subtitle?: string;
+  subtitle?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
 }
@@ -48,13 +48,13 @@ const Actions = ({ children, className }: { children: React.ReactNode; className
 
 Actions.ButtonGroup = ({
   primaryLabel,
-  secondaryLabel,
   onPrimary,
+  secondaryLabel,
   onSecondary,
 }: {
   primaryLabel: string;
-  secondaryLabel?: string;
   onPrimary: () => void;
+  secondaryLabel?: string;
   onSecondary?: () => void;
 }) => (
   <div className="flex flex-col gap-2">
