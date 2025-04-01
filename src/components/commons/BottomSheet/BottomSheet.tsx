@@ -53,17 +53,19 @@ Actions.ButtonGroup = ({
   onSecondary,
 }: {
   primaryLabel: string;
-  secondaryLabel: string;
+  secondaryLabel?: string;
   onPrimary: () => void;
-  onSecondary: () => void;
+  onSecondary?: () => void;
 }) => (
   <div className="flex flex-col gap-2">
     <Button btntype="enabled" onClick={onPrimary} className="w-full">
       {primaryLabel}
     </Button>
-    <Button btntype="secondary" onClick={onSecondary} className="w-full">
-      {secondaryLabel}
-    </Button>
+    {secondaryLabel && onSecondary && (
+      <Button btntype="secondary" onClick={onSecondary} className="w-full">
+        {secondaryLabel}
+      </Button>
+    )}
   </div>
 );
 

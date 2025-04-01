@@ -19,9 +19,20 @@ type DropdownProps = {
   value: string | undefined;
   onChange: (id: string) => void;
   placeholder?: string;
+  className?: string;
+  triggerClassName?: string; // 트리거 요소에 적용할 클래스
+  id?: string; // 컴포넌트에 적용할 ID
 };
 
-export const Dropdown = ({ items, value, onChange, placeholder }: DropdownProps) => {
+export const Dropdown = ({
+  items,
+  value,
+  onChange,
+  placeholder,
+  className,
+  triggerClassName,
+  id,
+}: DropdownProps) => {
   const [selected, setSelected] = useState<DropdownItem | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [triggerWidth, setTriggerWidth] = useState<number | undefined>(undefined);
@@ -44,7 +55,7 @@ export const Dropdown = ({ items, value, onChange, placeholder }: DropdownProps)
   };
 
   return (
-    <div className="relative" ref={triggerRef}>
+    <div className={clsx('relative', className)} ref={triggerRef} id={id}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div
@@ -54,6 +65,7 @@ export const Dropdown = ({ items, value, onChange, placeholder }: DropdownProps)
               'border border-[var(--border-default)]',
               'hover:border-[var(--fill-primary)]',
               'data-[state=open]:border-[var(--fill-primary)]',
+              triggerClassName,
             )}
           >
             <div className="flex items-center gap-2 text-sm">
@@ -65,10 +77,13 @@ export const Dropdown = ({ items, value, onChange, placeholder }: DropdownProps)
                   'text-[14px]',
                 )}
               >
-                {selected?.label || placeholder}
+                {placeholder}
               </span>
             </div>
-            <ChevronDown className="w-4 h-4 text-[var(--text-primary)]" />
+            <div className="flex items-center gap-2">
+              <span className="text-[14px] text-[var(--text-primary)]">{selected?.label}</span>
+              <ChevronDown className="w-4 h-4 text-[var(--text-primary)]" />
+            </div>
           </div>
         </DropdownMenuTrigger>
 

@@ -17,6 +17,9 @@ type UrlDropdownProps = {
   onChange: (value: string) => void;
   platformId: string | undefined;
   onPlatformChange: (id: string) => void;
+  className?: string;
+  textAlign?: 'left' | 'right';
+  inputClassName?: string;
 };
 
 export const UrlDropdown = ({
@@ -24,6 +27,8 @@ export const UrlDropdown = ({
   onChange,
   platformId,
   onPlatformChange,
+  className,
+  inputClassName,
 }: UrlDropdownProps) => {
   const [selected, setSelected] = useState(() => {
     if (!platformId) return SocialIcon[0];
@@ -80,7 +85,7 @@ export const UrlDropdown = ({
       : (value ?? '');
 
   return (
-    <div className="flex w-full items-center gap-2 relative" ref={triggerRef}>
+    <div className={clsx('flex w-full items-center gap-2', className)} ref={triggerRef}>
       {/* 드롭다운 버튼 */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -122,7 +127,10 @@ export const UrlDropdown = ({
         placeholder={selected.placeholder + '를 입력해 주세요'}
         value={displayValue}
         onChange={handleChange}
-        className="flex-1 text-[var(--text-primary)] bg-[var(--fill-quaternary)] "
+        className={clsx(
+          'flex-1 text-[var(--text-primary)] bg-[var(--fill-quaternary)]',
+          inputClassName, // 추가 클래스 적용
+        )}
       />
     </div>
   );
