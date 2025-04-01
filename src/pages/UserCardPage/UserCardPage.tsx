@@ -1,6 +1,6 @@
 // UserCardPage.tsx
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useIncrementViewCountMutation } from '@features/User/api/viewCountApi';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/store';
@@ -26,6 +26,8 @@ import { useCheckUserBusinessCardVisibilityQuery } from '@features/Networking/ne
 import { CARD_TYPE_TEXT, gradients } from '@constants/cardType';
 import { maskName } from '@utils/maskName';
 import CompanyInfo from '@components/CardInfo/CompanyInfo';
+import SlideDrawer from '@components/Alarm/SlideDrawer';
+import AlarmContents from '@components/Alarm/AlarmContents';
 
 const UserCardPage: React.FC = (): React.JSX.Element => {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
@@ -35,7 +37,10 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
   const [isHeaderSolid, setIsHeaderSolid] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isTwoWayExchanged, setIsTwoWayExchanged] = useState(false);
+  const [isAlarmDrawerOpen, setIsAlarmDrawerOpen] = useState(false);
   const isMyCard = userInfo?.nickname === nickname;
+  console.log(isMyCard);
+  const navigate = useNavigate();
 
   // 명함 상세 데이터 API 호출
   const { data: businessCard, isLoading, error } = useGetBusinessCardByIdQuery(businessCardId!);
@@ -151,6 +156,10 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
     }
   };
 
+  const goBack = () => {
+    navigate(-1);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">로딩 중...</div>
@@ -180,11 +189,11 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
         }`}
       >
         <Header.Left>
-          <ChevronLeft className="w-7 h-7" />
+          <ChevronLeft className="w-7 h-7" onClick={goBack} />
         </Header.Left>
         <Header.Right>
           <IconButton icon={<QrIcon />} onClick={() => setIsQRModalOpen(true)} />
-          <IconButton icon={<AlarmIcon />} />
+          <IconButton icon={<AlarmIcon />} onClick={() => setIsAlarmDrawerOpen(true)} />
         </Header.Right>
       </Header>
       <div className="relative flex flex-col mt-14 pt-[30px] pb-10 items-center justify-start overflow-x-hidden">
@@ -268,6 +277,9 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
         />
       </div>
       <QRScanDisplayModal isOpen={isQRModalOpen} onClose={() => setIsQRModalOpen(false)} />
+      <SlideDrawer isOpen={isAlarmDrawerOpen} onClose={() => setIsAlarmDrawerOpen(false)}>
+        <AlarmContents />
+      </SlideDrawer>
     </div>
   );
 };

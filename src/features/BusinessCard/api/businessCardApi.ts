@@ -295,6 +295,9 @@ export const businessCardApi = createApi({
           };
         }
       },
+      invalidatesTags: (_, __, { businessCardId }) => [
+        { type: 'BusinessCard', id: businessCardId },
+      ],
     }),
     setPrimaryBusinessCard: builder.mutation<void, string>({
       queryFn: async (cardId) => {

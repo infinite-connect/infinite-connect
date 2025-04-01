@@ -1,6 +1,6 @@
 // UserCardPage.tsx
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/store';
 import {
@@ -22,6 +22,7 @@ import CompanyInfoEdit from '@components/CardInfo/CompanyInfoEdit';
 import ContactInfoEdit from '@components/CardInfo/ContactInfoEdit';
 import { Button } from '@components/commons/Button/Button';
 import InterestsEdit from '@components/CardInfo/InterestEdit';
+import { Input } from '@components/Input/input';
 
 const UserCardEditPage: React.FC = (): React.JSX.Element => {
   // URL에서 nickname과 cardId 가져오기
@@ -33,6 +34,7 @@ const UserCardEditPage: React.FC = (): React.JSX.Element => {
 
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [isHeaderSolid, setIsHeaderSolid] = useState(false);
+  const navigate = useNavigate();
 
   // 명함 정보 조회
   const {
@@ -91,8 +93,6 @@ const UserCardEditPage: React.FC = (): React.JSX.Element => {
         fields_of_expertise: editedBusinessCard.fieldsOfExpertise,
         sub_expertise: editedBusinessCard.subExpertise,
         company: editedBusinessCard.company,
-        phone: editedBusinessCard.phone,
-        email: editedBusinessCard.email,
         business_website: editedBusinessCard.businessWebsite,
         experience_years: editedBusinessCard.experienceYears,
         card_type: editedBusinessCard.cardType,
@@ -128,6 +128,7 @@ const UserCardEditPage: React.FC = (): React.JSX.Element => {
       }).unwrap();
 
       alert('명함 정보가 성공적으로 저장되었습니다.');
+      navigate(-1);
     } catch (error) {
       console.error('명함 정보 저장 실패:', error);
       alert('명함 정보 저장에 실패했습니다.');
@@ -187,8 +188,8 @@ const UserCardEditPage: React.FC = (): React.JSX.Element => {
       </Header>
 
       <main className="relative flex flex-col mt-14 pb-[113px] pt-[30px] z-10">
-        <div className="flex justify-center items-center mb-4">
-          <input
+        <div className="flex justify-center items-center px-4">
+          <Input
             type="text"
             value={editedBusinessCard?.cardName || ''}
             onChange={(e) => {
@@ -201,29 +202,33 @@ const UserCardEditPage: React.FC = (): React.JSX.Element => {
 
               setEditedBusinessCard(updatedCard);
             }}
-            className="w-full max-w-md px-4 py-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-[334px] max-w-md px-4 py-2 text-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="카드 이름"
           />
         </div>
         {/* 명함 표시 */}
-        <div className="flex justify-center items-center mb-6">
+        <div className="flex justify-center items-center mb-5">
           <HorizontalCard cardId={cardId || ''} isTwoWayExchanged={true} isSetting={false} />
         </div>
 
         {/* 명함 정보 표시 */}
-        <section className="space-y-[14px] px-4">
+        <section className="space-y-[14px]">
           <CompanyInfoEdit
             company={editedBusinessCard?.company || ''}
             fax={editedBusinessCard?.fax || ''}
             businessWebsite={editedBusinessCard?.businessWebsite || ''}
+            businessAddress={editedBusinessCard?.businessAddress || ''}
             jobTitle={editedBusinessCard?.jobTitle || ''}
             department={editedBusinessCard?.department || ''}
             onChange={(field, value) => handleFieldChange(field as keyof BusinessCard, value)}
           />
           <CareerInfoEdit
             experienceYears={editedBusinessCard?.experienceYears || ''}
-            fieldsOfExpertise={editedBusinessCard?.fieldsOfExpertise || ''}
-            subExpertise={editedBusinessCard?.subExpertise || ''}
+            businessName={editedBusinessCard?.businessName || ''}
+            jobTitle={editedBusinessCard?.jobTitle || ''}
+            fax={editedBusinessCard?.fax || ''}
+            businessWebsite={editedBusinessCard?.businessWebsite || ''}
+            businessAddress={editedBusinessCard?.businessAddress || ''}
             onChange={(field, value) => handleFieldChange(field as keyof BusinessCard, value)}
           />
           <ContactInfoEdit
@@ -248,9 +253,15 @@ const UserCardEditPage: React.FC = (): React.JSX.Element => {
             }}
           />
         </section>
-        <Button btntype="enabled" className="w-full py-2" onClick={handleEditInfoSave}>
-          <div className="text-[14px] leading-[24px]">저장하기</div>
-        </Button>
+        <div className="flex flex-col px-6 mt-14 gap-[4px]">
+          <Button btntype="enabled" className="w-full py-2" onClick={handleEditInfoSave}>
+            <div className="text-[14px] leading-[24px]">저장하기</div>
+          </Button>
+          <Button btntype="secondary" className="w-full py-2" onClick={() => navigate(-1)}>
+            <div className="text-[14px] leading-[24px]">취소</div>
+          </Button>
+        </div>
+
         <BottomNavbar />
       </main>
 

@@ -25,12 +25,29 @@ import { useUpdateBusinessCardMutation } from '@features/BusinessCard/api/busine
 
 type FormData = z.infer<typeof schema>;
 
+interface ScanPageState {
+  fromScanPage?: boolean;
+  // 스캔 페이지에서 오는 데이터 속성들
+}
+
+interface CardDesignState {
+  businessCardId?: string;
+  // 카드 디자인 페이지에서 오는 데이터 속성들
+}
+
+type LocationState = ScanPageState & CardDesignState;
+
 const AdditionalInfoPage = (): React.JSX.Element => {
   const location = useLocation();
-  const businessCardId = location.state?.businessCardId || '';
   const navigate = useNavigate();
-  const scannedData = (location.state as Partial<FormData>) || null;
-  const isFromScanPage = location.state?.fromScanPage || false;
+  const locationState = location.state as LocationState;
+  const businessCardId = locationState?.businessCardId || '';
+  const isFromScanPage = locationState?.fromScanPage || false;
+
+  // 스캔 페이지에서 온 데이터만 추출
+  const scannedData = isFromScanPage ? locationState : null;
+  console.log(scannedData, isFromScanPage);
+  console.log(businessCardId);
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

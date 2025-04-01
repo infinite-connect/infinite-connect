@@ -61,6 +61,12 @@ const CardManagementDrawer: React.FC<CardManagementDrawerProps> = ({
     }
   };
 
+  const onClickSettingPage = () => {
+    navigate('/user/setting', {
+      state: { cardId: selectedCardId },
+    });
+  };
+
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange}>
       <DrawerContent hideIndicator className="bg-[#1a1a1a] text-white rounded-t-3xl">
@@ -86,7 +92,7 @@ const CardManagementDrawer: React.FC<CardManagementDrawerProps> = ({
             <BookmarkIcon />
             대표명함으로 설정하기
           </Button>
-          <Button btntype="secondary" className="w-full gap-[6px]">
+          <Button btntype="secondary" className="w-full gap-[6px]" onClick={onClickSettingPage}>
             <GearIcon />
             항목별 정보 공개 설정하기
           </Button>

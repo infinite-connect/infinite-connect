@@ -108,7 +108,7 @@ const SecondStep: React.FC<SecondStepProps> = ({
             errors.fieldsOfExpertise ? 'border-red-500' : 'border-gray-600'
           } bg-gray-700 px-4 py-2 text-white`}
         >
-          <option value="">직무를 선택하세요</option>
+          <option value="">현재 상태를 선택하세요</option>
           {userStatus.map((status) => (
             <option key={status} value={status}>
               {status}

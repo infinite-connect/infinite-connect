@@ -27,6 +27,9 @@ import {
   useGetFollowerViewQuery,
   DetailedCard,
 } from '@features/BusinessCardBookPage/BusinessCardBookApi';
+import QRScanDisplayModal from '@components/commons/QR/QRScanDisplayModal';
+import SlideDrawer from '@components/Alarm/SlideDrawer';
+import AlarmContents from '@components/Alarm/AlarmContents';
 
 const BusinessCardBookPage = (): React.JSX.Element => {
   const [activeTab, setActiveTab] = useState<'left' | 'right'>('left');
@@ -35,6 +38,8 @@ const BusinessCardBookPage = (): React.JSX.Element => {
   const [query, setQuery] = useState('');
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isSearchMode, setIsSearchMode] = useState(false);
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+  const [isAlarmDrawerOpen, setIsAlarmDrawerOpen] = useState(false);
 
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [filterValues, setFilterValues] = useState<FilterValues>({
@@ -148,8 +153,8 @@ const BusinessCardBookPage = (): React.JSX.Element => {
             <span>명함첩</span>
           </Header.Left>
           <Header.Right>
-            <IconButton icon={<QrIcon />} onClick={() => {}} />
-            <IconButton icon={<AlarmIcon />} onClick={() => {}} />
+            <IconButton icon={<QrIcon />} onClick={() => setIsQRModalOpen(true)} />
+            <IconButton icon={<AlarmIcon />} onClick={() => setIsAlarmDrawerOpen(true)} />
           </Header.Right>
         </Header>
       )}
@@ -288,6 +293,10 @@ const BusinessCardBookPage = (): React.JSX.Element => {
           options={filterOptions}
         />
       )}
+      <QRScanDisplayModal isOpen={isQRModalOpen} onClose={() => setIsQRModalOpen(false)} />
+      <SlideDrawer isOpen={isAlarmDrawerOpen} onClose={() => setIsAlarmDrawerOpen(false)}>
+        <AlarmContents />
+      </SlideDrawer>
 
       <BottomNavbar />
     </div>

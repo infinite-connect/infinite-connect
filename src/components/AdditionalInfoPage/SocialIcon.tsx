@@ -20,14 +20,14 @@ export const SocialIcon: SocialPlatform[] = [
     type: 'url',
     placeholder: '링크',
   },
-  // {
-  //   id: 'linkedin',
-  //   label: 'Linkedin',
-  //   icon: <Icon icon="mdi:linkedin" className="w-4 h-4" />,
-  //   prefix: 'linkedin',
-  //   type: 'url',
-  //   placeholder: '링크드인 링크',
-  // },
+  {
+    id: 'linkedin',
+    label: 'Linkedin',
+    icon: <Icon icon="mdi:linkedin" className="w-4 h-4" />,
+    prefix: 'linkedin',
+    type: 'url',
+    placeholder: '링크드인 링크',
+  },
   {
     id: 'github',
     label: 'Github',
