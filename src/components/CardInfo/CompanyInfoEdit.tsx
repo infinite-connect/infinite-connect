@@ -19,11 +19,13 @@ const CompanyInfoEdit: React.FC<CompanyInfoEditProps> = ({
   department = '',
   onChange,
 }) => {
-  const infoItems = [
-    { label: '회사', field: 'company', value: company },
-    { label: '부서', field: 'department', value: department },
+  const fields = [
+    { label: '이름', field: 'company', value: company },
     { label: '직책', field: 'jobTitle', value: jobTitle },
-    { label: '팩스', field: 'fax', value: fax },
+    { label: '연차', field: 'experienceYears', value: '6~10년차' },
+    { label: '직책', field: 'jobTitle', value: jobTitle },
+    { label: '부서', field: 'department', value: department },
+    { label: 'FAX', field: 'fax', value: fax },
     { label: '회사 웹사이트', field: 'businessWebsite', value: businessWebsite },
   ];
 
@@ -32,21 +34,24 @@ const CompanyInfoEdit: React.FC<CompanyInfoEditProps> = ({
       <div className="w-full h-[33px] flex items-start justify-start text-[14px] font-bold leading-[150%]">
         회사 정보
       </div>
-      {infoItems.map((item) => (
-        <div
-          key={item.field}
-          className="w-full h-[57px] flex flex-row items-center justify-between border-b border-[#292929] last:border-b-0"
-        >
-          <div className="text-[14px] leading-[150%]">{item.label}</div>
-          <input
-            type="text"
-            value={item.value}
-            onChange={(e) => onChange(item.field, e.target.value)}
-            className="bg-[#2A2A2A] text-white px-3 py-2 rounded w-[60%] focus:outline-none focus:ring-1 focus:ring-[#7253ff]"
-            placeholder={`${item.label} 입력`}
-          />
-        </div>
-      ))}
+
+      <div className="w-full space-y-4 mt-2">
+        {fields.map((item) => (
+          <div
+            key={item.field}
+            className="flex items-center justify-between h-[54px] bg-[#2A2A2A] px-4 rounded"
+          >
+            <span className="text-[14px] text-gray-400">{item.label}</span>
+            <input
+              type="text"
+              value={item.value}
+              onChange={(e) => onChange(item.field, e.target.value)}
+              className="bg-transparent text-white text-right focus:outline-none w-[70%]"
+              placeholder={item.label}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

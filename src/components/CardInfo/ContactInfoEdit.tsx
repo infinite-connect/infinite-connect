@@ -24,14 +24,17 @@ const ContactInfoEdit: React.FC<ContactInfoEditProps> = ({
     const urlValue = urlObject[urlType] || '';
 
     return (
-      <div className="w-full py-4 flex flex-col items-start justify-between border-b border-[#292929] last:border-b-0">
-        <div className="text-[14px] leading-[150%] mb-2">URL {fieldName.replace('Url', '')}</div>
-        <UrlDropdown
-          value={urlValue}
-          onChange={(value) => onUrlChange(fieldName, urlType, value)}
-          platformId={urlType}
-          onPlatformChange={(id) => onUrlChange(fieldName, id, '')}
-        />
+      <div className="w-full h-[54px] flex items-center justify-between bg-[#2A2A2A] rounded mb-4 items-e">
+        <div className="w-full">
+          <UrlDropdown
+            value={urlValue}
+            onChange={(value) => onUrlChange(fieldName, urlType, value)}
+            platformId={urlType}
+            onPlatformChange={(id) => onUrlChange(fieldName, id, '')}
+            className="bg-[#1E1E1E]"
+            inputClassName="text-right px-4 text-[16px]"
+          />
+        </div>
       </div>
     );
   };
@@ -42,19 +45,21 @@ const ContactInfoEdit: React.FC<ContactInfoEditProps> = ({
         연락처
       </div>
 
-      <div className="w-full py-4 flex flex-col items-start justify-between border-b border-[#292929]">
-        <div className="text-[14px] leading-[150%] mb-2">PHONE</div>
-        <div>{phone}</div>
-      </div>
+      <div className="w-full space-y-4 mt-2">
+        <div className="flex items-center justify-between h-[54px] bg-[#2A2A2A] px-4 rounded">
+          <span className="text-[14px] text-gray-400">PHONE</span>
+          <div className="text-white text-right w-[70%]">{phone}</div>
+        </div>
 
-      <div className="w-full py-4 flex flex-col items-start justify-between border-b border-[#292929]">
-        <div className="text-[14px] leading-[150%] mb-2">EMAIL</div>
-        <div>{email}</div>
-      </div>
+        <div className="flex items-center justify-between h-[54px] bg-[#2A2A2A] px-4 rounded">
+          <span className="text-[14px] text-gray-400">EMAIL</span>
+          <div className="text-white text-right w-[70%]">{email}</div>
+        </div>
 
-      {renderUrlInput(primaryUrl, 'primaryUrl')}
-      {renderUrlInput(subFirstUrl, 'subFirstUrl')}
-      {renderUrlInput(subSecondUrl, 'subSecondUrl')}
+        {renderUrlInput(primaryUrl, 'primaryUrl')}
+        {renderUrlInput(subFirstUrl, 'subFirstUrl')}
+        {renderUrlInput(subSecondUrl, 'subSecondUrl')}
+      </div>
     </div>
   );
 };
