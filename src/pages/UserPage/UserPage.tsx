@@ -34,6 +34,8 @@ import BottomNavbar from '@components/commons/BottomNavbar/BottomNavbar';
 import PlusBTN from '@assets/CardDesign/PlusBTN.png';
 import CompanyInfo from '@components/CardInfo/CompanyInfo';
 import CardShareDrawer from '@components/commons/Card/CardShareDrawer';
+import SlideDrawer from '@components/Alarm/SlideDrawer';
+import AlarmContents from '@components/Alarm/AlarmContents';
 const UserPage: React.FC = (): React.JSX.Element => {
   // const navigate = useNavigate();
   const { nickname } = useParams<{ nickname: string }>();
@@ -47,6 +49,7 @@ const UserPage: React.FC = (): React.JSX.Element => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isCardDrawerOpen, setIsCardDrawerOpen] = useState(false);
   const [isCardShareDrawerOpen, setIsCardShareDrawerOpen] = useState(false);
+  const [isAlarmDrawerOpen, setIsAlarmDrawerOpen] = useState(false);
   const [businessCards, setBusinessCards] = useState<string[]>([]);
 
   const [gradient, setGradient] = useState<string>(
@@ -224,7 +227,7 @@ const UserPage: React.FC = (): React.JSX.Element => {
             onClick={() => setIsCardShareDrawerOpen(true)}
             aria-label="카드 공유"
           />
-          <IconButton icon={<AlarmIcon />} aria-label="알림" />
+          <IconButton icon={<AlarmIcon />} onClick={() => setIsAlarmDrawerOpen(true)} />
         </Header.Right>
       </Header>
 
@@ -373,6 +376,9 @@ const UserPage: React.FC = (): React.JSX.Element => {
         selectedCardId={selectedCardId}
         refetchCards={refetchCards}
       />
+      <SlideDrawer isOpen={isAlarmDrawerOpen} onClose={() => setIsAlarmDrawerOpen(false)}>
+        <AlarmContents />
+      </SlideDrawer>
     </div>
   );
 };
