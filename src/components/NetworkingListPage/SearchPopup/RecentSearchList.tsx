@@ -38,7 +38,7 @@ const RecentSearchList: React.FC<RecentSearchListProps> = ({
             <h2 className="text-[var(--text-primary)] text-[16px] font-semibold">최근 검색어</h2>
             <button
               onClick={onClear}
-              className="text-[var(--text-secondary)] text-[14px] text-muted-foreground hover:underline"
+              className="text-[var(--text-secondary)] text-[14px] hover:underline"
             >
               전체 삭제
             </button>

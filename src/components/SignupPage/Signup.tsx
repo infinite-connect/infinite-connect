@@ -35,7 +35,7 @@ const SignupForm = (): React.JSX.Element => {
   const prevStep = () => setStep((prev) => prev - 1);
 
   return (
-    <div className="bg-[var(--bg-default-black)] px-5 font-[NanumGothic]">
+    <div className="bg-[var(--bg-default-black)] px-5">
       <div>
         <Header>
           <Header.Left>

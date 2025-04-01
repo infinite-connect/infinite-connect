@@ -24,7 +24,7 @@ const GridCardBox: React.FC<HotCardTestBoxProps> = ({ cardId, nickName }) => {
       <div>
         <div className="flex items-center">
           <NetworkType cardType={cardData?.card_type as CardType} />
-          <span className="text-[14px] ml-[4px] font-bold font-[Roboto] uppercase">
+          <span className="text-[14px] ml-[4px] font-bold uppercase">
             {cardData?.fields_of_expertise}
           </span>
         </div>

@@ -25,7 +25,7 @@ const TabList = ({ activeTab, onTabChange, onFilterClick }: TabListProps): React
                 onClick={() => onTabChange(tab)}
                 className={`
                   relative 
-                  text-[14px] font-[Inter] uppercase
+                  text-[14px] uppercase
                   ${isActive ? 'text-white' : 'text-[rgba(255,255,255,0.4)]'}
                 `}
               >

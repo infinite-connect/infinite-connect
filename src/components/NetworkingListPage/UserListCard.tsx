@@ -39,19 +39,19 @@ const UserListCard: React.FC<UserListCardProps> = ({ cardId, nickName }) => {
         <div className="flex flex-col justify-between">
           <span className="text-sm font-bold uppercase">{cardData?.fields_of_expertise}</span>
           <div className="flex flex-row mb-[14px] flex-1 items-center ">
-            <span className="text-[14px] font-[Inter] not-itarlic font-medium mr-[6px] whitespace-nowrap">
+            <span className="text-[14px] font-medium mr-[6px] whitespace-nowrap">
               {cardData?.sub_expertise}
             </span>
             {cardData?.department && cardData?.department.trim() !== '' && (
               <>
                 <SeparationLine />
-                <span className="text-[12px] font-[Inter] not-italic font-medium ml-[6px] whitespace-nowrap">
+                <span className="text-[12px] font-medium ml-[6px] whitespace-nowrap">
                   {cardData?.department}
                 </span>
               </>
             )}
           </div>
-          <div className="text-[10px] font-[Inter] font-medium">Infinite Connect</div>
+          <div className="text-[10px] font-medium">Infinite Connect</div>
         </div>
       </div>
       {/* 텍스트 영역 */}

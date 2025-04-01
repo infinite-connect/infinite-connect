@@ -19,8 +19,7 @@ const HotBusinessCardSection = (): React.JSX.Element => {
     <div className="flex flex-col items-start shrink-0 pl-[16px] mb-[30px] mt-[3rem]">
       <h2
         className="  
-        text-[var(--text-primary)]   
-          font-[NanumGothic]        
+        text-[var(--text-primary)]       
           text-[18px]             
           font-bold                 
           leading-[140%]           
@@ -32,8 +31,7 @@ const HotBusinessCardSection = (): React.JSX.Element => {
         잠깐! 주목할 만한 명함들이에요
       </h2>
       <h3
-        className="    
-          font-[NanumSquareOTF]        
+        className="          
           text-[14px] 
         text-[var(--text-secondary)]
           font-normal                

@@ -11,7 +11,7 @@ export default function CardSettingsPage() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="font-[NanumGothic] p-4 bg-[var(--bg-default-black)] text-white min-h-screen ">
+    <div className="p-4 bg-[var(--bg-default-black)] text-white min-h-screen ">
       {/* Header */}
       <Header className="flex items-center justify-between mb-6 pl-[4px]">
         <HeaderLeft>

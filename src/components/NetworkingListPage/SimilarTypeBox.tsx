@@ -43,7 +43,7 @@ const SimilarTypeBox: React.FC<SimilarTypeBoxProps> = ({ items }) => {
               <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex">
                   <NetworkType cardType={user.card_type} />
-                  <span className="flex text-[14px] ml-[4px] font-bold font-[Roboto] not-italic uppercase">
+                  <span className="flex text-[14px] ml-[4px] font-bold  uppercase">
                     {user.fields_of_expertise}
                   </span>
                 </div>
@@ -53,18 +53,20 @@ const SimilarTypeBox: React.FC<SimilarTypeBoxProps> = ({ items }) => {
 
               {/* 중단부 (직무/부서) */}
               <div className="flex flex-row mb-[14px] items-center">
-                <span className="text-[14px] font-[Inter] not-italic font-medium mr-[6px]">
-                  {user.sub_expertise}
-                </span>
-                <SeparationLine />
-                <span className="text-[14px] font-[Inter] not-italic font-medium ml-[6px]">
-                  {user.department || 'Engineering팀'}
-                </span>
+                <span className="text-[14px] font-medium mr-[6px]">{user.sub_expertise}</span>
+                {user.department && user.department.trim() !== '' && (
+                  <>
+                    <SeparationLine />
+                    <span className="text-[14px] font-medium ml-[6px] whitespace-nowrap">
+                      {user.department}
+                    </span>
+                  </>
+                )}
               </div>
 
               {/* 하단부 */}
               <div className="flex flex-row justify-between">
-                <span className="font-[Inter] text-[10px] font-medium">Infinite Connect</span>
+                <span className="text-[10px] font-medium">Infinite Connect</span>
               </div>
             </div>
 

@@ -33,7 +33,7 @@ const Modal: React.FC<ModalProps> = ({
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="font-[NanumGothic] bg-[var(--bg-default-black)] rounded-2xl shadow-xl w-[90%] max-w-md p-6 text-center flex flex-col gap-[30px]">
+      <div className="bg-[var(--bg-default-black)] rounded-2xl shadow-xl w-[90%] max-w-md p-6 text-center flex flex-col gap-[30px]">
         {/* text */}
         <div className="flex flex-col gap-[10px]">
           <h2 className="text-[var(--text-primary)] text-[16px] font-semibold">{title}</h2>

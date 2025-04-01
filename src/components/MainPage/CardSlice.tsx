@@ -75,10 +75,8 @@ const CardSlide = ({
   console.log(isPrimaryCard);
   return (
     <div className="flex flex-col">
-      <h2 className="text-center text-[16px] font-[NanumGothicOTF] font-semibold">
-        {titleMapping[cardType]}
-      </h2>
-      <h3 className="text-center text-[12px] font-[NanumGothicOTF] font-normal text-[var(--text-secondary)]">
+      <h2 className="text-center text-[16px] font-semibold">{titleMapping[cardType]}</h2>
+      <h3 className="text-center text-[12px] font-normal text-[var(--text-secondary)]">
         추가 정보를 작성하면 사람들과 더 쉽게 연결돼요
       </h3>
       <div className="flex flex-row gap-4">
@@ -86,15 +84,15 @@ const CardSlide = ({
         <div className="w-full flex flex-col justify-between">
           <CircleProgress cardId={business_card_id} />
           <div className="bg-[rgba(255,255,255,0.05)] px-2 py-3 gap-2 flex flex-col">
-            <div className="flex justify-between text-[12px] font-normal font-[NanumGothicOTF]">
+            <div className="flex justify-between text-[12px] font-normal">
               <p className="text-[var(--text-secondary)]">저장된 내 명함</p>
               <p>{savedCount}</p>
             </div>
-            <div className="flex justify-between text-[12px] font-normal font-[NanumGothicOTF]">
+            <div className="flex justify-between text-[12px] font-normal">
               <p className="text-[var(--text-secondary)]">받은 명함</p>
               <p>{receivedCount}</p>
             </div>
-            <div className="flex justify-between text-[12px] font-normal font-[NanumGothicOTF]">
+            <div className="flex justify-between text-[12px] font-normal">
               <p className="text-[var(--text-secondary)]">조회수</p>
               <p>{viewCount}</p>
             </div>

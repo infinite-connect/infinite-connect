@@ -9,10 +9,7 @@ const SloganSection = (): React.JSX.Element => {
       style={{ backgroundImage: `url(${sloganBgx2})` }}
     >
       <div className="w-full">
-        <span
-          className="text-[32px] font-light leading-[150%]"
-          style={{ fontFamily: 'NanumGothicOTF' }}
-        >
+        <span className="text-[32px] font-light leading-[150%]">
           우리는
           <br />
           연결될수록
@@ -22,7 +19,7 @@ const SloganSection = (): React.JSX.Element => {
       </div>
       <div className="flex flex-col flex-1/6">
         <ArrowUpLight />
-        <span className="flex text-[12px] font-light whitespace-nowrap font-[NanumGothicOTF] ">
+        <span className="flex text-[12px] font-light whitespace-nowrap">
           컨퍼런스
           <br />
           바로가기

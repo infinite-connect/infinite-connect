@@ -11,7 +11,7 @@ const Success = () => {
   console.log(businessCardId);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0C0C0D] font-[NanumGothic]  ">
+    <div className="flex flex-col min-h-screen bg-[#0C0C0D]">
       {/* 헤더 */}
       <Header className="pl-[20px]">
         <Header.Left>

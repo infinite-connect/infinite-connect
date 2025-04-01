@@ -46,29 +46,23 @@ const HotBusinessCardBox: React.FC<HotBusinessCardBoxProps> = ({ cardId }): Reac
       <div>
         <div className="flex items-center">
           <NetworkType cardType={data.cardType} />
-          <span className=" text-[14px] ml-[4px] font-bold font-[Roboto] not-italic uppercase">
+          <span className=" text-[14px] ml-[4px] font-bold not-italic uppercase">
             {data.fieldsOfExpertise}
           </span>
         </div>
         <div className="flex flex-row mb-[14px] items-center">
-          <span className="text-[14px] font-[Inter] not-italic font-medium mr-[6px]">
-            {data.subExpertise}
-          </span>
+          <span className="text-[14px] not-italic font-medium mr-[6px]">{data.subExpertise}</span>
           {data.department && data.department.trim() !== '' && (
             <>
               <SeparationLine />
-              <span className="text-[14px] font-[Inter] not-italic font-medium ml-[6px]">
-                {data.department}
-              </span>
+              <span className="text-[14px] font-medium ml-[6px]">{data.department}</span>
             </>
           )}
         </div>
         <span className="">{displayName}</span>
       </div>
       <div className="flex flex-row items-center justify-between w-full">
-        <span className="h-full font-[Inter] text-[10px] font-medium flex items-center ">
-          Infinite Connect
-        </span>
+        <span className="h-full  text-[10px] font-medium flex items-center ">Infinite Connect</span>
         <div className="flex items-center bg-[rgba(255,255,255,0.07)] rounded-sm p-[4px]">
           <PopularIcon />
           <span className=" text-[12px] gap-[2px] font-normal  rounded-sm p-[4px]">인기있는</span>

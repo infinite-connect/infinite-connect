@@ -10,10 +10,8 @@ const AddCardSlide: React.FC<AddCardSlideProps> = ({ onAddCardClick }) => {
     <div className="flex flex-col h-full">
       {/* + 아이콘 영역 */}
       <div className="flex flex-col"></div>
-      <h2 className="text-center text-[16px] font-[NanumGothicOTF] font-semibold ">
-        새로운 명함을 추가해보세요!
-      </h2>
-      <h3 className="text-center text-[12px] font-[NanumGothicOTF] font-normal text-[var(--text-secondary)] mb-4">
+      <h2 className="text-center text-[16px] font-semibold ">새로운 명함을 추가해보세요!</h2>
+      <h3 className="text-center text-[12px] font-normal text-[var(--text-secondary)] mb-4">
         다양한 명함으로 더 풍부한 네트워킹을 경험하세요
       </h3>
       <div

@@ -101,9 +101,7 @@ const UserFilterSection: React.FC = () => {
 
       {/* 실제 카드 리스트 (무한 스크롤) */}
       <div className="px-[16px] flex flex-col py-[16px]">
-        <h2 className="text-[18px] font-[NanumGothic] font-medium  mb-[20px]">
-          무한한 기회, 가벼운 시작
-        </h2>
+        <h2 className="text-[18px] font-medium  mb-[20px]">무한한 기회, 가벼운 시작</h2>
         <InfiniteScroll
           dataLength={displayedUsers.length} // 현재까지 보여준 아이템 수
           next={fetchMoreData} // 스크롤 끝에 도달 시 호출할 함수

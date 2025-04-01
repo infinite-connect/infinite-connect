@@ -50,8 +50,7 @@ const UserSimilarTypeSection = (): React.JSX.Element => {
     <div className="flex flex-col pl-[16px] gap-[20px]">
       <h2
         className="
-          text-[var(--text-primary)]   
-          font-[NanumGothic]        
+          text-[var(--text-primary)]                     
           text-[18px]             
           font-normal                 
           leading-[140%]           

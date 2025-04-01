@@ -23,7 +23,7 @@ const BottomNavbar: React.FC = () => {
   const isSelected = (route: string) => location.pathname === route;
 
   return (
-    <div className="fixed bottom-0 left-0 w-full h-[76px] bg-[var(--bg-default-black)] flex justify-around text-white z-50 py-4">
+    <div className="fixed bottom-0 w-full h-[76px] bg-[var(--bg-default-black)] flex justify-around text-white z-50 py-4">
       {/* 홈 버튼 */}
       <button type="button" onClick={() => navigate(homeRoute)} className="flex flex-col">
         <img
