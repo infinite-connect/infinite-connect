@@ -87,7 +87,7 @@ const MainPage = (): React.JSX.Element => {
         </Header.Right>
       </Header>
 
-      <div className="pt-14">
+      <div className="py-14">
         <SloganSection />
         <MyCardSection />
 

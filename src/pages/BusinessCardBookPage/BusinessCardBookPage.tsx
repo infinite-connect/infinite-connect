@@ -138,7 +138,7 @@ const BusinessCardBookPage = (): React.JSX.Element => {
   };
 
   return (
-    <div className="bg-[var(--bg-default-black)] max-w-screen text-white">
+    <div className="bg-[var(--bg-default-black)] max-w-screen min-h-screen text-white">
       {/* 상단 헤더 */}
       {!selectedCard && (
         <Header className="px-[16px] bg-[var(--bg-default-black)] top-0 left-0 ">
