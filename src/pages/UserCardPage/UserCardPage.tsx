@@ -269,6 +269,7 @@ const UserCardPage: React.FC = (): React.JSX.Element => {
           subExpertise={businessCard.subExpertise}
         />
         <ContactInfo
+          isTwoWayExchanged={isTwoWayExchanged}
           phone={businessCard.phone}
           email={businessCard.email}
           primaryUrl={businessCard.primaryUrl || undefined}
