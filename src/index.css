@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css');
 
 @import 'tailwindcss';
@@ -44,7 +43,7 @@ body {
 }
 @theme {
   /* font */
-  --font-sans: 'Roboto', 'Pretendard', sans-serif;
+  --font-sans: 'Pretendard', sans-serif;
 
   /* bg */
   --bg-default-black: #121212;
@@ -75,7 +74,7 @@ body {
 }
 
 :root {
-  --font-sans: 'Roboto', 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+  --font-sans: 'Pretendard', sans-serif;
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
