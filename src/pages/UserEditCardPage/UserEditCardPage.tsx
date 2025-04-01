@@ -217,6 +217,7 @@ const UserCardEditPage: React.FC = (): React.JSX.Element => {
             company={editedBusinessCard?.company || ''}
             fax={editedBusinessCard?.fax || ''}
             businessWebsite={editedBusinessCard?.businessWebsite || ''}
+            businessAddress={editedBusinessCard?.businessAddress || ''}
             jobTitle={editedBusinessCard?.jobTitle || ''}
             department={editedBusinessCard?.department || ''}
             onChange={(field, value) => handleFieldChange(field as keyof BusinessCard, value)}

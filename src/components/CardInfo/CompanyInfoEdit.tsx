@@ -6,6 +6,7 @@ interface CompanyInfoEditProps<T = any> {
   company?: string;
   fax?: string;
   businessWebsite?: string;
+  businessAddress?: string;
   jobTitle?: string;
   department?: string;
   onChange: (field: keyof T, value: string) => void;
@@ -15,18 +16,20 @@ const CompanyInfoEdit: React.FC<CompanyInfoEditProps> = ({
   company = '',
   fax = '',
   businessWebsite = '',
+  businessAddress = '',
   jobTitle = '',
   department = '',
+
   onChange,
 }) => {
   const fields = [
     { label: '이름', field: 'company', value: company },
     { label: '직책', field: 'jobTitle', value: jobTitle },
     { label: '연차', field: 'experienceYears', value: '6~10년차' },
-    { label: '직책', field: 'jobTitle', value: jobTitle },
     { label: '부서', field: 'department', value: department },
     { label: 'FAX', field: 'fax', value: fax },
     { label: '회사 웹사이트', field: 'businessWebsite', value: businessWebsite },
+    { label: '회사 주소', field: 'businessAddress', value: businessAddress },
   ];
 
   return (
