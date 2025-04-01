@@ -1,4 +1,3 @@
-import SeparationLine from '@components/NetworkingListPage/UI/SeparationLine';
 import NetworkType from '@components/NetworkingListPage/UI/NetworkTypeCircle';
 import React from 'react';
 import { useGetBusinessCardQuery } from '@features/Networking/networkingApi';
@@ -30,12 +29,6 @@ const GridCardBox: React.FC<HotCardTestBoxProps> = ({ cardId, nickName }) => {
         </div>
         <div className="flex flex-row mb-[14px] items-center">
           <span className="text-[14px] font-medium mr-[6px]">{cardData?.sub_expertise}</span>
-          {cardData?.department && cardData?.department.trim() !== '' && (
-            <>
-              <SeparationLine />
-              <span className="text-[14px] font-medium ml-[6px]">{cardData?.department}</span>
-            </>
-          )}
         </div>
         <span>
           {cardData?.business_name && cardData?.business_name.trim() !== ''

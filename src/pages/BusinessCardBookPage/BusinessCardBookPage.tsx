@@ -48,6 +48,7 @@ const BusinessCardBookPage = (): React.JSX.Element => {
   const primaryCard = useSelector((state: RootState) => state.userBusinessCard.primaryCard);
 
   const { data: userCards } = useGetUserCardsViewCountsQuery(userInfo?.nickname || '');
+  console.log('로그인한 유저의 카드개수 확인:', userCards);
 
   // 대표 명함을 맨 위로 정렬
   const orderedCards = useMemo(() => {
